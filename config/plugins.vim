@@ -1,4 +1,3 @@
-
 " Install Vim Plug if not installed
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
 	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
@@ -13,13 +12,15 @@ function! DoRemote(arg)
 endfunction
 " Syntax 
 Plug 'sheerun/vim-polyglot'
+Plug 'equalsraf/neovim-gui-shim'
+Plug 'joshdick/onedark.vim'
+Plug 'dzhou121/gonvim-fuzzy'
 
 " Auto complete
 Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 Plug 'w0rp/ale' " Linter
-Plug 'ludovicchabant/vim-gutentags' " Tag support
+" Plug 'ludovicchabant/vim-gutentags' " Tag support
 Plug 'jiangmiao/auto-pairs' " Auto close pairs
-
 Plug 'SirVer/ultisnips'
 
 " Java Plugins
@@ -32,10 +33,8 @@ Plug 'zchee/deoplete-jedi', { 'for': ['python', 'py'] }
 Plug 'ajmwagar/deoplete-omnisharp', {'for': ['cs', 'csharp']}
 Plug 'OmniSharp/omnisharp-vim', { 'for': ['cs', 'csharp']}
 
-
-
 " Prose mode plugins
-Plug 'ujihisa/neco-look', {'for': ['md', 'txt', 'markdown', 'vim']}
+Plug 'ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']}
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/goyo.vim' ", { 'on': 'GoyoEnter' }
 Plug 'suan/vim-instant-markdown', {'for': ['markdown', 'md','mkd']}
@@ -44,15 +43,9 @@ Plug 'fszymanski/deoplete-emoji', {'for': ['md','markdown', 'txt', '']}
 Plug 'junegunn/vim-emoji', {'for': ['md', 'markdown', 'txt', '']}
 
 "Javascript Plugins
-Plug 'pangloss/vim-javascript'
-Plug 'carlitux/deoplete-ternjs'
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install && npm install -g tern' }
-
-"Typescript Plugins
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-Plug 'Quramy/tsuquyomi'
-Plug 'mhartington/deoplete-typescript'
-
+Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'js', 'jsx'] }
+Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'js', 'jsx']}
+Plug 'ternjs/tern_for_vim', { 'do': 'npm install && npm install -g tern'}
 
 " Colorsheme
 Plug 'ajmwagar/vim-deus'
@@ -71,7 +64,11 @@ Plug 'mileszs/ack.vim'
 " Git support
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-dispatch'
+
+" Comments
 Plug 'tpope/vim-commentary'
+
+" File path
 Plug 'scrooloose/nerdtree'
 
 call plug#end()
@@ -103,6 +100,7 @@ function! s:check_back_space() abort "" {{{
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction ""  }}} 
+
 inoremap <silent><expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<TAB>"
 inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
 
@@ -110,10 +108,13 @@ inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
 "autocmd FileType java JCEnable
 
-" Cs completion
+" C# Completion
 autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-let g:OmniSharp_server_type = 'v1'
 let g:OmniSharp_selector_ui='fzf'
+let g:OmniSharp_server_type = 'v1'
+
+" let g:OmniSharp_server_type = 'roslyn'
+" let g:OmniSharp_server_path = '/home/ajmwagar/.config/nvim/omni/omnisharp/OmniSharp.exe'
 
 " Goyo {{{
 set dictionary=/usr/share/dict/words
@@ -174,8 +175,14 @@ let g:ackprg = 'rg --vimgrep --no-heading'
 let g:rg_find_command = 'rg --files --follow -g "!{.config,etc,bin,node_modules,.git}/*"'
 command! -bang -nargs=* Rg call fzf#vim#files('.', {'source': g:rg_find_command}, 0) 
 let g:ackprg = 'rg --vimgrep --no-heading'
-noremap <silent> <C-p> :Rg<return>
-noremap <silent> <C-b> :Buffers<cr>
+if !has('gui_running')
+  noremap <silent> <C-p> :Rg<return>
+  noremap <silent> <C-b> :Buffers<cr>
+endif
+if has('gui_running')
+  noremap <silent> <C-p> :GonvimFuzzyFiles
+endif
+
 noremap <C-t> :LAck<space>
 
 " Customize fzf colors to match your color scheme

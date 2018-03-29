@@ -87,8 +87,7 @@ filetype plugin indent on
 
 "Spell checking for spefic files
 autocmd FileType md,markdown,txt, setlocal spell
-autocmd FileType md,markdown Dispatch instant-markdown-d
-
+" autocmd FileType md,markdown Dispatch instant-markdown-d
 
 autocmd FileType js,jsx :Dispatch tern
 
