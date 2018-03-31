@@ -1,25 +1,24 @@
 " Install Vim Plug if not installed
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
-	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	autocmd VimEnter * PlugInstall
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall
 endif
 
 call plug#begin()
 
 function! DoRemote(arg)
-	UpdateRemotePlugins
+  UpdateRemotePlugins
 endfunction
 " Syntax 
 Plug 'sheerun/vim-polyglot'
-Plug 'equalsraf/neovim-gui-shim'
+" Plug 'equalsraf/neovim-gui-shim'
 Plug 'joshdick/onedark.vim'
-Plug 'dzhou121/gonvim-fuzzy'
+" Plug 'dzhou121/gonvim-fuzzy'
 
-" Auto complete
-Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') } " Auto complete
+
 Plug 'w0rp/ale' " Linter
-" Plug 'ludovicchabant/vim-gutentags' " Tag support
 Plug 'jiangmiao/auto-pairs' " Auto close pairs
 Plug 'SirVer/ultisnips'
 
@@ -52,13 +51,10 @@ Plug 'ajmwagar/vim-deus'
 Plug 'ajmwgar/vim-emoticons'
 
 " Status bar
-Plug 'ajmwagar/lightline-deus'
-Plug 'taohex/lightline-buffer'
-Plug 'itchyny/lightline.vim'
+Plug 'ajmwagar/lightline-deus' | Plug 'taohex/lightline-buffer' | Plug 'itchyny/lightline.vim'
 
 " Searching/Fuzzy Finding
-Plug 'junegunn/fzf', { 'dir': './install --all' }
-Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'dir': './install --all' } | Plug 'junegunn/fzf.vim'
 Plug 'mileszs/ack.vim'
 
 " Git support
@@ -96,10 +92,10 @@ inoremap <silent><expr> <TAB>
       \ pumvisible() ?  "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ deoplete#mappings#manual_complete()
-function! s:check_back_space() abort "" {{{    
+function! s:check_back_space() abort ""     
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
-endfunction ""  }}} 
+endfunction ""   
 
 inoremap <silent><expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<TAB>"
 inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
@@ -381,7 +377,7 @@ let g:NERDTreeChDirMode = 2
 
 " after a re-source, fix syntax matching issues (concealing brackets):
 if exists('g:loaded_webdevicons')
-    call webdevicons#refresh()
+  call webdevicons#refresh()
 endif
 
 " }}}

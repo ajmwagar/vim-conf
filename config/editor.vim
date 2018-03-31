@@ -1,12 +1,12 @@
 " Avery Wagar
-
-
 " Functional Config {{{
 set nocompatible
 filetype off
 " Turn on syntax highlighting
 syntax on
 
+" Begone swapfiles
+set directory^=$HOME/.config/nvim/tmp//
 
 "  Pick a leader key
 let mapleader = ";"
