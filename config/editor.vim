@@ -61,14 +61,11 @@ else
   let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 endif
 
-" Allow hidden buffers
-set hidden
+set hidden " Allow hidden buffers
 
-" Rendering
-set ttyfast
+set ttyfast " Rendering
 
-" Status bar
-set laststatus=2
+set laststatus=2 " Status bar
 
 " Last line
 set noshowmode
@@ -96,5 +93,19 @@ set history=100
 set splitbelow
 set splitright
 
+set number relativenumber
 
-" }}}
+augroup numbertoggle
+  autocmd!
+
+  augroup numbertoggle
+    autocmd!
+    autocmd BufEnter,FocusGained,WinEnter * if &nu | set rnu   | endif
+    autocmd BufEnter,FocusGained,WinEnter * if &nu | :ALEEnableBuffer | endif
+    autocmd BufEnter,FocusGained,WinEnter * if &nu | :SignifyEnable | endif
+    autocmd BufLeave,FocusLost,WinLeave   * if &nu | set nornu | endif
+    autocmd BufLeave,FocusLost,WinLeave   * if &nu | :ALEDisableBuffer | endif
+    autocmd BufLeave,FocusLost,WinLeave   * if &nu | :SignifyDisable | endif
+  augroup END
+
+  " }}}

@@ -10,17 +10,20 @@ call plug#begin()
 function! DoRemote(arg)
   UpdateRemotePlugins
 endfunction
+
 " Syntax 
 Plug 'sheerun/vim-polyglot'
-" Plug 'equalsraf/neovim-gui-shim'
-Plug 'joshdick/onedark.vim'
-" Plug 'dzhou121/gonvim-fuzzy'
+
+Plug 'jiangmiao/auto-pairs' " Auto close pairs
+
+" Surround
+Plug 'tpope/vim-surround'
 
 Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') } " Auto complete
 
+Plug 'SirVer/ultisnips' " Snippets
+
 Plug 'w0rp/ale' " Linter
-Plug 'jiangmiao/auto-pairs' " Auto close pairs
-Plug 'SirVer/ultisnips'
 
 " Java Plugins
 Plug 'artur-shaik/vim-javacomplete2', { 'for': 'java'}
@@ -37,7 +40,6 @@ Plug 'ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']}
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/goyo.vim' ", { 'on': 'GoyoEnter' }
 Plug 'suan/vim-instant-markdown', {'for': ['markdown', 'md','mkd']}
-
 Plug 'fszymanski/deoplete-emoji', {'for': ['md','markdown', 'txt', '']}
 Plug 'junegunn/vim-emoji', {'for': ['md', 'markdown', 'txt', '']}
 
@@ -59,7 +61,11 @@ Plug 'mileszs/ack.vim'
 
 " Git support
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-dispatch'
+Plug 'mhinz/vim-signify'
+
+" build
+" Plug 'tpope/vim-dispatch'
+Plug 'skywind3000/asyncrun.vim'
 
 " Comments
 Plug 'tpope/vim-commentary'
@@ -112,6 +118,12 @@ let g:OmniSharp_server_type = 'v1'
 " let g:OmniSharp_server_type = 'roslyn'
 " let g:OmniSharp_server_path = '/home/ajmwagar/.config/nvim/omni/omnisharp/OmniSharp.exe'
 
+" Signify {{{
+let g:signify_vcs_list = ['git']
+let g:signify_realtime = 1
+
+
+" }}}
 " Goyo {{{
 set dictionary=/usr/share/dict/words
 function! s:goyo_enter()
@@ -381,3 +393,18 @@ if exists('g:loaded_webdevicons')
 endif
 
 " }}}
+
+command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
+
+autocmd User AsyncRunPre :copen
+" autocmd User AsyncRunPre call CheckMake()
+
+" function! CheckMake()
+"   if exists(':Make') == 2
+"     " noautocmd Make
+"   else
+"     " silent noautocmd make!
+"     redraw!
+"     return 'call fugitive#cwindow()'
+"   endif
+" endfunction
