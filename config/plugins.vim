@@ -5,7 +5,7 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall
 endif
 
-call plug#begin()
+call plug#begin('~/.config/nvim/plugged')
 
 function! DoRemote(arg)
   UpdateRemotePlugins
@@ -19,7 +19,13 @@ Plug 'jiangmiao/auto-pairs' " Auto close pairs
 " Surround
 Plug 'tpope/vim-surround'
 
-Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') } " Auto complete
+"Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') } " Auto complete
+Plug 'autozimu/LanguageClient-neovim', {
+      \ 'branch': 'next',
+      \ 'do': 'bash install.sh',
+      \ }
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'roxma/nvim-completion-manager'
 
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
@@ -29,29 +35,35 @@ Plug 'w0rp/ale' " Linter
 " Java Plugins
 Plug 'artur-shaik/vim-javacomplete2', { 'for': 'java'}
 
+
+
 " Python Plugins
-Plug 'zchee/deoplete-jedi', { 'for': ['python', 'py'] }
+" Plug 'zchee/deoplete-jedi', { 'for': ['python', 'py'] }
 
 " C# Plugins
-Plug 'ajmwagar/deoplete-omnisharp', {'for': ['cs', 'csharp']}
-Plug 'OmniSharp/omnisharp-vim', { 'for': ['cs', 'csharp']}
+" Plug 'ajmwagar/deoplete-omnisharp', {'for': ['cs', 'csharp']}
+" Plug 'OmniSharp/omnisharp-vim', { 'for': ['cs', 'csharp']}
+Plug 'cyansprite/omnisharp.nvim'
+
 
 " Prose mode plugins
 Plug 'ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']}
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/goyo.vim' ", { 'on': 'GoyoEnter' }
 Plug 'suan/vim-instant-markdown', {'for': ['markdown', 'md','mkd']}
-Plug 'fszymanski/deoplete-emoji', {'for': ['md','markdown', 'txt', '']}
+" Plug 'fszymanski/deoplete-emoji', {'for': ['md','markdown', 'txt', '']}
 Plug 'junegunn/vim-emoji', {'for': ['md', 'markdown', 'txt', '']}
 
 "Javascript Plugins
-Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'js', 'jsx'] }
-Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'js', 'jsx']}
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install && npm install -g tern'}
+Plug 'roxma/nvim-cm-tern', {'do': 'npm install'}
+" Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'js', 'jsx'] }
+" Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'js', 'jsx']}
+" Plug 'ternjs/tern_for_vim', { 'do': 'npm install && npm install -g tern'}
 
 " Colorsheme
 Plug 'ajmwagar/vim-deus'
-Plug 'ajmwgar/vim-emoticons'
+" Plug 'ajmwagar/vim-emoticons'
+Plug 'ryanoasis/vim-devicons'
 
 " Status bar
 Plug 'ajmwagar/lightline-deus' | Plug 'taohex/lightline-buffer' | Plug 'itchyny/lightline.vim'
@@ -76,49 +88,120 @@ Plug 'scrooloose/nerdtree'
 
 call plug#end()
 
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_ignore_case = 1
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#enable_camel_case = 1
-let g:deoplete#auto_complete_start_length = 1
-let g:deoplete#enable_refresh_always = 1
-let g:deoplete#max_abbr_width = 0
-let g:deoplete#max_menu_width = 0
-let g:deoplete#omni#input_patterns = get(g:,'deoplete#omni#input_patterns',{})
-call deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
+" Completion {{{
 
-let g:tern_request_timeout = 1
-let g:tern_request_timeout = 6000
-let g:tern#command = ["tern"]
-let g:tern#arguments = ["--persistent"]
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
 
-set completeopt-=preview
+" let g:cm_matcher.case = "smartcase"
+"
+ " css completion via `csscomplete#CompleteCSS`
+" The `'cm_refresh_patterns'` is PCRE.
+" Be careful with `'scoping': 1` here, not all sources, especially omnifunc,
+" can handle this feature properly.
+au User CmSetup call cm#register_source({'name' : 'cm-java',
+        \ 'priority': 9, 
+        \ 'scoping': 1,
+        \ 'scopes': ['java'],
+        \ 'abbreviation': 'jc',
+        \ 'word_pattern': '[\w\-]+',
+        \ 'cm_refresh_patterns':['[\w\-]+\s*:\s+'],
+        \ 'cm_refresh': {'omnifunc': 'javacomplete#Complete'},
+        \ })
 
-"use TAB as the mapping
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ?  "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ deoplete#mappings#manual_complete()
-function! s:check_back_space() abort ""     
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction ""   
 
-inoremap <silent><expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<TAB>"
-inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
 
-" Start Java Completer
-autocmd FileType java setlocal omnifunc=javacomplete#Complete
-"autocmd FileType java JCEnable
+" let g:deoplete#enable_at_startup = 1
+" let g:deoplete#enable_ignore_case = 1
+" let g:deoplete#enable_smart_case = 1
+" let g:deoplete#enable_camel_case = 1
+" let g:deoplete#auto_complete_start_length = 1
+" let g:deoplete#enable_refresh_always = 1
+" let g:deoplete#max_abbr_width = 0
+" let g:deoplete#max_menu_width = 0
+" let g:deoplete#omni#input_patterns = get(g:,'deoplete#omni#input_patterns',{})
+" call deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
-" C# Completion
-autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-let g:OmniSharp_selector_ui='fzf'
-let g:OmniSharp_server_type = 'v1'
+"let g:tern_request_timeout = 1
+"let g:tern_request_timeout = 6000
+"let g:tern#command = ["tern"]
+"let g:tern#arguments = ["--persistent"]
+
+" set completeopt-=preview
+
+""use TAB as the mapping
+"inoremap <silent><expr> <TAB>
+"      \ pumvisible() ?  "\<C-n>" :
+"      \ <SID>check_back_space() ? "\<TAB>" :
+"      \ deoplete#mappings#manual_complete()
+"function! s:check_back_space() abort ""     
+"  let col = col('.') - 1
+"  return !col || getline('.')[col - 1]  =~ '\s'
+"endfunction ""   
+
+" inoremap <silent><expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<TAB>"
+" inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
+
+"" Start Java Completer
+"autocmd FileType java setlocal omnifunc=javacomplete#Complete
+""autocmd FileType java JCEnable
+
+"" C# Completion
+"autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
+"let g:OmniSharp_selector_ui='fzf'
+"let g:OmniSharp_server_type = 'v1'
 
 " let g:OmniSharp_server_type = 'roslyn'
 " let g:OmniSharp_server_path = '/home/ajmwagar/.config/nvim/omni/omnisharp/OmniSharp.exe'
+" }}}
+" LSP {{{
+"
 
+" Automatically start language servers.
+let g:LanguageClient_autoStart = 1
+
+" Minimal LSP configuration for JavaScript
+let g:LanguageClient_serverCommands = {}
+
+" Rust
+let g:LanguageClient_serverCommands.rust = ['rls']
+
+" Python
+let g:LanguageClient_serverCommands.python = ['pyls']
+
+" JS
+if executable('javascript-typescript-stdio')
+  let g:LanguageClient_serverCommands.javascript = ['javascript-typescript-stdio']
+  let g:LanguageClient_serverCommands["javascript.jsx"] = ['javascript-typescript-stdio']
+  " Use LanguageServer for omnifunc completion
+  autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
+  autocmd FileType javascript setlocal completefunc=LanguageClient#complete
+endif
+" if executable('typescript-language-server')
+" "   let g:LanguageClient_serverCommands.javascript = ['typescript-language-server --stdio']
+" "   let g:LanguageClient_serverCommands['javacript.jsx'] = ['typescript-language-server --stdio']
+" "   " Use LanguageServer for omnifunc completion
+" "   autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
+" " else
+" "   echo "typescript-language-server not installed!\n"
+" "   :cq
+" " endif
+
+
+" " Map renaming in python
+" autocmd FileType python nnoremap <buffer>
+"   \ <leader>lr :call LanguageClient_textDocument_rename()<cr>
+" }}}
+" Snippets {{{
+imap <c-j>     <Plug>(neosnippet_expand_or_jump)
+vmap <c-j>     <Plug>(neosnippet_expand_or_jump)
+inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
+vmap <c-u>     <Plug>(neosnippet_expand_target)
+" expand parameters
+let g:neosnippet#enable_completed_snippet=1
+" }}}
 " Signify {{{
 let g:signify_vcs_list = ['git']
 let g:signify_realtime = 1
