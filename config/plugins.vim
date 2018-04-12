@@ -21,7 +21,8 @@ Plug 'tpope/vim-surround'
 
 Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') } " Auto complete
 
-Plug 'SirVer/ultisnips' " Snippets
+Plug 'Shougo/neosnippet'
+Plug 'Shougo/neosnippet-snippets'
 
 Plug 'w0rp/ale' " Linter
 
@@ -84,7 +85,7 @@ let g:deoplete#enable_refresh_always = 1
 let g:deoplete#max_abbr_width = 0
 let g:deoplete#max_menu_width = 0
 let g:deoplete#omni#input_patterns = get(g:,'deoplete#omni#input_patterns',{})
-call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
+call deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
 
 let g:tern_request_timeout = 1
 let g:tern_request_timeout = 6000
