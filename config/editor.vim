@@ -101,10 +101,8 @@ augroup numbertoggle
   augroup numbertoggle
     autocmd!
     autocmd BufEnter,FocusGained,WinEnter * if &nu | set rnu   | endif
-    autocmd BufEnter,FocusGained,WinEnter * if &nu | :ALEEnableBuffer | endif
     autocmd BufEnter,FocusGained,WinEnter * if &nu | :SignifyEnable | endif
     autocmd BufLeave,FocusLost,WinLeave   * if &nu | set nornu | endif
-    autocmd BufLeave,FocusLost,WinLeave   * if &nu | :ALEDisableBuffer | endif
     autocmd BufLeave,FocusLost,WinLeave   * if &nu | :SignifyDisable | endif
   augroup END
 

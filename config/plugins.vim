@@ -17,48 +17,27 @@ Plug 'sheerun/vim-polyglot'
 Plug 'jiangmiao/auto-pairs' " Auto close pairs
 
 " Surround
-Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-surround'
 
-"Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') } " Auto complete
 Plug 'autozimu/LanguageClient-neovim', {
       \ 'branch': 'next',
       \ 'do': 'bash install.sh',
       \ }
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'roxma/nvim-completion-manager'
 
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 
-Plug 'w0rp/ale' " Linter
-
-" Java Plugins
-Plug 'artur-shaik/vim-javacomplete2', { 'for': 'java'}
-
-
-
-" Python Plugins
-" Plug 'zchee/deoplete-jedi', { 'for': ['python', 'py'] }
-
 " C# Plugins
-" Plug 'ajmwagar/deoplete-omnisharp', {'for': ['cs', 'csharp']}
-" Plug 'OmniSharp/omnisharp-vim', { 'for': ['cs', 'csharp']}
-Plug 'cyansprite/omnisharp.nvim'
+" Plug 'cyansprite/omnisharp.nvim'
 
 
 " Prose mode plugins
 Plug 'ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']}
-Plug 'junegunn/limelight.vim'
-Plug 'junegunn/goyo.vim' ", { 'on': 'GoyoEnter' }
+" Plug 'junegunn/limelight.vim'
+" Plug 'junegunn/goyo.vim' ", { 'on': 'GoyoEnter' }
 Plug 'suan/vim-instant-markdown', {'for': ['markdown', 'md','mkd']}
-" Plug 'fszymanski/deoplete-emoji', {'for': ['md','markdown', 'txt', '']}
-Plug 'junegunn/vim-emoji', {'for': ['md', 'markdown', 'txt', '']}
-
-"Javascript Plugins
-Plug 'roxma/nvim-cm-tern', {'do': 'npm install'}
-" Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'js', 'jsx'] }
-" Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'js', 'jsx']}
-" Plug 'ternjs/tern_for_vim', { 'do': 'npm install && npm install -g tern'}
+" Plug 'junegunn/vim-emoji', {'for': ['md', 'markdown', 'txt', '']}
 
 " Colorsheme
 Plug 'ajmwagar/vim-deus'
@@ -77,14 +56,13 @@ Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-signify'
 
 " build
-" Plug 'tpope/vim-dispatch'
 Plug 'skywind3000/asyncrun.vim'
 
 " Comments
 Plug 'tpope/vim-commentary'
 
 " File path
-Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
 
 call plug#end()
 
@@ -144,9 +122,9 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 " inoremap <silent><expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<TAB>"
 " inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
 
-"" Start Java Completer
-"autocmd FileType java setlocal omnifunc=javacomplete#Complete
-""autocmd FileType java JCEnable
+" Start Java Completer
+autocmd FileType java setlocal omnifunc=javacomplete#Complete
+"autocmd FileType java JCEnable
 
 "" C# Completion
 "autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
@@ -166,10 +144,26 @@ let g:LanguageClient_autoStart = 1
 let g:LanguageClient_serverCommands = {}
 
 " Rust
-let g:LanguageClient_serverCommands.rust = ['rls']
+if executable('rls')
+  let g:LanguageClient_serverCommands.rust = ['rls']
+else 
+  echo "rls is not installed!\n"
+  :cq
+endif
 
 " Python
-let g:LanguageClient_serverCommands.python = ['pyls']
+if executable('pyls')
+  let g:LanguageClient_serverCommands.python = ['pyls']
+else 
+  echo "pyls server not installed!\n"
+ :cq
+endif
+if executable('jdtls')
+  let g:LanguageClient_serverCommands.java = ['jdtls']
+else 
+  echo "jdtls server not installed!\n"
+ :cq
+endif
 
 " JS
 if executable('javascript-typescript-stdio')
@@ -178,16 +172,50 @@ if executable('javascript-typescript-stdio')
   " Use LanguageServer for omnifunc completion
   autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
   autocmd FileType javascript setlocal completefunc=LanguageClient#complete
+else
+  echo "javascript-typescript-stdio server not installed!\n"
+ :cq
 endif
-" if executable('typescript-language-server')
-" "   let g:LanguageClient_serverCommands.javascript = ['typescript-language-server --stdio']
-" "   let g:LanguageClient_serverCommands['javacript.jsx'] = ['typescript-language-server --stdio']
-" "   " Use LanguageServer for omnifunc completion
-" "   autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
-" " else
-" "   echo "typescript-language-server not installed!\n"
-" "   :cq
-" " endif
+
+" Smarter vim features
+" Documentation
+nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+" GoTo def
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+" Rename
+nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+" Symbols
+nnoremap <silent> <C-s> :call LanguageClient_textDocument_documentSymbol()<CR>
+
+
+" better diagnotics
+let g:LanguageClient_diagnosticsDisplay =  {
+      \ 1: {
+      \ "name": "Error",
+      \ "texthl": "ALEError",
+      \ "signText": "⛔️",
+      \ "signTexthl": "ALEErrorSign",
+      \ },
+      \ 2: {
+      \ "name": "Warning",
+      \ "texthl": "ALEWarning",
+      \ "signText": "⚠️ ",
+      \ "signTexthl": "ALEWarningSign",
+      \ },
+      \ 3: {
+      \ "name": "Information",
+      \ "texthl": "ALEInfo",
+      \ "signText": "ℹ",
+      \ "signTexthl": "ALEInfoSign",
+      \ },
+      \ 4: {
+      \ "name": "Hint",
+      \ "texthl": "ALEInfo",
+      \ "signText": "➤",
+      \ "signTexthl": "ALEInfoSign",
+      \ },
+      \ }
+
 
 
 " " Map renaming in python
@@ -218,7 +246,7 @@ function! s:goyo_enter()
   set nosi 
   set noai 
   colorscheme whiteboard
-  :ALEDisableBuffer
+  " :ALEDisableBuffer
   "set noshowcmd
   set scrolloff=999
   :Limelight
@@ -230,7 +258,7 @@ function! s:goyo_leave()
   set nospell ci si ai 
   set scrolloff=5
   colorscheme deus
-  :ALEEnableBuffer
+  " :ALEEnableBuffer
   :Limelight!
 
 endfunction
@@ -334,7 +362,7 @@ let g:lightline = {
       \ },
       \ 'active': {
       \   'left': [['mode', 'paste'], ['gitbranch', 'filename', 'filetype', 'modified']],
-      \   'right': [['time'], ['lineinfo'],  ['percent'], ['linter_warnings', 'linter_errors', 'linter_ok']]
+      \   'right': [['time'], ['lineinfo'],  ['percent']]
       \ }
       \ }
 
@@ -362,28 +390,28 @@ function! MyFileformat()
 endfunction
 
 
-function! LightlineLinterWarnings() abort
-  let l:counts = ale#statusline#Count(bufnr(''))
-  let l:all_errors = l:counts.error + l:counts.style_error
-  let l:all_non_errors = l:counts.total - l:all_errors
-  return l:counts.total == 0 ? '' : printf('%d ⚠', all_non_errors)
-endfunction
+" function! LightlineLinterWarnings() abort
+"   let l:counts = ale#statusline#Count(bufnr(''))
+"   let l:all_errors = l:counts.error + l:counts.style_error
+"   let l:all_non_errors = l:counts.total - l:all_errors
+"   return l:counts.total == 0 ? '' : printf('%d ⚠', all_non_errors)
+" endfunction
 
-function! LightlineLinterErrors() abort
-  let l:counts = ale#statusline#Count(bufnr(''))
-  let l:all_errors = l:counts.error + l:counts.style_error
-  let l:all_non_errors = l:counts.total - l:all_errors
-  return l:counts.total == 0 ? '' : printf('%d 🔴', all_errors)
-endfunction
+" function! LightlineLinterErrors() abort
+"   let l:counts = ale#statusline#Count(bufnr(''))
+"   let l:all_errors = l:counts.error + l:counts.style_error
+"   let l:all_non_errors = l:counts.total - l:all_errors
+"   return l:counts.total == 0 ? '' : printf('%d 🔴', all_errors)
+" endfunction
 
-function! LightlineLinterOK() abort
-  let l:counts = ale#statusline#Count(bufnr(''))
-  let l:all_errors = l:counts.error + l:counts.style_error
-  let l:all_non_errors = l:counts.total - l:all_errors
-  return l:counts.total == 0 ? '✓ ' : ''
-endfunction
+" function! LightlineLinterOK() abort
+"   let l:counts = ale#statusline#Count(bufnr(''))
+"   let l:all_errors = l:counts.error + l:counts.style_error
+"   let l:all_non_errors = l:counts.total - l:all_errors
+"   return l:counts.total == 0 ? '✓ ' : ''
+" endfunction
 
-autocmd User ALELint call s:MaybeUpdateLightline()
+" autocmd User ALELint call s:MaybeUpdateLightline()
 
 " Update and show lightline but only if it's visible (e.g., not in Goyo)
 function! s:MaybeUpdateLightline()
