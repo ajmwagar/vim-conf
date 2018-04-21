@@ -1,70 +1,68 @@
-" Install Vim Plug if not installed
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall
-endif
+packadd minpac
 
-call plug#begin('~/.config/nvim/plugged')
+set rtp+=/home/ajmwagar/usr/dev/git/vim-pointbreak
 
+call minpac#init()
+" minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
+call minpac#add('k-takata/minpac', {'type': 'opt'})
 function! DoRemote(arg)
   UpdateRemotePlugins
 endfunction
 
 " Syntax 
-Plug 'sheerun/vim-polyglot'
+call minpac#add('sheerun/vim-polyglot')
+call minpac#add('jiangmiao/auto-pairs') " Auto close pairs
 
-Plug 'jiangmiao/auto-pairs' " Auto close pairs
+call minpac#add('rakr/vim-one')
 
-" Surround
-" Plug 'tpope/vim-surround'
+call minpac#add('wikitopian/hardmode')
 
-Plug 'autozimu/LanguageClient-neovim', {
+" Autocomplete
+call minpac#add('autozimu/LanguageClient-neovim', {
       \ 'branch': 'next',
       \ 'do': 'bash install.sh',
-      \ }
-Plug 'roxma/nvim-completion-manager'
+      \ })
+call minpac#add('roxma/nvim-completion-manager')
 
-Plug 'Shougo/neosnippet'
-Plug 'Shougo/neosnippet-snippets'
-
-" C# Plugins
-" Plug 'cyansprite/omnisharp.nvim'
-
+" Snippets
+call minpac#add('Shougo/neosnippet')
+call minpac#add('Shougo/neosnippet-snippets')
 
 " Prose mode plugins
-Plug 'ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']}
-" Plug 'junegunn/limelight.vim'
-" Plug 'junegunn/goyo.vim' ", { 'on': 'GoyoEnter' }
-Plug 'suan/vim-instant-markdown', {'for': ['markdown', 'md','mkd']}
-" Plug 'junegunn/vim-emoji', {'for': ['md', 'markdown', 'txt', '']}
+" call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
+call minpac#add('suan/vim-instant-markdown')
+call minpac#add('junegunn/goyo.vim')
+call minpac#add('junegunn/limelight.vim')
+call minpac#add('bilalq/lite-dfm')
 
 " Colorsheme
-Plug 'ajmwagar/vim-deus'
-" Plug 'ajmwagar/vim-emoticons'
-Plug 'ryanoasis/vim-devicons'
+call minpac#add('ajmwagar/vim-deus')
+call minpac#add('ryanoasis/vim-devicons')
 
 " Status bar
-Plug 'ajmwagar/lightline-deus' | Plug 'taohex/lightline-buffer' | Plug 'itchyny/lightline.vim'
+call minpac#add ('ajmwagar/lightline-deus') 
+call minpac#add ('taohex/lightline-buffer')
+call minpac#add('itchyny/lightline.vim')
 
 " Searching/Fuzzy Finding
-Plug 'junegunn/fzf', { 'dir': './install --all' } | Plug 'junegunn/fzf.vim'
-Plug 'mileszs/ack.vim'
+call minpac#add('junegunn/fzf', { 'dir': './install --all' })
+call minpac#add('junegunn/fzf.vim')
+" call minpac#add('mileszs/ack.vim')
 
 " Git support
-Plug 'tpope/vim-fugitive'
-Plug 'mhinz/vim-signify'
+call minpac#add('tpope/vim-fugitive')
+call minpac#add('mhinz/vim-signify')
 
 " build
-Plug 'skywind3000/asyncrun.vim'
+call minpac#add('skywind3000/asyncrun.vim')
 
 " Comments
-Plug 'tpope/vim-commentary'
+call minpac#add('tpope/vim-commentary')
+" call minpac#add('tpope/vim-vinegar')
 
 " File path
-Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
+" call minpac#add('scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']})
 
-call plug#end()
 
 " Completion {{{
 
@@ -74,19 +72,19 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
 
 " let g:cm_matcher.case = "smartcase"
 "
- " css completion via `csscomplete#CompleteCSS`
+" css completion via `csscomplete#CompleteCSS`
 " The `'cm_refresh_patterns'` is PCRE.
 " Be careful with `'scoping': 1` here, not all sources, especially omnifunc,
 " can handle this feature properly.
 au User CmSetup call cm#register_source({'name' : 'cm-java',
-        \ 'priority': 9, 
-        \ 'scoping': 1,
-        \ 'scopes': ['java'],
-        \ 'abbreviation': 'jc',
-        \ 'word_pattern': '[\w\-]+',
-        \ 'cm_refresh_patterns':['[\w\-]+\s*:\s+'],
-        \ 'cm_refresh': {'omnifunc': 'javacomplete#Complete'},
-        \ })
+      \ 'priority': 9, 
+      \ 'scoping': 1,
+      \ 'scopes': ['java'],
+      \ 'abbreviation': 'jc',
+      \ 'word_pattern': '[\w\-]+',
+      \ 'cm_refresh_patterns':['[\w\-]+\s*:\s+'],
+      \ 'cm_refresh': {'omnifunc': 'javacomplete#Complete'},
+      \ })
 
 
 
@@ -156,13 +154,13 @@ if executable('pyls')
   let g:LanguageClient_serverCommands.python = ['pyls']
 else 
   echo "pyls server not installed!\n"
- :cq
+  :cq
 endif
 if executable('jdtls')
   let g:LanguageClient_serverCommands.java = ['jdtls']
 else 
   echo "jdtls server not installed!\n"
- :cq
+  :cq
 endif
 
 " JS
@@ -174,7 +172,7 @@ if executable('javascript-typescript-stdio')
   autocmd FileType javascript setlocal completefunc=LanguageClient#complete
 else
   echo "javascript-typescript-stdio server not installed!\n"
- :cq
+  :cq
 endif
 
 " Smarter vim features
@@ -233,32 +231,27 @@ let g:neosnippet#enable_completed_snippet=1
 " Signify {{{
 let g:signify_vcs_list = ['git']
 let g:signify_realtime = 1
-
-
 " }}}
 " Goyo {{{
 set dictionary=/usr/share/dict/words
 function! s:goyo_enter()
-  let g:deoplete#sources._=[ 'look', 'buffer', 'ultisnips', 'file', 'dictionary']
   set spell 
-  let b:deoplete_ignore_sources = []
   set noci
   set nosi 
   set noai 
   colorscheme whiteboard
-  " :ALEDisableBuffer
   "set noshowcmd
   set scrolloff=999
   :Limelight
+  " :SignifyToggle
 
 endfunction
 
 function! s:goyo_leave()
-  "let b:deoplete_ignore_sources = ['look']
   set nospell ci si ai 
   set scrolloff=5
   colorscheme deus
-  " :ALEEnableBuffer
+  " :SignifyEnable
   :Limelight!
 
 endfunction
@@ -279,12 +272,6 @@ let g:DevIconsEnableFoldersOpenClose = 1
 
 " enable folder/directory glyph flag (disabled by default with 0)
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-" }}}
-"NERDTree Settings {{{
-"======================================================================
-
-"Settings
-
 " }}}
 "fuzzy finder/ack Settings {{{
 set noshowmode
@@ -369,7 +356,7 @@ let g:lightline = {
 
 function! Timer()
   " return strftime("%H%S")
-  return strftime("%H:%M") . " 🕒"  "Timer in status line
+  return strftime("%H:%M") . " 🕒" "Timer in status line
   " return !date
 endfunction
 
@@ -438,14 +425,14 @@ let g:lightline_buffer_maxflen = 30
 " }}}
 "Ale Settings {{{
 
-let g:ale_echo_msg_error_str = 'E'
-let g:ale_echo_msg_warning_str = 'W'
-" let g:ale_sign_error = '💥'  
-let g:ale_sign_error = '🔴'  
-let g:ale_sign_warning = '⚠️'
-let g:ale_open_list = 0
-let g:ale_loclist = 0
-let g:ale_javascript_eslint_use_global = 1
+" let g:ale_echo_msg_error_str = 'E'
+" let g:ale_echo_msg_warning_str = 'W'
+" " let g:ale_sign_error = '💥'  
+" let g:ale_sign_error = '🔴'  
+" let g:ale_sign_warning = '⚠️'
+" let g:ale_open_list = 0
+" let g:ale_loclist = 0
+" let g:ale_javascript_eslint_use_global = 1
 
 " let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
 " let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
@@ -453,57 +440,42 @@ let g:ale_javascript_eslint_use_global = 1
 " let g:gitgutter_sign_modified_removed = emoji#for('collision')
 
 " }}}
-" emoji {{{
-
-" emoji replace
-nnoremap <leader>em :%s/:\([^:]\+\):/\=emoji#for(submatch(1), submatch(0))/g<cr>
-
-set completefunc=emoji#complete
-
-
-" }}}
-" UltiSnips {{{
-
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-j>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-
-let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/UltiSnips', 'UltiSnips']
-let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"
-
-" }}}
 "NERDTree Settings {{{
 "======================================================================
 
 "Settings
-function! NERDTreeToggleInCurDir()
-  " If NERDTree is open in the current buffer
-  if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
-    exe ":NERDTreeClose"
-  else
-    if (expand("%:t") != '')
-      exe ":NERDTreeFind"
-    else
-      exe ":NERDTreeToggle"
-    endif
-  endif
-endfunction
+" function! NERDTreeToggleInCurDir()
+"   " If NERDTree is open in the current buffer
+" if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
+"   exe ":NERDTreeClose"
+" else
+"   if (expand("%:t") != '')
+"     exe ":NERDTreeFind"
+"   else
+"     exe ":NERDTreeToggle"
+"   endif
+" endif
+" endfunction
 
-let NERDTreeIgnore = ['\.meta$','\.ipa$','\.apk$','\.zip$','\.rar$', '\.class$']
-" open Nerd Tree in folder of file in active buffer
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-let NERDTreeQuitOnOpen = 1
-let g:NERDTreeChDirMode = 2
+" let NERDTreeIgnore = ['\.meta$','\.ipa$','\.apk$','\.zip$','\.rar$', '\.class$']
+" " open Nerd Tree in folder of file in active buffer
+" let NERDTreeMinimalUI = 1
+" let NERDTreeDirArrows = 1
+" let NERDTreeQuitOnOpen = 1
+" let g:NERDTreeChDirMode = 2
 
-" after a re-source, fix syntax matching issues (concealing brackets):
-if exists('g:loaded_webdevicons')
-  call webdevicons#refresh()
-endif
+" " after a re-source, fix syntax matching issues (concealing brackets):
+" if exists('g:loaded_webdevicons')
+" call webdevicons#refresh()
+" endif
 
+" }}}
+" pointbreak: {{{
+let g:pointbreak_char = "🔴"
+let g:pointbreak_autostart = 1
+
+nnoremap <leader>b :PointbreakAdd<CR>
+nnoremap <leader>br :PointbreakRemove<CR>
 " }}}
 
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>

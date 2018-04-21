@@ -4,19 +4,14 @@ set nocompatible
 filetype off
 " Turn on syntax highlighting
 syntax on
-
 " Begone swapfiles
 set directory^=$HOME/.config/nvim/tmp//
-
 "  Pick a leader key
 let mapleader = ";"
-
 " Security
 set modelines=1
-
 "Open in folder
 cd ~/usr/dev/
-
 " Folding
 set foldmethod=marker
 set foldlevel=0
@@ -29,13 +24,12 @@ set relativenumber
 set ruler
 
 " Blink cursor on error instead of beeping (grr)
-set noerrorbells
+" set noerrorbells
 
 " Encoding
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf8,prc
-
 " Whitespace
 set wrap " Wrap lines
 set linebreak " Wraps lines a words
@@ -47,6 +41,40 @@ set softtabstop=2 " Number of spaces per tab
 set shiftwidth=2   " Number of auto indent spaces
 set autoindent " Auto indent
 set noshiftround " Indent lines by 2 not by nearest mutiple of two
+
+" Netrw
+let g:netrw_liststyle = 3
+let g:netrw_banner = 0
+let g:netrw_browse_split = 4
+let g:netrw_winsize = 15
+let g:netrw_altv = 1
+let g:netrw_preview=1           " open previews vertically
+" augroup ProjectDrawer
+"   autocmd!
+"   autocmd VimEnter * :Vexplore
+" augroup END
+
+" Toggle Vexplore with Ctrl-E
+function! ToggleVExplorer()
+  if exists("t:expl_buf_num")
+      let expl_win_num = bufwinnr(t:expl_buf_num)
+      if expl_win_num != -1
+          let cur_win_nr = winnr()
+          exec expl_win_num . 'wincmd w'
+          close
+          exec cur_win_nr . 'wincmd w'
+          unlet t:expl_buf_num
+      else
+          unlet t:expl_buf_num
+      endif
+  else
+      exec '1wincmd w'
+      Vexplore
+      let t:expl_buf_num = bufnr("%")
+  endif
+endfunction
+map <silent> <leader>t :call ToggleVExplorer()<CR>
+
 
 " Cursor motion
 set scrolloff=3
@@ -62,14 +90,12 @@ else
 endif
 
 set hidden " Allow hidden buffers
-
 set ttyfast " Rendering
-
 set laststatus=2 " Status bar
 
 " Last line
-set noshowmode
-set noshowcmd
+set noshowcmd " Disable last line
+set noshowmode " ^^
 
 " Searching
 set hlsearch "  Highlight all search results
@@ -84,9 +110,6 @@ filetype plugin indent on
 
 "Spell checking for spefic files
 autocmd FileType md,markdown,txt, setlocal spell
-" autocmd FileType md,markdown Dispatch instant-markdown-d
-
-autocmd FileType js,jsx :Dispatch tern
 
 "Make vim more natural
 set history=100
@@ -107,3 +130,36 @@ augroup numbertoggle
   augroup END
 
   " }}}
+  " Cursor {{{
+" highlight Cursor guifg=white guibg=black
+" highlight iCursor guifg=white guibg=steelblue
+" set guicursor=n-v-c:block-Cursor
+" set guicursor+=i:ver100-iCursor
+" set guicursor+=n-v-c:blinkon0
+" set guicursor+=i:blinkwait10
+
+  " }}}
+" Colors {{{
+
+set t_Co=256
+
+set termguicolors
+" Fix colors in tmux
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+let &t_ZH="\e[3m"
+let &t_ZR="\e[23m"
+
+set background=dark    " Setting dark mode
+"set background=light    " Setting light mode
+set fillchars+=vert:\ 
+let g:deus_termcolors=256
+let NVIM_TUI_ENABLE_TRUE_COLOR=1
+let g:deus_italics = 1
+colorscheme deus
+
+if has("gui_running")
+	set guifont ="DejaVuSansMono Nerd Font Complete Mono:h11"
+endif
+
+" }}}

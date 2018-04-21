@@ -1,6 +1,2 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =4
-let g:netrw_dirhist_1='/home/ajmwagar/bin/lovr/src/api'
-let g:netrw_dirhist_2='/home/ajmwagar/usr/gdrive/School/Social/Renissance'
-let g:netrw_dirhist_3='/home/ajmwagar/usr/dev/git/outrigger/test'
-let g:netrw_dirhist_4='/home/ajmwagar/usr/dev/git/outrigger'
+let g:netrw_dirhist_cnt =0
