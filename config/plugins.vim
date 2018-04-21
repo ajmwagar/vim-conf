@@ -76,9 +76,6 @@ let g:deoplete#max_abbr_width = 0
 let g:deoplete#max_menu_width = 0
 
 
-call deoplete#custom#set('LS', 'label', '')
-call deoplete#custom#set('ns', 'label', '')
-
 set completeopt-=preview
 
 "use TAB as the mapping
