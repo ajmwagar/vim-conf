@@ -1,139 +1,105 @@
-packadd minpac
+if exists('*minpac#init')
+  call minpac#init()
 
-set rtp+=/home/ajmwagar/usr/dev/git/vim-pointbreak
+  " minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
+  call minpac#add('k-takata/minpac', {'type': 'opt'})
 
-call minpac#init()
-" minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
-call minpac#add('k-takata/minpac', {'type': 'opt'})
-function! DoRemote(arg)
-  UpdateRemotePlugins
-endfunction
+  function! DoRemote(arg)
+    UpdateRemotePlugins
+  endfunction
 
-" Syntax 
-call minpac#add('sheerun/vim-polyglot')
-call minpac#add('jiangmiao/auto-pairs') " Auto close pairs
+  " Syntax 
+  call minpac#add('sheerun/vim-polyglot')
+  call minpac#add('jiangmiao/auto-pairs') " Auto close pairs
 
-call minpac#add('rakr/vim-one')
+  " call minpac#add('wikitopian/hardmode')
 
-call minpac#add('wikitopian/hardmode')
+  " Autocomplete
+  call minpac#add('autozimu/LanguageClient-neovim', {'do': '!sh ./install.sh' })
 
-" Autocomplete
-call minpac#add('autozimu/LanguageClient-neovim', {
-      \ 'branch': 'next',
-      \ 'do': 'bash install.sh',
-      \ })
-call minpac#add('roxma/nvim-completion-manager')
+  " call minpac#add('roxma/nvim-completion-manager')
+  call minpac#add('Shougo/deoplete.nvim')
 
-" Snippets
-call minpac#add('Shougo/neosnippet')
-call minpac#add('Shougo/neosnippet-snippets')
+  " Snippets
+  call minpac#add('Shougo/neosnippet')
+  call minpac#add('Shougo/neosnippet-snippets')
 
-" Prose mode plugins
-" call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
-call minpac#add('suan/vim-instant-markdown')
-call minpac#add('junegunn/goyo.vim')
-call minpac#add('junegunn/limelight.vim')
-call minpac#add('bilalq/lite-dfm')
+  " Prose mode plugins
+  " call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
+  call minpac#add('suan/vim-instant-markdown')
+  call minpac#add('junegunn/goyo.vim')
+  call minpac#add('junegunn/limelight.vim')
 
-" Colorsheme
-call minpac#add('ajmwagar/vim-deus')
-call minpac#add('ryanoasis/vim-devicons')
+  " Colorsheme
+  call minpac#add('ajmwagar/vim-deus')
+  call minpac#add('ryanoasis/vim-devicons')
 
-" Status bar
-call minpac#add ('ajmwagar/lightline-deus') 
-call minpac#add ('taohex/lightline-buffer')
-call minpac#add('itchyny/lightline.vim')
+  " Status bar
+  call minpac#add('ajmwagar/lightline-deus') 
+  call minpac#add('taohex/lightline-buffer')
+  call minpac#add('itchyny/lightline.vim')
 
-" Searching/Fuzzy Finding
-call minpac#add('junegunn/fzf', { 'dir': './install --all' })
-call minpac#add('junegunn/fzf.vim')
-" call minpac#add('mileszs/ack.vim')
+  " Searching/Fuzzy Finding
+  call minpac#add('junegunn/fzf', { 'do': './install --all' })
+  call minpac#add('junegunn/fzf.vim')
+  " call minpac#add('mileszs/ack.vim')
 
-" Git support
-call minpac#add('tpope/vim-fugitive')
-call minpac#add('mhinz/vim-signify')
+  " Git support
+  call minpac#add('tpope/vim-fugitive')
+  call minpac#add('mhinz/vim-signify')
 
-" build
-call minpac#add('skywind3000/asyncrun.vim')
+  " build
+  call minpac#add('skywind3000/asyncrun.vim')
 
-" Comments
-call minpac#add('tpope/vim-commentary')
-" call minpac#add('tpope/vim-vinegar')
-
-" File path
-" call minpac#add('scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']})
-
+  " Comments
+  call minpac#add('tpope/vim-commentary')
+endif
 
 " Completion {{{
+" nvim-completion-manager
 
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
 
-" let g:cm_matcher.case = "smartcase"
-"
-" css completion via `csscomplete#CompleteCSS`
-" The `'cm_refresh_patterns'` is PCRE.
-" Be careful with `'scoping': 1` here, not all sources, especially omnifunc,
-" can handle this feature properly.
-au User CmSetup call cm#register_source({'name' : 'cm-java',
-      \ 'priority': 9, 
-      \ 'scoping': 1,
-      \ 'scopes': ['java'],
-      \ 'abbreviation': 'jc',
-      \ 'word_pattern': '[\w\-]+',
-      \ 'cm_refresh_patterns':['[\w\-]+\s*:\s+'],
-      \ 'cm_refresh': {'omnifunc': 'javacomplete#Complete'},
-      \ })
+" autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+" Deoplete
+let g:deoplete#enable_at_startup = 1 " Auto start
 
 
+let g:deoplete#enable_smart_case = 1 " Smart case
+let g:deoplete#auto_complete_start_length = 2 " Stop bothering me
+let g:deoplete#enable_refresh_always = 1
 
-" let g:deoplete#enable_at_startup = 1
-" let g:deoplete#enable_ignore_case = 1
-" let g:deoplete#enable_smart_case = 1
-" let g:deoplete#enable_camel_case = 1
-" let g:deoplete#auto_complete_start_length = 1
-" let g:deoplete#enable_refresh_always = 1
-" let g:deoplete#max_abbr_width = 0
-" let g:deoplete#max_menu_width = 0
-" let g:deoplete#omni#input_patterns = get(g:,'deoplete#omni#input_patterns',{})
-" call deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+let g:deoplete#max_abbr_width = 0
+let g:deoplete#max_menu_width = 0
 
-"let g:tern_request_timeout = 1
-"let g:tern_request_timeout = 6000
-"let g:tern#command = ["tern"]
-"let g:tern#arguments = ["--persistent"]
 
-" set completeopt-=preview
+call deoplete#custom#set('LS', 'label', '')
+call deoplete#custom#set('ns', 'label', '')
 
-""use TAB as the mapping
-"inoremap <silent><expr> <TAB>
-"      \ pumvisible() ?  "\<C-n>" :
-"      \ <SID>check_back_space() ? "\<TAB>" :
-"      \ deoplete#mappings#manual_complete()
-"function! s:check_back_space() abort ""     
-"  let col = col('.') - 1
-"  return !col || getline('.')[col - 1]  =~ '\s'
-"endfunction ""   
+set completeopt-=preview
 
-" inoremap <silent><expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<TAB>"
-" inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
+"use TAB as the mapping
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ?  "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ deoplete#mappings#manual_complete()
+function! s:check_back_space() abort ""     
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction ""   
 
-" Start Java Completer
-autocmd FileType java setlocal omnifunc=javacomplete#Complete
-"autocmd FileType java JCEnable
+inoremap <silent><expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<TAB>"
+inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
 
-"" C# Completion
-"autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-"let g:OmniSharp_selector_ui='fzf'
-"let g:OmniSharp_server_type = 'v1'
 
-" let g:OmniSharp_server_type = 'roslyn'
-" let g:OmniSharp_server_path = '/home/ajmwagar/.config/nvim/omni/omnisharp/OmniSharp.exe'
+" Sources:
+
+
 " }}}
 " LSP {{{
-"
 
 " Automatically start language servers.
 let g:LanguageClient_autoStart = 1
@@ -184,6 +150,12 @@ nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 " Symbols
 nnoremap <silent> <C-s> :call LanguageClient_textDocument_documentSymbol()<CR>
+
+" Auto start server
+autocmd FileType javascript :LanguageClientStart<CR>
+autocmd FileType java :LanguageClientStart<CR>
+autocmd FileType python :LanguageClientStart<CR>
+autocmd FileType rust :LanguageClientStart<CR>
 
 
 " better diagnotics
@@ -259,19 +231,6 @@ endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
-" }}}
-" Devicons{{{
-" loading the plugin
-let g:webdevicons_enable = 1
-
-" adding the flags to NERDTree
-"let g:webdevicons_enable_nerdtree = 1
-
-" enable open and close folder/directory glyph flags (disabled by default with 0)
-let g:DevIconsEnableFoldersOpenClose = 1
-
-" enable folder/directory glyph flag (disabled by default with 0)
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 " }}}
 "fuzzy finder/ack Settings {{{
 set noshowmode
@@ -423,72 +382,21 @@ let g:lightline_buffer_enable_devicons = 1
 let g:lightline_buffer_maxflen = 30
 
 " }}}
-"Ale Settings {{{
-
-" let g:ale_echo_msg_error_str = 'E'
-" let g:ale_echo_msg_warning_str = 'W'
-" " let g:ale_sign_error = '💥'  
-" let g:ale_sign_error = '🔴'  
-" let g:ale_sign_warning = '⚠️'
-" let g:ale_open_list = 0
-" let g:ale_loclist = 0
-" let g:ale_javascript_eslint_use_global = 1
-
-" let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
-" let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
-" let g:gitgutter_sign_removed = emi#for('small_red_triangle')
-" let g:gitgutter_sign_modified_removed = emoji#for('collision')
-
-" }}}
-"NERDTree Settings {{{
-"======================================================================
-
-"Settings
-" function! NERDTreeToggleInCurDir()
-"   " If NERDTree is open in the current buffer
-" if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
-"   exe ":NERDTreeClose"
-" else
-"   if (expand("%:t") != '')
-"     exe ":NERDTreeFind"
-"   else
-"     exe ":NERDTreeToggle"
-"   endif
-" endif
-" endfunction
-
-" let NERDTreeIgnore = ['\.meta$','\.ipa$','\.apk$','\.zip$','\.rar$', '\.class$']
-" " open Nerd Tree in folder of file in active buffer
-" let NERDTreeMinimalUI = 1
-" let NERDTreeDirArrows = 1
-" let NERDTreeQuitOnOpen = 1
-" let g:NERDTreeChDirMode = 2
-
-" " after a re-source, fix syntax matching issues (concealing brackets):
-" if exists('g:loaded_webdevicons')
-" call webdevicons#refresh()
-" endif
-
-" }}}
-" pointbreak: {{{
+" Pointbreak: {{{
 let g:pointbreak_char = "🔴"
 let g:pointbreak_autostart = 1
 
 nnoremap <leader>b :PointbreakAdd<CR>
 nnoremap <leader>br :PointbreakRemove<CR>
 " }}}
-
+" AsyncRun: {{{
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 
 autocmd User AsyncRunPre :copen
-" autocmd User AsyncRunPre call CheckMake()
+" }}}
 
-" function! CheckMake()
-"   if exists(':Make') == 2
-"     " noautocmd Make
-"   else
-"     " silent noautocmd make!
-"     redraw!
-"     return 'call fugitive#cwindow()'
-"   endif
-" endfunction
+" Define user commands for updating/cleaning the plugins.
+" Each of them loads minpac, reloads .vimrc to register the
+" information of plugins, then performs the task.
+command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update()
+command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
