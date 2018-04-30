@@ -1,5 +1,6 @@
 " Avery Wagar
 " Functional Config {{{
+" set shortmess=I " Read :help shortmess for everything else.
 set nocompatible
 filetype off
 " Turn on syntax highlighting
@@ -15,27 +16,15 @@ cd ~/usr/dev/
 " Folding
 set foldmethod=marker
 set foldlevel=0
-"
 "Show line number
 set number
 set relativenumber
 
-" Show file stats
-set ruler
-
-" Blink cursor on error instead of beeping (grr)
-" set noerrorbells
-
-" Encoding
-set encoding=utf-8
-set fileencoding=utf-8
-set fileencodings=ucs-bom,utf8,prc
 " Whitespace
 set wrap " Wrap lines
 set linebreak " Wraps lines a words
 set breakindent " Consistent indent of wrapped linex
 set textwidth=100 " Wrap at 100 chars
-" set formatoptions=tcqrn1
 set expandtab " Use spaces instead of tan
 set softtabstop=2 " Number of spaces per tab
 set shiftwidth=2   " Number of auto indent spaces
@@ -49,12 +38,8 @@ let g:netrw_browse_split = 4
 let g:netrw_winsize = 15
 let g:netrw_altv = 1
 let g:netrw_preview=1           " open previews vertically
-" augroup ProjectDrawer
-"   autocmd!
-"   autocmd VimEnter * :Vexplore
-" augroup END
 
-" Toggle Vexplore with Ctrl-E
+" Toggle Vexplore with leader-t
 function! ToggleVExplorer()
   if exists("t:expl_buf_num")
       let expl_win_num = bufwinnr(t:expl_buf_num)
@@ -77,7 +62,6 @@ map <silent> <leader>t :call ToggleVExplorer()<CR>
 
 
 " Cursor motion
-set scrolloff=3
 set backspace=indent,eol,start " Use backspace in insert mode
 
 " Different Cursor shape in tmux 
@@ -91,11 +75,6 @@ endif
 
 set hidden " Allow hidden buffers
 set ttyfast " Rendering
-set laststatus=2 " Status bar
-
-" Last line
-set noshowcmd " Disable last line
-set noshowmode " ^^
 
 " Searching
 set hlsearch "  Highlight all search results
@@ -104,43 +83,28 @@ set smartcase " Enable smart case
 set ignorecase " Always case-insensitive
 set showmatch " Highlight matching brace
 
-
 filetype plugin indent on
-
 
 "Spell checking for spefic files
 autocmd FileType md,markdown,txt, setlocal spell
 
 "Make vim more natural
-set history=100
 set splitbelow
 set splitright
 
-set number relativenumber
+" augroup numbertoggle
+"   autocmd!
 
-augroup numbertoggle
-  autocmd!
-
-  augroup numbertoggle
-    autocmd!
-    autocmd BufEnter,FocusGained,WinEnter * if &nu | set rnu   | endif
-    autocmd BufEnter,FocusGained,WinEnter * if &nu | :SignifyEnable | endif
-    autocmd BufLeave,FocusLost,WinLeave   * if &nu | set nornu | endif
-    autocmd BufLeave,FocusLost,WinLeave   * if &nu | :SignifyDisable | endif
-  augroup END
-
-  " }}}
-  " Cursor {{{
-" highlight Cursor guifg=white guibg=black
-" highlight iCursor guifg=white guibg=steelblue
-" set guicursor=n-v-c:block-Cursor
-" set guicursor+=i:ver100-iCursor
-" set guicursor+=n-v-c:blinkon0
-" set guicursor+=i:blinkwait10
+"   augroup numbertoggle
+"     autocmd!
+"     autocmd BufEnter,FocusGained,WinEnter * if &nu | set rnu   | endif
+"     autocmd BufEnter,FocusGained,WinEnter * if &nu | :SignifyEnable | endif
+"     autocmd BufLeave,FocusLost,WinLeave   * if &nu | set nornu | endif
+"     autocmd BufLeave,FocusLost,WinLeave   * if &nu | :SignifyDisable | endif
+"   augroup END
 
   " }}}
 " Colors {{{
-
 set t_Co=256
 
 set termguicolors

@@ -15,18 +15,22 @@ if exists('*minpac#init')
   " call minpac#add('wikitopian/hardmode')
 
   " Autocomplete
-  call minpac#add('autozimu/LanguageClient-neovim', {'do': '!sh ./install.sh' })
+  call minpac#add('autozimu/LanguageClient-neovim', {'do': '!sh ./install.sh', 'branch': 'next' })
 
   " call minpac#add('roxma/nvim-completion-manager')
-  call minpac#add('Shougo/deoplete.nvim')
+  call minpac#add('Shougo/deoplete.nvim', {'do': 'call DoRemote()'})
 
-  " Snippets
-  call minpac#add('Shougo/neosnippet')
-  call minpac#add('Shougo/neosnippet-snippets')
+
+  " C# (No language server, yet.)
+  " call minpac#add('OmniSharp/omnisharp-vim')
+  "
+  " Snippets 
+  " call minpac#add('Shougo/neosnippet')
+  " call minpac#add('Shougo/neosnippet-snippets')
 
   " Prose mode plugins
   " call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
-  call minpac#add('suan/vim-instant-markdown')
+  call minpac#add('davinche/godown-vim')
   call minpac#add('junegunn/goyo.vim')
   call minpac#add('junegunn/limelight.vim')
 
@@ -35,13 +39,10 @@ if exists('*minpac#init')
   call minpac#add('ryanoasis/vim-devicons')
 
   " Status bar
-  call minpac#add('ajmwagar/lightline-deus') 
-  call minpac#add('taohex/lightline-buffer')
-  call minpac#add('itchyny/lightline.vim')
+  call minpac#add('ajmwagar/lightline-deus') | call minpac#add('taohex/lightline-buffer') | call minpac#add('itchyny/lightline.vim')
 
   " Searching/Fuzzy Finding
-  call minpac#add('junegunn/fzf', { 'do': './install --all' })
-  call minpac#add('junegunn/fzf.vim')
+  call minpac#add('junegunn/fzf', { 'do': './install --all' }) | call minpac#add('junegunn/fzf.vim')
   " call minpac#add('mileszs/ack.vim')
 
   " Git support
@@ -58,16 +59,16 @@ endif
 " Completion {{{
 " nvim-completion-manager
 
-" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+"  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+"  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
 
-" autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Deoplete
 let g:deoplete#enable_at_startup = 1 " Auto start
-
-
+let g:deoplete#enable_camel_case = 1 
+let g:deoplete#ignore_case = 1 
 let g:deoplete#enable_smart_case = 1 " Smart case
 let g:deoplete#auto_complete_start_length = 2 " Stop bothering me
 let g:deoplete#enable_refresh_always = 1
@@ -102,41 +103,15 @@ inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
 let g:LanguageClient_autoStart = 1
 
 " Minimal LSP configuration for JavaScript
-let g:LanguageClient_serverCommands = {}
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rls'],
+    \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['javascript-typescript-stdio'],
+    \ 'python': ['pyls'],
+    \ 'java': ['jdtls']
+    \ }
 
-" Rust
-if executable('rls')
-  let g:LanguageClient_serverCommands.rust = ['rls']
-else 
-  echo "rls is not installed!\n"
-  :cq
-endif
-
-" Python
-if executable('pyls')
-  let g:LanguageClient_serverCommands.python = ['pyls']
-else 
-  echo "pyls server not installed!\n"
-  :cq
-endif
-if executable('jdtls')
-  let g:LanguageClient_serverCommands.java = ['jdtls']
-else 
-  echo "jdtls server not installed!\n"
-  :cq
-endif
-
-" JS
-if executable('javascript-typescript-stdio')
-  let g:LanguageClient_serverCommands.javascript = ['javascript-typescript-stdio']
-  let g:LanguageClient_serverCommands["javascript.jsx"] = ['javascript-typescript-stdio']
-  " Use LanguageServer for omnifunc completion
-  autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
-  autocmd FileType javascript setlocal completefunc=LanguageClient#complete
-else
-  echo "javascript-typescript-stdio server not installed!\n"
-  :cq
-endif
+autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
 
 " Smarter vim features
 " Documentation
@@ -147,26 +122,31 @@ nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 " Symbols
 nnoremap <silent> <C-s> :call LanguageClient_textDocument_documentSymbol()<CR>
+" Formatting 
+nnoremap <silent> <C-f> :call LanguageClient_textDocument_formatting()<CR>
+
+nnoremap <silent> <leader>r :call LanguageClient_textDocument_references()<CR>
 
 " Auto start server
-autocmd FileType javascript :LanguageClientStart<CR>
-autocmd FileType java :LanguageClientStart<CR>
-autocmd FileType python :LanguageClientStart<CR>
-autocmd FileType rust :LanguageClientStart<CR>
+" autocmd FileType javascript :LanguageClientStart<CR>
+" autocmd FileType java :LanguageClientStart<CR>
+" autocmd FileType python :LanguageClientStart<CR>
+" autocmd FileType rust :LanguageClientStart<CR>
 
 
+      " signText": "⚠️ ⛔️",
 " better diagnotics
 let g:LanguageClient_diagnosticsDisplay =  {
       \ 1: {
       \ "name": "Error",
       \ "texthl": "ALEError",
-      \ "signText": "⛔️",
+      \ "signText": "✘",
       \ "signTexthl": "ALEErrorSign",
       \ },
       \ 2: {
       \ "name": "Warning",
       \ "texthl": "ALEWarning",
-      \ "signText": "⚠️ ",
+      \ "signText": "⚠",
       \ "signTexthl": "ALEWarningSign",
       \ },
       \ 3: {
@@ -204,6 +184,8 @@ let g:signify_realtime = 1
 " Goyo {{{
 set dictionary=/usr/share/dict/words
 function! s:goyo_enter()
+  " packadd goyo.vim
+  " packadd limelight.vim
   set spell 
   set noci
   set nosi 
@@ -241,9 +223,6 @@ let g:ackprg = 'rg --vimgrep --no-heading'
 if !has('gui_running')
   noremap <silent> <C-p> :Rg<return>
   noremap <silent> <C-b> :Buffers<cr>
-endif
-if has('gui_running')
-  noremap <silent> <C-p> :GonvimFuzzyFiles
 endif
 
 noremap <C-t> :LAck<space>
@@ -311,8 +290,8 @@ let g:lightline = {
 
 
 function! Timer()
-  " return strftime("%H%S")
-  return strftime("%H:%M") . " 🕒" "Timer in status line
+  return strftime("%H:%S")
+  " return strftime("%H:%M") . " 🕒" "Timer in status line
   " return !date
 endfunction
 
@@ -397,3 +376,10 @@ autocmd User AsyncRunPre :copen
 " information of plugins, then performs the task.
 command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update()
 command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
+
+" command! AsyncRun packadd asyncrun.vim | call AsyncRun()
+
+
+" autocmd FileType markdown packadd godown-vim
+
+

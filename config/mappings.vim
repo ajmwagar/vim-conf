@@ -1,5 +1,4 @@
 "Mappings {{{
-"Netrw
 "Better Focus
 map <C-h> <C-w>h
 map <C-j> <C-w>j
@@ -11,16 +10,11 @@ noremap <leader>] :bn<return>
 "Find and replace
 map <leader>fr :%s///g<left><left>
 map <leader>frl :s///g<left><left>
-map <leader><space> :let @/=''<cr> " clear search
-"Loc List
-" map <leader>e :copen<CR>
-" map <leader>w :cclose<CR>
+map <silent><leader><space> :let @/=''<cr> " clear search
 " Move up/down editor lines
-nnoremap j gj
-nnoremap k gk
+nnoremap <silent> j gj
+nnoremap <silent> k gk
 "Goyo
-nnoremap <leader>z :Goyo<return>
-
-" Fuzzy find symbol
-nnoremap <c-s> :call LanguageClient_textDocument_documentSymnol
+nnoremap <silent><leader>z :Goyo<return>
+nnoremap Q <nop>
 " }}}
