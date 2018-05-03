@@ -1,8 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =6
-let g:netrw_dirhist_1='/home/ajmwagar/usr/dev/git/outrigger'
-let g:netrw_dirhist_2='/home/ajmwagar/usr/dev/git/outrigger/controllers'
-let g:netrw_dirhist_3='/home/ajmwagar/usr/dev/git/outrigger/controllers/settings'
-let g:netrw_dirhist_4='/home/ajmwagar/usr/dev'
-let g:netrw_dirhist_5='/home/ajmwagar/usr/dev/git/outrigger/controllers/settings'
-let g:netrw_dirhist_6='/home/ajmwagar/usr/dev/git/outrigger/models'

@@ -16,13 +16,12 @@ noremap <leader>] :bn<return>
 "Find and replace
 map <leader>fr :%s///g<left><left>
 map <leader>frl :s///g<left><left>
-map <leader><space> :let @/=''<cr> " clear search
+map <silent><leader><space> :let @/=''<cr> " clear search
 
 " Move up/down editor lines
-nnoremap j gj
-nnoremap k gk
-
+nnoremap <silent> j gj
+nnoremap <silent> k gk
 "Goyo
-nnoremap <leader>z :Goyo<return>
-
+nnoremap <silent><leader>z :Goyo<return>
+nnoremap Q <nop>
 " }}}
