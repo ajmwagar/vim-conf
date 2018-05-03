@@ -24,7 +24,7 @@ set relativenumber
 set wrap " Wrap lines
 set linebreak " Wraps lines a words
 set breakindent " Consistent indent of wrapped linex
-set textwidth=100 " Wrap at 100 chars
+" set textwidth=100 " Wrap at 100 chars
 set expandtab " Use spaces instead of tan
 set softtabstop=2 " Number of spaces per tab
 set shiftwidth=2   " Number of auto indent spaces

@@ -11,15 +11,14 @@ if exists('*minpac#init')
   " Syntax 
   call minpac#add('sheerun/vim-polyglot')
   call minpac#add('jiangmiao/auto-pairs') " Auto close pairs
-
-  " call minpac#add('wikitopian/hardmode')
+  call minpac#add('Konfekt/FastFold') " Make Vim fast again!
+  call minpac#add('godlygeek/tabular')
 
   " Autocomplete
   call minpac#add('autozimu/LanguageClient-neovim', {'do': '!sh ./install.sh', 'branch': 'next' })
 
   " call minpac#add('roxma/nvim-completion-manager')
   call minpac#add('Shougo/deoplete.nvim', {'do': 'call DoRemote()'})
-
 
   " C# (No language server, yet.)
   " call minpac#add('OmniSharp/omnisharp-vim')
@@ -30,7 +29,7 @@ if exists('*minpac#init')
 
   " Prose mode plugins
   " call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
-  call minpac#add('davinche/godown-vim')
+  call minpac#add('davinche/godown-vim', {'type': 'opt'})
   call minpac#add('junegunn/goyo.vim')
   call minpac#add('junegunn/limelight.vim')
 
@@ -67,15 +66,12 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Deoplete
 let g:deoplete#enable_at_startup = 1 " Auto start
-let g:deoplete#enable_camel_case = 1 
-let g:deoplete#ignore_case = 1 
 let g:deoplete#enable_smart_case = 1 " Smart case
 let g:deoplete#auto_complete_start_length = 2 " Stop bothering me
-let g:deoplete#enable_refresh_always = 1
+let g:deoplete#enable_refresh_always = 0
 
 let g:deoplete#max_abbr_width = 0
 let g:deoplete#max_menu_width = 0
-
 
 set completeopt-=preview
 
@@ -115,17 +111,17 @@ autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
 
 " Smarter vim features
 " Documentation
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 " GoTo def
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 " Rename
-nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 " Symbols
-nnoremap <silent> <C-s> :call LanguageClient_textDocument_documentSymbol()<CR>
+nnoremap <silent> <C-s> :call LanguageClient#textDocument_documentSymbol()<CR>
 " Formatting 
-nnoremap <silent> <C-f> :call LanguageClient_textDocument_formatting()<CR>
+nnoremap <silent> <C-f> :call LanguageClient#textDocument_formatting()<CR>
 
-nnoremap <silent> <leader>r :call LanguageClient_textDocument_references()<CR>
+nnoremap <silent> <leader>r :call LanguageClient#textDocument_references()<CR>
 
 " Auto start server
 " autocmd FileType javascript :LanguageClientStart<CR>
@@ -212,8 +208,6 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 " }}}
 "fuzzy finder/ack Settings {{{
-set noshowmode
-
 "Use ripgrep
 let g:ackprg = 'rg --vimgrep --no-heading'
 
@@ -283,15 +277,15 @@ let g:lightline = {
       \   'separator': ''
       \ },
       \ 'active': {
-      \   'left': [['mode', 'paste'], ['gitbranch', 'filename', 'filetype', 'modified']],
+      \   'left': [['mode', 'paste'], ['gitbranch', 'filetype', 'modified']],
       \   'right': [['time'], ['lineinfo'],  ['percent']]
       \ }
       \ }
 
 
 function! Timer()
-  return strftime("%H:%S")
-  " return strftime("%H:%M") . " 🕒" "Timer in status line
+  " return strftime("%H:%S")
+  return strftime("%H:%M") . " PST" "Timer in status line
   " return !date
 endfunction
 
@@ -303,8 +297,12 @@ function! MyGit()
 endfunction
 
 function! MyFiletype()
+  if expand('%:t') != ''
+    return expand('%:t') . " " .  WebDevIconsGetFileTypeSymbol()
+  else
+    return ''
+  endif
   " return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol()  ''
-  return WebDevIconsGetFileTypeSymbol()
 endfunction
 
 function! MyFileformat()
@@ -359,27 +357,26 @@ let g:lightline_buffer_maxflen = 30
 
 " }}}
 " Pointbreak: {{{
-let g:pointbreak_char = "🔴"
-let g:pointbreak_autostart = 1
+" let g:pointbreak_char = "🔴"
+" let g:pointbreak_autostart = 1
 
-nnoremap <leader>b :PointbreakAdd<CR>
-nnoremap <leader>br :PointbreakRemove<CR>
+" nnoremap <leader>b :PointbreakAdd<CR>
+" nnoremap <leader>br :PointbreakRemove<CR>
 " }}}
 " AsyncRun: {{{
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 
 autocmd User AsyncRunPre :copen
 " }}}
-
+" Packadd: {{{
 " Define user commands for updating/cleaning the plugins.
 " Each of them loads minpac, reloads .vimrc to register the
 " information of plugins, then performs the task.
 command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update()
 command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
 
-" command! AsyncRun packadd asyncrun.vim | call AsyncRun()
+"command! AsyncRun packadd asyncrun.vim | call AsyncRun()
 
-
-" autocmd FileType markdown packadd godown-vim
-
-
+" Godown packadd
+autocmd FileType markdown packadd godown-vim
+" }}}
