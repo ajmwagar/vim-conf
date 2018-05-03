@@ -24,4 +24,5 @@ nnoremap <silent> k gk
 "Goyo
 nnoremap <silent><leader>z :Goyo<return>
 nnoremap Q <nop>
+autocmd VimEnter,BufEnter,BufWinEnter * silent! iunmap <buffer> <M-">
 " }}}

@@ -4,15 +4,14 @@ if exists('*minpac#init')
   " minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
   call minpac#add('k-takata/minpac', {'type': 'opt'})
 
-  function! DoRemote(arg)
+  function! DoRemote()
     UpdateRemotePlugins
   endfunction
 
   " Syntax 
-  call minpac#add('sheerun/vim-polyglot')
   call minpac#add('jiangmiao/auto-pairs') " Auto close pairs
-  call minpac#add('Konfekt/FastFold') " Make Vim fast again!
-  call minpac#add('godlygeek/tabular')
+  call minpac#add('sheerun/vim-polyglot') " Syntax
+  call minpac#add('godlygeek/tabular')  " Formatting
 
   " Autocomplete
   call minpac#add('autozimu/LanguageClient-neovim', {'do': '!sh ./install.sh', 'branch': 'next' })
@@ -20,9 +19,6 @@ if exists('*minpac#init')
   " call minpac#add('roxma/nvim-completion-manager')
   call minpac#add('Shougo/deoplete.nvim', {'do': 'call DoRemote()'})
 
-  " C# (No language server, yet.)
-  " call minpac#add('OmniSharp/omnisharp-vim')
-  "
   " Snippets 
   " call minpac#add('Shougo/neosnippet')
   " call minpac#add('Shougo/neosnippet-snippets')
@@ -214,10 +210,8 @@ let g:ackprg = 'rg --vimgrep --no-heading'
 let g:rg_find_command = 'rg --files --follow -g "!{.config,etc,bin,node_modules,.git}/*"'
 command! -bang -nargs=* Rg call fzf#vim#files('.', {'source': g:rg_find_command}, 0) 
 let g:ackprg = 'rg --vimgrep --no-heading'
-if !has('gui_running')
-  noremap <silent> <C-p> :Rg<return>
-  noremap <silent> <C-b> :Buffers<cr>
-endif
+noremap <silent> <C-p> :Rg<return>
+noremap <silent> <C-b> :Buffers<cr>
 
 noremap <C-t> :LAck<space>
 
@@ -310,6 +304,7 @@ function! MyFileformat()
 endfunction
 
 
+
 " function! LightlineLinterWarnings() abort
 "   let l:counts = ale#statusline#Count(bufnr(''))
 "   let l:all_errors = l:counts.error + l:counts.style_error
@@ -355,6 +350,7 @@ let g:lightline_buffer_enable_devicons = 1
 " max file name length
 let g:lightline_buffer_maxflen = 30
 
+
 " }}}
 " Pointbreak: {{{
 " let g:pointbreak_char = "🔴"
@@ -374,8 +370,6 @@ autocmd User AsyncRunPre :copen
 " information of plugins, then performs the task.
 command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update()
 command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
-
-"command! AsyncRun packadd asyncrun.vim | call AsyncRun()
 
 " Godown packadd
 autocmd FileType markdown packadd godown-vim

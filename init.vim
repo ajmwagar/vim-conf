@@ -8,6 +8,7 @@ if &compatible
 endif
 
 " Begone default plugins
+let g:loaded_matchit = 1
 let g:loaded_gzip = 1
 let g:loaded_zipPlugin = 1
 let g:loaded_logipat = 1
