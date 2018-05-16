@@ -28,6 +28,8 @@ set shiftwidth=2   " Number of auto indent spaces
 set autoindent " Auto indent
 set noshiftround " Indent lines by 2 not by nearest mutiple of two
 
+" Printing
+set pdev=Brother_HL-4570CDW_series
 
 " Netrw
 let g:netrw_liststyle = 3
@@ -184,21 +186,26 @@ nnoremap <C-t> :Sterm<CR>
 
 " }}}
 " Colors {{{
-set t_Co=256
 
-set termguicolors
 " Fix colors in tmux
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-let &t_ZH="\e[3m"
-let &t_ZR="\e[23m"
+if !has('gui_running')
+  " Font
+  set guifont ="Knack Nerd Font"
+  " Colors
+  set termguicolors
+  set t_Co=256
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  let &t_ZH="\e[3m"
+  let &t_ZR="\e[23m"
+  let g:deus_termcolors=256
+  let NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
 
 set background=dark    " Setting dark mode
+let g:deus_italics = 1
 "set background=light    " Setting light mode
 set fillchars+=vert:\ 
-let g:deus_termcolors=256
-let NVIM_TUI_ENABLE_TRUE_COLOR=1
-let g:deus_italics = 1
 colorscheme deus
 
 if has("gui_running")

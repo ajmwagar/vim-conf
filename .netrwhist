@@ -1,4 +1,5 @@
 let g:netrw_dirhistmax  =10
+<<<<<<< HEAD
 let g:netrw_dirhist_cnt =8
 let g:netrw_dirhist_1='/home/ajmwagar/usr/hack'
 let g:netrw_dirhist_2='/home/ajmwagar/usr/hack/boa'
@@ -8,3 +9,12 @@ let g:netrw_dirhist_5='/home/ajmwagar/usr/hack/boa/boa'
 let g:netrw_dirhist_6='/home/ajmwagar/usr/hack/boa/boa/tools'
 let g:netrw_dirhist_7='/home/ajmwagar/usr/hack/boa/boa'
 let g:netrw_dirhist_8='/home/ajmwagar/usr/hack/boa/boa/attack'
+=======
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/home/ajmwagar/.config/nvim/config'
+let g:netrw_dirhist_2='/home/ajmwagar/.config/nvim'
+let g:netrw_dirhist_3='/home/ajmwagar/.config/nvim/config'
+let g:netrw_dirhist_4='/home/ajmwagar/.config/nvim'
+let g:netrw_dirhist_5='/home/ajmwagar/.config/nvim/config'
+let g:netrw_dirhist_6='/home/ajmwagar/.config/nvim'
+>>>>>>> 4a409b4b456833df8280b32c57ff4aab1f48a630
