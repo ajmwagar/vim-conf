@@ -1,23 +1,26 @@
 "Mappings {{{
 " Open docs
 
-nnoremap <silent> K :call ZealDoc()<CR>
+nnoremap K :call ZealDoc()<CR>
 
 
 function! ZealDoc()
   if expand('%:e') == 'py'
-    execute "silent !zeal \"python: " . expand('<cword>') . "\"&\n\n"
+    execute "silent !zeal \"python: " . expand('<cword>') . "\"\n\n"
   elseif expand('%:e') == 'rs'
-    execute "silent !zeal \"rust: " . expand('<cword>') . "\"&\n\n"
+    execute "silent !zeal \"rust: " . expand('<cword>') . "\"\n\n"
   elseif expand('%:e') == 'js'
-    execute "silent !zeal \"nodejs: " . expand('<cword>') . "\"&\n\n"
+    execute "silent !zeal \"nodejs: " . expand('<cword>') . "\"\n\n"
+  elseif expand('%:e') == 'css'
+    execute "silent !zeal \"css: " . expand('<cword>') . "\"\n\n"
+    echo 'hi'
   elseif expand('%:e') == 'cs'
-    execute "silent !zeal \"unity3d: " . expand('<cword>') . "\"&\n\n"
+    execute "silent !zeal \"unity3d: " . expand('<cword>') . "\"\n\n"
   elseif expand('%:e') != ''
-    execute "silent !zeal \"" . expand('%:e') . ": " . expand('<cword>') . "\"&\n\n"
+    execute "silent !zeal \"" . expand('%:e') . ": " . expand('<cword>') . "\"\n\n"
 
   else
-    execute "silent !zeal \"" . expand('<cword>') . "\"&\n\n"
+    execute "silent !zeal \"" . expand('<cword>') . "\"\n\n"
   endif
 endfunction
 
