@@ -1,9 +1,26 @@
 "Mappings {{{
-"Better Focus
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
+" Open docs
+
+nnoremap <silent> K :call ZealDoc()<CR>
+
+
+function! ZealDoc()
+  if expand('%:e') == 'py'
+    execute "silent !zeal \"python: " . expand('<cword>') . "\"&\n\n"
+  elseif expand('%:e') == 'rs'
+    execute "silent !zeal \"rust: " . expand('<cword>') . "\"&\n\n"
+  elseif expand('%:e') == 'js'
+    execute "silent !zeal \"nodejs: " . expand('<cword>') . "\"&\n\n"
+  elseif expand('%:e') == 'cs'
+    execute "silent !zeal \"unity3d: " . expand('<cword>') . "\"&\n\n"
+  elseif expand('%:e') != ''
+    execute "silent !zeal \"" . expand('%:e') . ": " . expand('<cword>') . "\"&\n\n"
+
+  else
+    execute "silent !zeal \"" . expand('<cword>') . "\"&\n\n"
+  endif
+endfunction
+
 " Switching Buffers
 noremap <leader>[ :bp<return>
 noremap <leader>] :bn<return>

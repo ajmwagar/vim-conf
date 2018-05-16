@@ -17,18 +17,19 @@ if exists('*minpac#init')
   " Autocomplete
   call minpac#add('autozimu/LanguageClient-neovim', {'do': '!sh ./install.sh', 'branch': 'next' })
 
-  " call minpac#add('roxma/nvim-completion-manager')
+  " Documentation
+  call minpac#add('Konfekt/vim-zeal')
+
   call minpac#add('Shougo/deoplete.nvim', {'do': 'call DoRemote()'})
 
   " C# (No language server, yet.)
   " call minpac#add('OmniSharp/omnisharp-vim')
-  "
+
   " Snippets 
-  " call minpac#add('Shougo/neosnippet')
-  " call minpac#add('Shougo/neosnippet-snippets')
+  call minpac#add('SirVer/ultisnips')
 
   " Prose mode plugins
-  " call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
+  call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
   call minpac#add('davinche/godown-vim', {'type': 'opt'})
   call minpac#add('junegunn/goyo.vim')
   call minpac#add('junegunn/limelight.vim')
@@ -42,7 +43,7 @@ if exists('*minpac#init')
 
   " Searching/Fuzzy Finding
   call minpac#add('junegunn/fzf', { 'do': './install --all' }) | call minpac#add('junegunn/fzf.vim')
-  " call minpac#add('mileszs/ack.vim')
+  call minpac#add('mileszs/ack.vim')
 
   " Git support
   call minpac#add('tpope/vim-fugitive')
@@ -90,7 +91,23 @@ inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
 
 
 " Sources:
+let g:deoplete#sources = {}
+let g:deoplete#ignore_sources = {}
 
+let g:deoplete#sources.markdown = ['look']
+" Ignore look in code files
+let g:deoplete#ignore_sources.java = ['look']
+let g:deoplete#ignore_sources['cs'] = ['look']
+let g:deoplete#ignore_sources['javascript'] = ['look']
+let g:deoplete#ignore_sources['rust'] = ['look']
+let g:deoplete#ignore_sources['python'] = ['look']
+let g:deoplete#ignore_sources['snippets'] = ['look']
+let g:deoplete#ignore_sources['sh'] = ['look']
+let g:deoplete#ignore_sources['go'] = ['look']
+let g:deoplete#ignore_sources['pug'] = ['look']
+let g:deoplete#ignore_sources['css'] = ['look']
+let g:deoplete#ignore_sources['html'] = ['look']
+let g:deoplete#ignore_sources['log'] = ['look']
 
 " }}}
 " LSP {{{
@@ -100,18 +117,19 @@ let g:LanguageClient_autoStart = 1
 
 " Minimal LSP configuration for JavaScript
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rls'],
-    \ 'javascript': ['javascript-typescript-stdio'],
-    \ 'javascript.jsx': ['javascript-typescript-stdio'],
-    \ 'python': ['pyls'],
-    \ 'java': ['jdtls']
-    \ }
+      \ 'rust': ['rls'],
+      \ 'javascript': ['javascript-typescript-stdio'],
+      \ 'javascript.jsx': ['javascript-typescript-stdio'],
+      \ 'python': ['pyls'],
+      \ 'java': ['jdtls']
+      \ }
 
 autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
 
 " Smarter vim features
 " Documentation
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+"
 " GoTo def
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 " Rename
@@ -130,7 +148,7 @@ nnoremap <silent> <leader>r :call LanguageClient#textDocument_references()<CR>
 " autocmd FileType rust :LanguageClientStart<CR>
 
 
-      " signText": "⚠️ ⛔️",
+" signText": "⚠️ ⛔️",
 " better diagnotics
 let g:LanguageClient_diagnosticsDisplay =  {
       \ 1: {
@@ -166,28 +184,38 @@ let g:LanguageClient_diagnosticsDisplay =  {
 "   \ <leader>lr :call LanguageClient_textDocument_rename()<cr>
 " }}}
 " Snippets {{{
-imap <c-j>     <Plug>(neosnippet_expand_or_jump)
-vmap <c-j>     <Plug>(neosnippet_expand_or_jump)
-inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
-vmap <c-u>     <Plug>(neosnippet_expand_target)
-" expand parameters
-let g:neosnippet#enable_completed_snippet=1
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+" Unmap these
+inoremap <c-n> <NOP>
+inoremap <c-p> <NOP>
+
+let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsJumpForwardTrigger="<c-n>"
+let g:UltiSnipsJumpBackwardTrigger="<c-p>" 
+let g:UltiSnipsSnippetDirectories=["/home/ajmwagar/.config/nvim/UltiSnips"] " Setup dir
+
+
+" imap <c-j>     <Plug>(neosnippet_expand_or_jump)
+" vmap <c-j>     <Plug>(neosnippet_expand_or_jump)
+" inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
+" vmap <c-u>     <Plug>(neosnippet_expand_target)
+" " expand parameters
+" let g:neosnippet#enable_completed_snippet=1
 " }}}
 " Signify {{{
 let g:signify_vcs_list = ['git']
 let g:signify_realtime = 1
 " }}}
+" Prose: {{{
 " Goyo {{{
 set dictionary=/usr/share/dict/words
 function! s:goyo_enter()
-  " packadd goyo.vim
-  " packadd limelight.vim
   set spell 
   set noci
   set nosi 
   set noai 
   colorscheme whiteboard
-  "set noshowcmd
+  set noshowcmd
   set scrolloff=999
   :Limelight
   " :SignifyToggle
@@ -206,6 +234,7 @@ endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
+" }}}
 " }}}
 "fuzzy finder/ack Settings {{{
 "Use ripgrep
