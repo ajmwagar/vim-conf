@@ -12,7 +12,7 @@ if exists('*minpac#init')
   call minpac#add('jiangmiao/auto-pairs') " Auto close pairs
   call minpac#add('sheerun/vim-polyglot') " Syntax
   " call minpac#add('godlygeek/tabular')  " Formatting
-  " call minpac#add('lambdalisue/suda.vim')
+  call minpac#add('lambdalisue/suda.vim')
 
   " Autocomplete
   call minpac#add('autozimu/LanguageClient-neovim', {'do': '!sh ./install.sh', 'branch': 'next' })
@@ -40,7 +40,7 @@ if exists('*minpac#init')
   call minpac#add('mileszs/ack.vim')
 
   " Git support
-  call minpac#add('tpope/vim-fugitive')
+   call minpac#add('tpope/vim-fugitive')
   call minpac#add('mhinz/vim-signify')
 
   " build

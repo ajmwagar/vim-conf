@@ -1,6 +1,8 @@
 " Avery Wagar
 
 " Functional Config {{{
+" Fun: {{{
+"
 " set shortmess=I " Read :help shortmess for everything else.
 set nocompatible
 filetype off
@@ -17,6 +19,7 @@ set foldlevel=0
 set number
 set relativenumber
 
+" }}}
 
 " Whitespace:{{{
 "
@@ -84,16 +87,20 @@ endfunction
 function! SetProjectRoot()
   " default to current
   lcd %:p:h
-  let git_dir = system("git rev-parse --show-toplevel")
+  let my_git_dir = system("git rev-parse --show-toplevel")
   " Check output
-  let is_not_git_dir = matchstr(git_dir, '^fatal:.*')
+  let is_not_git_dir = matchstr(my_git_dir, '^fatal:.*')
+  let is_not_dot_git_dir = matchstr(my_git_dir, '\n')
+
   if empty(is_not_git_dir)
-    lcd `=git_dir`
+    if empty(is_not_dot_git_dir)
+      lcd `=my_git_dir`
+    endif
   endif
 endfunction
 
-autocmd BufRead *
-      \ call SetProjectRoot()
+autocmd BufNewFile *
+    \   call SetProjectRoot()
 
 autocmd CursorMoved silent *
       \ if &filetype == 'netrw' |
