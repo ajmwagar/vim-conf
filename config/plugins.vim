@@ -11,13 +11,11 @@ if exists('*minpac#init')
   " Syntax 
   call minpac#add('jiangmiao/auto-pairs') " Auto close pairs
   call minpac#add('sheerun/vim-polyglot') " Syntax
-  call minpac#add('godlygeek/tabular')  " Formatting
+  " call minpac#add('godlygeek/tabular')  " Formatting
+  " call minpac#add('lambdalisue/suda.vim')
 
   " Autocomplete
   call minpac#add('autozimu/LanguageClient-neovim', {'do': '!sh ./install.sh', 'branch': 'next' })
-
-  " Documentation
-  call minpac#add('Konfekt/vim-zeal')
 
   call minpac#add('Shougo/deoplete.nvim', {'do': 'call DoRemote()'})
 
@@ -32,7 +30,7 @@ if exists('*minpac#init')
 
   " Colorsheme
   call minpac#add('ajmwagar/vim-deus')
-  call minpac#add('ryanoasis/vim-devicons')
+  " call minpac#add('ryanoasis/vim-devicons')
 
   " Status bar
   call minpac#add('ajmwagar/lightline-deus') | call minpac#add('taohex/lightline-buffer') | call minpac#add('itchyny/lightline.vim')
@@ -182,12 +180,12 @@ let g:LanguageClient_diagnosticsDisplay =  {
 " Snippets {{{
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 " Unmap these
-inoremap <c-n> <NOP>
-inoremap <c-p> <NOP>
+map <C-n> <NOP>
+map <C-p> <NOP>
 
 let g:UltiSnipsExpandTrigger="<c-j>"
 let g:UltiSnipsJumpForwardTrigger="<c-n>"
-let g:UltiSnipsJumpBackwardTrigger="<c-p>" 
+let g:UltiSnipsJumpBackwardTrigger="<c-b>" 
 let g:UltiSnipsSnippetDirectories=["/home/ajmwagar/.config/nvim/UltiSnips"] " Setup dir
 
 
@@ -314,14 +312,14 @@ endfunction
 
 function! MyGit()
   if (fugitive#head() != '')
-    return fugitive#head() . " "
+    return fugitive#head() " 
   endif
   return ''
 endfunction
 
 function! MyFiletype()
   if expand('%:t') != ''
-    return expand('%:t') . " " .  WebDevIconsGetFileTypeSymbol()
+    return expand('%:t') . " "  " .  WebDevIconsGetFileTypeSymbol()
   else
     return ''
   endif
@@ -329,7 +327,7 @@ function! MyFiletype()
 endfunction
 
 function! MyFileformat()
-  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+  return winwidth(0) > 70 ? (&fileformat . ' ' )  " . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
 

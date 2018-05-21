@@ -17,7 +17,9 @@ set foldlevel=0
 set number
 set relativenumber
 
-" Whitespace
+
+" Whitespace:{{{
+"
 set wrap " Wrap lines
 set linebreak " Wraps lines a words
 set breakindent " Consistent indent of wrapped linex
@@ -27,11 +29,14 @@ set softtabstop=2 " Number of spaces per tab
 set shiftwidth=2   " Number of auto indent spaces
 set autoindent " Auto indent
 set noshiftround " Indent lines by 2 not by nearest mutiple of two
+" }}}
 
 " Printing
 set pdev=Brother_HL-4570CDW_series
 
-" Netrw
+" Netrw: {{{
+
+
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
 let g:netrw_winsize = 15
@@ -88,17 +93,19 @@ function! SetProjectRoot()
 endfunction
 
 autocmd BufRead *
-      \ call FollowSymlink() |
       \ call SetProjectRoot()
 
 autocmd CursorMoved silent *
       \ if &filetype == 'netrw' |
-      \   call FollowSymlink() | call SetProjectRoot() |
+      \   call SetProjectRoot() |
       \ endif
 
+" }}}
 
-" Cursor motion
+" Cursor motion: {{{
+"
 set backspace=indent,eol,start " Use backspace in insert mode
+" }}}
 
 " Different Cursor shape in tmux 
 if exists('$TMUX')
@@ -112,12 +119,14 @@ endif
 set hidden " Allow hidden buffers
 set ttyfast " Rendering
 
-" Searching
+" Searching: {{{
+"
 set hlsearch "  Highlight all search results
 set incsearch " Searches the string incrementaly
 set smartcase " Enable smart case 
 set ignorecase " Always case-insensitive
 set showmatch " Highlight matching brace
+" }}}
 
 set dictionary+=/usr/share/dict/words
 
@@ -130,7 +139,8 @@ autocmd FileType md,markdown,txt, setlocal spell
 set splitbelow
 set splitright
 
-" Persistent undo
+" Persistent undo: {{{
+"
 if exists("+undofile")
   " undofile - This allows you to use undos after exiting and restarting
   " This, like swap and backup files, uses .vim-undo first, then ~/.vim/undo
@@ -147,8 +157,10 @@ endif
 " Begone swapfiles
 set directory^=$HOME/.config/nvim/tmp//
 set noswapfile
+" }}}
 
-"Terminal settings
+"Terminal settings: {{{
+"
 autocmd TermOpen term://* startinsert
 autocmd TermOpen term://* setlocal nonumber norelativenumber
 " Make esc work
@@ -170,6 +182,7 @@ nnoremap <C-l> <C-w>l
 command! Sterm :sp | :term
 
 nnoremap <C-t> :Sterm<CR>
+"}}}
 
 
 
