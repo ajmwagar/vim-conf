@@ -1,8 +1,6 @@
 " Avery Wagar
-
 " Functional Config {{{
-" Fun: {{{
-"
+" Workflow: {{{
 " set shortmess=I " Read :help shortmess for everything else.
 set nocompatible
 filetype off
@@ -15,14 +13,16 @@ set modelines=1
 " Folding
 set foldmethod=marker
 set foldlevel=0
-"Show line number
-set number
-set relativenumber
-
+set number " Show line number
+set relativenumber " Enable 'nybrid' line numbers
+set mouse=n " Disable mouse in insert mode
+set dictionary+=/usr/share/dict/words "Add  a dictionary
+filetype plugin indent on " Turn on indeting
+"Make vim more natural
+set splitbelow " Split new panes below
+set splitright " Vertical split new panes to the right
 " }}}
-
 " Whitespace:{{{
-"
 set wrap " Wrap lines
 set linebreak " Wraps lines a words
 set breakindent " Consistent indent of wrapped linex
@@ -33,19 +33,14 @@ set shiftwidth=2   " Number of auto indent spaces
 set autoindent " Auto indent
 set noshiftround " Indent lines by 2 not by nearest mutiple of two
 " }}}
-
-" Printing
-set pdev=Brother_HL-4570CDW_series
-
 " Netrw: {{{
 
-
-let g:netrw_liststyle = 3
-let g:netrw_banner = 0
-let g:netrw_winsize = 15
-let g:netrw_altv = 1
+let g:netrw_liststyle = 3  " Show 'tree' view
+let g:netrw_banner = 0 " Disable annoying banner
+let g:netrw_winsize = 15 " 15 pecent of screen size
+let g:netrw_altv = 1  " Auto cd
 let g:netrw_preview=1           " open previews vertically
-let g:netrw_browse_split = 4
+let g:netrw_browse_split = 4 " Open in last used buffer
 
 " Toggle Vexplore with leader-t
 function! ToggleVExplorer()
@@ -108,12 +103,7 @@ autocmd CursorMoved silent *
       \ endif
 
 " }}}
-
-" Cursor motion: {{{
-"
-set backspace=indent,eol,start " Use backspace in insert mode
-" }}}
-
+" Performance: {{{
 " Different Cursor shape in tmux 
 if exists('$TMUX')
   let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
@@ -125,27 +115,18 @@ endif
 
 set hidden " Allow hidden buffers
 set ttyfast " Rendering
-
+" }}}
 " Searching: {{{
-"
 set hlsearch "  Highlight all search results
 set incsearch " Searches the string incrementaly
 set smartcase " Enable smart case 
 set ignorecase " Always case-insensitive
 set showmatch " Highlight matching brace
 " }}}
-
-set dictionary+=/usr/share/dict/words
-
-filetype plugin indent on
-
-"Spell checking for spefic files
-autocmd FileType md,markdown,txt, setlocal spell
-
-"Make vim more natural
-set splitbelow
-set splitright
-
+" Workflow: {{{
+set backspace=indent,eol,start " Use backspace in insert mode
+set pdev=Brother_HL-4570CDW_series " Print from home
+" }}}
 " Persistent undo: {{{
 "
 if exists("+undofile")
@@ -156,16 +137,15 @@ if exists("+undofile")
   if isdirectory($HOME . '/.config/nvim/undo') == 0
     :silent !mkdir -p ~/.config/nvim/undo > /dev/null 2>&1
   endif
-  set undodir=./.vim-undo//
+  set undodir=./.vim-undo// " Set undodir
   set undodir+=~/.config/nvim/undo//
-  set undofile
+  set undofile " Create undofiles
 endif
 
 " Begone swapfiles
-set directory^=$HOME/.config/nvim/tmp//
-set noswapfile
+set directory^=$HOME/.config/nvim/tmp// " Disable swapfiles
+set noswapfile " Begone
 " }}}
-
 "Terminal settings: {{{
 "
 autocmd TermOpen term://* startinsert
@@ -188,25 +168,15 @@ nnoremap <C-l> <C-w>l
 
 command! Sterm :sp | :term
 
-nnoremap <C-t> :Sterm<CR>
+nnoremap m :Sterm<CR>
 "}}}
-
-
-
-" augroup numbertoggle
-"   autocmd!
-
-"   augroup numbertoggle
-"     autocmd!
-"     autocmd BufEnter,FocusGained,WinEnter * if &nu | set rnu   | endif
-"     autocmd BufEnter,FocusGained,WinEnter * if &nu | :SignifyEnable | endif
-"     autocmd BufLeave,FocusLost,WinLeave   * if &nu | set nornu | endif
-"     autocmd BufLeave,FocusLost,WinLeave   * if &nu | :SignifyDisable | endif
-"   augroup END
+" }}}
+" Autocmds:{{{
+"Spell checking for spefic files
+autocmd FileType md,markdown,txt, setlocal spell
 
 " }}}
 " Colors {{{
-
 " Fix colors in tmux
 if !has('gui_running')
   " Font

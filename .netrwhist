@@ -1,8 +1,9 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =6
-let g:netrw_dirhist_1='/home/ajmwagar/usr/dev/git/outrigger/lib/client'
-let g:netrw_dirhist_2='/home/ajmwagar/.config/nvim'
-let g:netrw_dirhist_3='/home/ajmwagar/.config/nvim/config'
-let g:netrw_dirhist_4='/home/ajmwagar/.config/nvim'
-let g:netrw_dirhist_5='/home/ajmwagar/.config/nvim/config'
-let g:netrw_dirhist_6='/home/ajmwagar/etc'
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/home/ajmwagar/usr/dev/git/outrigger'
+let g:netrw_dirhist_2='/home/ajmwagar/usr/dev/git/outrigger/.serverless'
+let g:netrw_dirhist_3='/home/ajmwagar/usr/dev/git/outrigger'
+let g:netrw_dirhist_4='/home/ajmwagar/usr/dev/git/outrigger/.serverless'
+let g:netrw_dirhist_5='/home/ajmwagar/usr/dev/git/outrigger'
+let g:netrw_dirhist_6='/home/ajmwagar/usr/dev/git/outrigger/controllers'
+let g:netrw_dirhist_7='/home/ajmwagar/usr/dev/git/outrigger'

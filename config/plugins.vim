@@ -1,72 +1,83 @@
+" file: PLUGINS.vim
+" written in vim
+
+" Import Plugins: {{{
 if exists('*minpac#init')
   call minpac#init()
 
   " minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
   call minpac#add('k-takata/minpac', {'type': 'opt'})
+  " Fast plugin manager
 
+  " Wrap in function
   function! DoRemote()
     UpdateRemotePlugins
   endfunction
 
-  " Syntax 
-  call minpac#add('jiangmiao/auto-pairs') " Auto close pairs
-  call minpac#add('sheerun/vim-polyglot') " Syntax
-  " call minpac#add('godlygeek/tabular')  " Formatting
-  call minpac#add('lambdalisue/suda.vim')
+  "
+  " Workflow plugins
+  "
+  call minpac#add('sheerun/vim-polyglot') " Syntax files for most languages
+  call minpac#add('jiangmiao/auto-pairs') " Auto close brackets and ''
+  call minpac#add('tpope/vim-commentary') " Toggle comments with ease
+  call minpac#add('lambdalisue/suda.vim') " Forgot 'sudo vim'?
+  call minpac#add('ConradIrwin/vim-bracketed-paste') " Paste better into vim from terminal
+  
+  "
+  " Searching/Fuzzy Finding
+  "
+  "
+  call minpac#add('junegunn/fzf', { 'do': './install --all' }) | call minpac#add('junegunn/fzf.vim') " FZF <3's Vim
+  call minpac#add('mileszs/ack.vim') " Search me, baby
 
+  "
+  " Git support
+  "
+  call minpac#add('tpope/vim-fugitive') " This should be illegal
+  call minpac#add('mhinz/vim-signify') " I can see the red dress
+  call minpac#add('skywind3000/asyncrun.vim') " build code async
+
+  " 
   " Autocomplete
-  call minpac#add('autozimu/LanguageClient-neovim', {'do': '!sh ./install.sh', 'branch': 'next' })
+  "
+  call minpac#add('autozimu/LanguageClient-neovim', {'do': '!sh ./install.sh', 'branch': 'next' }) " Setup language servers
+  call minpac#add('Shougo/deoplete.nvim', {'do': 'call DoRemote()'}) " Autocomplete engine
 
-  call minpac#add('Shougo/deoplete.nvim', {'do': 'call DoRemote()'})
-
+  "
   " Snippets 
-  call minpac#add('SirVer/ultisnips')
+  "
+  call minpac#add('Shougo/neosnippet.vim') " Snip, Snip!
+  call minpac#add('Shougo/neosnippet-snippets') " Load default snippets
 
+
+  " 
   " Prose mode plugins
+  "
+  "
   call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
   call minpac#add('davinche/godown-vim', {'type': 'opt'})
-  call minpac#add('junegunn/goyo.vim')
-  call minpac#add('junegunn/limelight.vim')
+  call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
+  call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
 
-  " Colorsheme
-  call minpac#add('ajmwagar/vim-deus')
-  " call minpac#add('ryanoasis/vim-devicons')
+  "
+  " Editor plugins/UI
+  "
+  call minpac#add('ajmwagar/vim-deus') " Colorsheme
+  call minpac#add('ajmwagar/lightline-deus') | call minpac#add('taohex/lightline-buffer') | call minpac#add('itchyny/lightline.vim') " Status bar
 
-  " Status bar
-  call minpac#add('ajmwagar/lightline-deus') | call minpac#add('taohex/lightline-buffer') | call minpac#add('itchyny/lightline.vim')
-
-  " Searching/Fuzzy Finding
-  call minpac#add('junegunn/fzf', { 'do': './install --all' }) | call minpac#add('junegunn/fzf.vim')
-  call minpac#add('mileszs/ack.vim')
-
-  " Git support
-   call minpac#add('tpope/vim-fugitive')
-  call minpac#add('mhinz/vim-signify')
-
-  " build
-  call minpac#add('skywind3000/asyncrun.vim')
-
-  " Comments
-  call minpac#add('tpope/vim-commentary')
 endif
-
+" }}}
+" Plugin Config: {{{
 " Completion {{{
-" nvim-completion-manager
-
-"  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-"  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-"  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
 
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-
 " Deoplete
 let g:deoplete#enable_at_startup = 1 " Auto start
 let g:deoplete#enable_smart_case = 1 " Smart case
 let g:deoplete#auto_complete_start_length = 2 " Stop bothering me
-let g:deoplete#enable_refresh_always = 0
-
-let g:deoplete#max_abbr_width = 0
-let g:deoplete#max_menu_width = 0
+let g:deoplete#enable_refresh_always = 0 " Stop the weird sorting redraw
+let g:deoplete#max_abbr_width = 0 " Allow for wide menu
+let g:deoplete#max_menu_width = 0 " Allow for tall menu
 
 set completeopt-=preview
 
@@ -79,30 +90,28 @@ function! s:check_back_space() abort ""
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction ""   
-
 inoremap <silent><expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<TAB>"
 inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
-
-
 " Sources:
 let g:deoplete#sources = {}
 let g:deoplete#ignore_sources = {}
-
 let g:deoplete#sources.markdown = ['look']
 " Ignore look in code files
-let g:deoplete#ignore_sources.java = ['look']
-let g:deoplete#ignore_sources['cs'] = ['look']
-let g:deoplete#ignore_sources['javascript'] = ['look']
-let g:deoplete#ignore_sources['rust'] = ['look']
-let g:deoplete#ignore_sources['python'] = ['look']
-let g:deoplete#ignore_sources['snippets'] = ['look']
-let g:deoplete#ignore_sources['sh'] = ['look']
-let g:deoplete#ignore_sources['go'] = ['look']
-let g:deoplete#ignore_sources['pug'] = ['look']
-let g:deoplete#ignore_sources['css'] = ['look']
-let g:deoplete#ignore_sources['html'] = ['look']
-let g:deoplete#ignore_sources['log'] = ['look']
+let g:deoplete#ignore_sources.java = ['look', 'm']
+let g:deoplete#ignore_sources['cs'] = ['look', 'm']
+let g:deoplete#ignore_sources['javascript'] = ['look', 'm']
+let g:deoplete#ignore_sources['rust'] = ['look', 'm']
+let g:deoplete#ignore_sources['python'] = ['look', 'm']
+let g:deoplete#ignore_sources['snippets'] = ['look', 'm']
+let g:deoplete#ignore_sources['sh'] = ['look', 'm']
+let g:deoplete#ignore_sources['go'] = ['look', 'm']
+let g:deoplete#ignore_sources['pug'] = ['look', 'm']
+let g:deoplete#ignore_sources['css'] = ['look', 'm']
+let g:deoplete#ignore_sources['html'] = ['look', 'm']
+let g:deoplete#ignore_sources['log'] = ['look', 'm']
 
+set complete-=i   " disable scanning included files
+set complete-=t   " disable searching tags
 " }}}
 " LSP {{{
 
@@ -123,7 +132,8 @@ autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
 " Smarter vim features
 " Documentation
 " nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-"
+" Replaced in mappings.vim
+
 " GoTo def
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 " Rename
@@ -136,10 +146,10 @@ nnoremap <silent> <C-f> :call LanguageClient#textDocument_formatting()<CR>
 nnoremap <silent> <leader>r :call LanguageClient#textDocument_references()<CR>
 
 " Auto start server
-" autocmd FileType javascript :LanguageClientStart<CR>
-" autocmd FileType java :LanguageClientStart<CR>
-" autocmd FileType python :LanguageClientStart<CR>
-" autocmd FileType rust :LanguageClientStart<CR>
+autocmd FileType javascript :LanguageClientStart<CR>
+autocmd FileType java :LanguageClientStart<CR>
+autocmd FileType python :LanguageClientStart<CR>
+autocmd FileType rust :LanguageClientStart<CR>
 
 
 " signText": "⚠️ ⛔️",
@@ -170,31 +180,25 @@ let g:LanguageClient_diagnosticsDisplay =  {
       \ "signTexthl": "ALEInfoSign",
       \ },
       \ }
-
-
-
-" " Map renaming in python
-" autocmd FileType python nnoremap <buffer>
-"   \ <leader>lr :call LanguageClient_textDocument_rename()<cr>
 " }}}
 " Snippets {{{
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-" Unmap these
-map <C-n> <NOP>
-map <C-p> <NOP>
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-j>     <Plug>(neosnippet_expand_or_jump)
+smap <C-j>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-j>     <Plug>(neosnippet_expand_target)
 
-let g:UltiSnipsExpandTrigger="<c-j>"
-let g:UltiSnipsJumpForwardTrigger="<c-n>"
-let g:UltiSnipsJumpBackwardTrigger="<c-b>" 
-let g:UltiSnipsSnippetDirectories=["/home/ajmwagar/.config/nvim/UltiSnips"] " Setup dir
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
 
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
 
-" imap <c-j>     <Plug>(neosnippet_expand_or_jump)
-" vmap <c-j>     <Plug>(neosnippet_expand_or_jump)
-" inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
-" vmap <c-u>     <Plug>(neosnippet_expand_target)
-" " expand parameters
-" let g:neosnippet#enable_completed_snippet=1
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory='~/.config/nvim/snips/'
+let g:neosnippet#enable_completed_snippet=1
 " }}}
 " Signify {{{
 let g:signify_vcs_list = ['git']
@@ -202,8 +206,30 @@ let g:signify_realtime = 1
 " }}}
 " Prose: {{{
 " Goyo {{{
+" Disable cursorline in goyo
+function! ToggleCursorlineAutoGroup()
+    if !exists('#CursorlineAutoGroup#InsertLeave')
+        set cursorline
+        augroup CursorlineAutoGroup
+            autocmd!
+            autocmd InsertLeave,WinEnter * set cursorline
+            autocmd InsertEnter,WinLeave * set nocursorline
+        augroup END
+    else
+        set nocursorline
+        augroup CursorlineAutoGroup
+            autocmd!
+        augroup END
+    endif
+
+endfunction
+
+call ToggleCursorlineAutoGroup()
+
 set dictionary=/usr/share/dict/words
 function! s:goyo_enter()
+  call ToggleCursorlineAutoGroup()
+  set nocursorline
   set spell 
   set noci
   set nosi 
@@ -217,6 +243,8 @@ function! s:goyo_enter()
 endfunction
 
 function! s:goyo_leave()
+  call ToggleCursorlineAutoGroup()
+  set cursorline
   set nospell ci si ai 
   set scrolloff=5
   colorscheme deus
@@ -233,7 +261,6 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 "fuzzy finder/ack Settings {{{
 "Use ripgrep
 let g:ackprg = 'rg --vimgrep --no-heading'
-
 let g:rg_find_command = 'rg --files --follow -g "!{.config,etc,bin,node_modules,.git}/*"'
 command! -bang -nargs=* Rg call fzf#vim#files('.', {'source': g:rg_find_command}, 0) 
 let g:ackprg = 'rg --vimgrep --no-heading'
@@ -379,16 +406,8 @@ let g:lightline_buffer_maxflen = 30
 
 
 " }}}
-" Pointbreak: {{{
-" let g:pointbreak_char = "🔴"
-" let g:pointbreak_autostart = 1
-
-" nnoremap <leader>b :PointbreakAdd<CR>
-" nnoremap <leader>br :PointbreakRemove<CR>
-" }}}
 " AsyncRun: {{{
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
-
 autocmd User AsyncRunPre :copen
 " }}}
 " Packadd: {{{
@@ -400,4 +419,8 @@ command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
 
 " Godown packadd
 autocmd FileType markdown packadd godown-vim
+
+" Goyo and Limelighy
+command! GoyoStart packadd goyo.vim | packadd limelight.vim | Goyo
+" }}}
 " }}}
