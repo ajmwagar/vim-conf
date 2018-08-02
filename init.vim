@@ -7,6 +7,7 @@ if &compatible
   set nocompatible
 endif
 " Begone default plugins: {{{
+"
 let g:loaded_matchit = 1 " Don't need it
 let g:loaded_gzip = 1 " Gzip is pointless
 let g:loaded_zipPlugin = 1 " zip is also pointless
@@ -15,6 +16,7 @@ let g:loaded_2html_plugin = 1 " Disable 2html
 let g:loaded_rrhelper = 1 " I don't use r
 let g:loaded_getscriptPlugin = 1 " Dont need it
 let g:loaded_tarPlugin = 1 " Nope
+
 " }}}
 " VIMRC: {{{
 " source ~/.config/nvim/config/plugins.vim " Handle Plugins with minpac
@@ -26,62 +28,45 @@ if exists('*minpac#init')
   call minpac#add('k-takata/minpac', {'type': 'opt'})
   " Fast plugin manager
 
-  " Wrap in function
   function! DoRemote()
     UpdateRemotePlugins
   endfunction
 
-  "
   " Workflow plugins
-  "
+  call minpac#add('xolox/vim-misc') 
+  call minpac#add('xolox/vim-session') " Session
   call minpac#add('sheerun/vim-polyglot') " Syntax files for most languages
   call minpac#add('jiangmiao/auto-pairs') " Auto close brackets and ''
   call minpac#add('tpope/vim-commentary') " Toggle comments with ease
   call minpac#add('lambdalisue/suda.vim') " Forgot 'sudo vim'?
   call minpac#add('ConradIrwin/vim-bracketed-paste') " Paste better into vim from terminal
 
-  "
   " Searching/Fuzzy Finding
-  "
-  "
   call minpac#add('junegunn/fzf', { 'do': './install --all' }) | call minpac#add('junegunn/fzf.vim') " FZF <3's Vim
   call minpac#add('mileszs/ack.vim') " Search me, baby
 
-  "
   " Git support
-  "
   call minpac#add('tpope/vim-fugitive') " This should be illegal
   call minpac#add('mhinz/vim-signify') " I can see the red dress
   call minpac#add('skywind3000/asyncrun.vim') " build code async
 
-  " 
   " Autocomplete
-  "
   call minpac#add('autozimu/LanguageClient-neovim', {'do': '!sh ./install.sh', 'branch': 'next' }) " Setup language servers
   call minpac#add('Shougo/deoplete.nvim', {'do': 'call DoRemote()'}) " Autocomplete engine
 
-  "
   " Snippets 
-  "
-  " call minpac#add('Shougo/neosnippet.vim') " Snip, Snip!
-  " call minpac#add('Shougo/neosnippet-snippets') " Load default snippets
   call minpac#add('SirVer/ultisnips')
 
-
-
-  " 
   " Prose mode plugins
-  "
-  "
-  call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
-  call minpac#add('davinche/godown-vim', {'type': 'opt'})
-  call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
-  call minpac#add('junegunn/limelight.vim')
+  " call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
+  " call minpac#add('davinche/godown-vim', {'type': 'opt'})
+  " call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
+  " call minpac#add('junegunn/limelight.vim')
 
-  "
   " Editor plugins/UI
-  "
   call minpac#add('ajmwagar/vim-deus') " Colorsheme
+  " call minpac#add('jaxbot/semantic-highlight.vim')
+  " call minpac#add('RRethy/vim-illuminate') " Higlighting
   call minpac#add('ajmwagar/lightline-deus') | call minpac#add('taohex/lightline-buffer') | call minpac#add('itchyny/lightline.vim') " Status bar
 
 endif
@@ -142,6 +127,8 @@ let g:LanguageClient_serverCommands = {
       \ 'rust': ['rls'],
       \ 'javascript': ['javascript-typescript-stdio'],
       \ 'javascript.jsx': ['javascript-typescript-stdio'],
+      \ 'csharp': ['node', '/home/ajmwagar/bin/omnisharp-node-client/languageserver/server.js'],
+      \ 'cs': ['node', '/home/ajmwagar/bin/omnisharp-node-client/languageserver/server.js'],
       \ 'python': ['pyls'],
       \ 'java': ['jdtls']
       \ }
@@ -487,11 +474,11 @@ set noshiftround " Indent lines by 2 not by nearest mutiple of two
 " }}}
 " Netrw: {{{
 
- let g:netrw_liststyle = 3  " Show 'tree' view
+let g:netrw_liststyle = 3  " Show 'tree' view
 let g:netrw_banner = 0 " Disable annoying banner
 let g:netrw_winsize = 15 " 15 pecent of screen size
-" let g:netrw_altv = 1 " Auto cd
-" let g:netrw_preview= 1 " open previews vertically
+let g:netrw_altv = 1 " Auto cd
+let g:netrw_preview= 1 " open previews vertically
 let g:netrw_browse_split = 4 " Open in last used buffer
 
 " Toggle Vexplore with leader-t
@@ -501,7 +488,7 @@ function! ToggleVExplorer()
     if expl_win_num != -1
       let cur_win_nr = winnr()
       exec expl_win_num . 'wincmd w'
-      close
+      bd
       " exec cur_win_nr . 'wincmd w'
       unlet t:expl_buf_num
     else
@@ -541,7 +528,7 @@ function! SetProjectRoot()
 
   if empty(is_not_git_dir)
     if empty(is_not_dot_git_dir)
-      lcd `=my_git_dir`
+      lcd my_git_dir
     endif
   endif
 endfunction
@@ -603,30 +590,32 @@ set noswapfile " Begone
 autocmd TermOpen term://* startinsert
 autocmd TermOpen term://* setlocal nonumber norelativenumber
 " Make esc work
-tnoremap <Esc> <C-\><C-n>:q<CR>
+tnoremap <Esc> <C-\><C-n>:bd!<CR>
+" :bd!<CR>
 "Better Focus
-tnoremap <C-h> <C-\><C-N><C-w>h
+" tnoremap <C-h> <C-\><C-N><C-w>h
 " tnoremap <C-j> <C-\><C-N><C-w>j
-tnoremap <C-k> <C-\><C-N><C-w>k
-tnoremap <C-l> <C-\><C-N><C-w>l
-" inoremap <C-h> <C-\><C-N><C-w>h
-" inoremap <C-j> <C-\><C-N><C-w>j
-" inoremap <C-k> <C-\><C-N><C-w>k
-" inoremap <C-l> <C-\><C-N><C-w>l
+" tnoremap <C-k> <C-\><C-N><C-w>k
+" tnoremap <C-l> <C-\><C-N><C-w>l
+inoremap <C-h> <C-\><C-N><C-w>h
+inoremap <C-j> <C-\><C-N><C-w>j
+inoremap <C-k> <C-\><C-N><C-w>k
+inoremap <C-l> <C-\><C-N><C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 command! Sterm :sp | :term
+command! Vterm :vs | :term
 
-nnoremap m :Sterm<CR>
+nnoremap <C-m> :Sterm<CR>
+nnoremap <C-n> :Vterm<CR>
 "}}}
 " }}}
 " Autocmds:{{{
 "Spell checking for spefic files
 autocmd FileType md,markdown,txt, setlocal spell
-
 " }}}
 " Colors {{{
 " Fix colors in tmux

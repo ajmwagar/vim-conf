@@ -1,9 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
-let g:netrw_dirhist_1='/home/ajmwagar/usr/dev/git/outrigger'
-let g:netrw_dirhist_2='/home/ajmwagar/usr/dev/git/outrigger/.serverless'
-let g:netrw_dirhist_3='/home/ajmwagar/usr/dev/git/outrigger'
-let g:netrw_dirhist_4='/home/ajmwagar/usr/dev/git/outrigger/.serverless'
-let g:netrw_dirhist_5='/home/ajmwagar/usr/dev/git/outrigger'
-let g:netrw_dirhist_6='/home/ajmwagar/usr/dev/git/outrigger/controllers'
-let g:netrw_dirhist_7='/home/ajmwagar/usr/dev/git/outrigger'
+let g:netrw_dirhist_cnt =4
+let g:netrw_dirhist_1='/home/ajmwagar/usr/dev/git'
+let g:netrw_dirhist_2='/home/ajmwagar/usr/dev/git/dropzone'
+let g:netrw_dirhist_3='/home/ajmwagar/usr/dev/git/dropzone/src/components'
+let g:netrw_dirhist_4='/home/ajmwagar/usr/dev/git/dropzone'
