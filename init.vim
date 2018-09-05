@@ -33,12 +33,9 @@ if exists('*minpac#init')
   endfunction
 
   " Workflow plugins
-  call minpac#add('xolox/vim-misc') 
-  call minpac#add('xolox/vim-session') " Session
   call minpac#add('sheerun/vim-polyglot') " Syntax files for most languages
   call minpac#add('jiangmiao/auto-pairs') " Auto close brackets and ''
   call minpac#add('tpope/vim-commentary') " Toggle comments with ease
-  call minpac#add('lambdalisue/suda.vim') " Forgot 'sudo vim'?
   call minpac#add('ConradIrwin/vim-bracketed-paste') " Paste better into vim from terminal
 
   " Searching/Fuzzy Finding
@@ -58,10 +55,10 @@ if exists('*minpac#init')
   call minpac#add('SirVer/ultisnips')
 
   " Prose mode plugins
-  " call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
-  " call minpac#add('davinche/godown-vim', {'type': 'opt'})
-  " call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
-  " call minpac#add('junegunn/limelight.vim')
+  call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
+  call minpac#add('davinche/godown-vim', {'type': 'opt'})
+  call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
+  call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
 
   " Editor plugins/UI
   call minpac#add('ajmwagar/vim-deus') " Colorsheme
@@ -237,7 +234,7 @@ function! ToggleCursorlineAutoGroup()
 
 endfunction
 
-" call ToggleCursorlineAutoGroup()
+call ToggleCursorlineAutoGroup()
 
 set dictionary=/usr/share/dict/words
 function! s:goyo_enter()
@@ -647,8 +644,6 @@ endif
 " source ~/.config/nvim/config/mappings.vim " Shortcuts/mappings
 "Mappings {{{
 "
-command! W :w suda://%<CR> " Write in sudo
-
 " Open docs
 nnoremap <silent> K :call ZealDoc()<CR>
 
