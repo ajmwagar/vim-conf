@@ -54,6 +54,8 @@ if exists('*minpac#init')
   " Snippets 
   call minpac#add('SirVer/ultisnips')
 
+  call minpac#add('ajmwagar/discord.nvim')
+
   " Prose mode plugins
   call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
   call minpac#add('davinche/godown-vim', {'type': 'opt'})
