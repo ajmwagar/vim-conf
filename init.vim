@@ -33,6 +33,7 @@ if exists('*minpac#init')
   endfunction
 
   " Workflow plugins
+  call minpac#add('posva/vim-vue') " vue syntax
   call minpac#add('sheerun/vim-polyglot') " Syntax files for most languages
   call minpac#add('jiangmiao/auto-pairs') " Auto close brackets and ''
   call minpac#add('tpope/vim-commentary') " Toggle comments with ease
@@ -52,20 +53,18 @@ if exists('*minpac#init')
   call minpac#add('Shougo/deoplete.nvim', {'do': 'call DoRemote()'}) " Autocomplete engine
 
   " Snippets 
-  call minpac#add('SirVer/ultisnips')
+  call minpac#add('SirVer/ultisnips', {'type': 'opt'})
 
-  call minpac#add('ajmwagar/discord.nvim')
+  " call minpac#add('ajmwagar/discord.nvim')
 
   " Prose mode plugins
   call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
-  call minpac#add('davinche/godown-vim', {'type': 'opt'})
+  " call minpac#add('davinche/godown-vim', {'type': 'opt'})
   call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
   call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
 
   " Editor plugins/UI
   call minpac#add('ajmwagar/vim-deus') " Colorsheme
-  " call minpac#add('jaxbot/semantic-highlight.vim')
-  " call minpac#add('RRethy/vim-illuminate') " Higlighting
   call minpac#add('ajmwagar/lightline-deus') | call minpac#add('taohex/lightline-buffer') | call minpac#add('itchyny/lightline.vim') " Status bar
 
 endif
@@ -132,7 +131,6 @@ let g:LanguageClient_serverCommands = {
       \ 'java': ['jdtls']
       \ }
 
-autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
 
 " Smarter vim features
 " Documentation
@@ -151,10 +149,6 @@ nnoremap <silent> <C-f> :call LanguageClient#textDocument_formatting()<CR>
 nnoremap <silent> <leader>r :call LanguageClient#textDocument_references()<CR>
 
 " Auto start server
-autocmd FileType javascript :LanguageClientStart<CR>
-autocmd FileType java :LanguageClientStart<CR>
-autocmd FileType python :LanguageClientStart<CR>
-autocmd FileType rust :LanguageClientStart<CR>
 
 
 " signText": "⚠️ ⛔️",
@@ -163,13 +157,13 @@ let g:LanguageClient_diagnosticsDisplay =  {
       \ 1: {
       \ "name": "Error",
       \ "texthl": "ALEError",
-      \ "signText": "✘",
+      \ "signText": "⛔️",
       \ "signTexthl": "ALEErrorSign",
       \ },
       \ 2: {
       \ "name": "Warning",
       \ "texthl": "ALEWarning",
-      \ "signText": "⚠",
+      \ "signText": "⚠️",
       \ "signTexthl": "ALEWarningSign",
       \ },
       \ 3: {
@@ -430,15 +424,18 @@ command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update()
 command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
 
 " Godown packadd
-autocmd FileType markdown packadd godown-vim
+" autocmd FileType markdown packadd godown-vim
 
 " Goyo and Limelighy
 command! GoyoStart packadd goyo.vim | packadd limelight.vim | Goyo
 " }}}
+" Syntax: {{{
+let g:vue_disable_pre_processors=1
+" }}}
 " }}}
 " source ~/.config/nvim/config/editor.vim " Colorschemes/indentation
 " Functional Config {{{
-" Workflow: {{{
+"" Workflow: {{{
 " set shortmess=I " Read :help shortmess for everything else.
 set nocompatible
 filetype off
@@ -459,7 +456,7 @@ filetype plugin indent on " Turn on indeting
 "Make vim more natural
 set splitbelow " Split new panes below
 set splitright " Vertical split new panes to the right
-" }}}
+"" }}}
 " Whitespace:{{{
 set wrap " Wrap lines
 set linebreak " Wraps lines a words
@@ -471,76 +468,76 @@ set shiftwidth=2   " Number of auto indent spaces
 set autoindent " Auto indent
 set noshiftround " Indent lines by 2 not by nearest mutiple of two
 " }}}
-" Netrw: {{{
+" " Netrw: {{{
 
-let g:netrw_liststyle = 3  " Show 'tree' view
-let g:netrw_banner = 0 " Disable annoying banner
-let g:netrw_winsize = 15 " 15 pecent of screen size
-let g:netrw_altv = 1 " Auto cd
-let g:netrw_preview= 1 " open previews vertically
-let g:netrw_browse_split = 4 " Open in last used buffer
+" let g:netrw_liststyle = 3  " Show 'tree' view
+" let g:netrw_banner = 0 " Disable annoying banner
+" let g:netrw_winsize = 15 " 15 pecent of screen size
+" let g:netrw_altv = 1 " Auto cd
+" let g:netrw_preview= 1 " open previews vertically
+" let g:netrw_browse_split = 4 " Open in last used buffer
 
-" Toggle Vexplore with leader-t
-function! ToggleVExplorer()
-  if exists("t:expl_buf_num")
-    let expl_win_num = bufwinnr(t:expl_buf_num)
-    if expl_win_num != -1
-      let cur_win_nr = winnr()
-      exec expl_win_num . 'wincmd w'
-      bd
-      " exec cur_win_nr . 'wincmd w'
-      unlet t:expl_buf_num
-    else
-      unlet t:expl_buf_num
-    endif
-  else
-    exec '1wincmd w'
-    Vexplore
-    let t:expl_buf_num = bufnr("%")
-  endif
-endfunction
+" " Toggle Vexplore with leader-t
+" function! ToggleVExplorer()
+"   if exists("t:expl_buf_num")
+"     let expl_win_num = bufwinnr(t:expl_buf_num)
+"     if expl_win_num != -1
+"       let cur_win_nr = winnr()
+"       exec expl_win_num . 'wincmd w'
+"       bd
+"       " exec cur_win_nr . 'wincmd w'
+"       unlet t:expl_buf_num
+"     else
+"       unlet t:expl_buf_num
+"     endif
+"   else
+"     exec '1wincmd w'
+"     Vexplore
+"     let t:expl_buf_num = bufnr("%")
+"   endif
+" endfunction
 
-map <silent> <leader>t :call ToggleVExplorer()<CR>
+" map <silent> <leader>t :call ToggleVExplorer()<CR>
 
-" Dir setup
-" set autochdir
+" " Dir setup
+" " set autochdir
 
-" Follow symlinks
-function! FollowSymlink()
-  let current_file = expand('%:p')
-  " Check for symlink
-  if getftype(current_file) == 'link'
-    " Open actual filepath
-    let actual_file = resolve(current_file)
-    silent! execute 'file ' . actual_file
-  endif
-endfunction
+" " Follow symlinks
+" function! FollowSymlink()
+"   let current_file = expand('%:p')
+"   " Check for symlink
+"   if getftype(current_file) == 'link'
+"     " Open actual filepath
+"     let actual_file = resolve(current_file)
+"     silent! execute 'file ' . actual_file
+"   endif
+" endfunction
 
 
-function! SetProjectRoot()
-  " default to current
-  lcd %:p:h
-  let my_git_dir = system("git rev-parse --show-toplevel")
-  " Check output
-  let is_not_git_dir = matchstr(my_git_dir, '^fatal:.*')
-  let is_not_dot_git_dir = matchstr(my_git_dir, '\n')
+" function! SetProjectRoot()
+"   " default to current
+"   lcd %:p:h
+"   let my_git_dir = system("git rev-parse --show-toplevel")
+"   " Check output
+"   let is_not_git_dir = matchstr(my_git_dir, '^fatal:.*')
+"   let is_not_dot_git_dir = matchstr(my_git_dir, '\n')
 
-  if empty(is_not_git_dir)
-    if empty(is_not_dot_git_dir)
-      lcd my_git_dir
-    endif
-  endif
-endfunction
+"   if empty(is_not_git_dir)
+"     if empty(is_not_dot_git_dir)
+"       lcd my_git_dir
+"     endif
+"   endif
+" endfunction
 
-autocmd BufNewFile *
-      \   call SetProjectRoot()
+" autocmd BufNewFile *
+"       \   call SetProjectRoot()
 
-autocmd CursorMoved silent *
-      \ if &filetype == 'netrw' |
-      \   call SetProjectRoot() |
-      \ endif
+" autocmd CursorMoved silent *
+"       \ if &filetype == 'netrw' |
+"       \   call SetProjectRoot() |
+"       \ endif
 
-" }}}
+" " }}}
 " Performance: {{{
 " Different Cursor shape in tmux 
 if exists('$TMUX')
@@ -605,16 +602,9 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-command! Sterm :sp | :term
-command! Vterm :vs | :term
-
-nnoremap <C-m> :Sterm<CR>
-nnoremap <C-n> :Vterm<CR>
 "}}}
 " }}}
 " Autocmds:{{{
-"Spell checking for spefic files
-autocmd FileType md,markdown,txt, setlocal spell
 " }}}
 " Colors {{{
 " Fix colors in tmux
@@ -624,10 +614,10 @@ if !has('gui_running')
   " Colors
   set termguicolors
   set t_Co=256
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-  let &t_ZH="\e[3m"
-  let &t_ZR="\e[23m"
+  " let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  " let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  " let &t_ZH="\e[3m"
+  " let &t_ZR="\e[23m"
   let g:deus_termcolors=256
   let NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
