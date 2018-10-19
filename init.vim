@@ -65,7 +65,9 @@ if exists('*minpac#init')
 
   " Editor plugins/UI
   call minpac#add('ajmwagar/vim-deus') " Colorsheme
-  call minpac#add('ajmwagar/lightline-deus') | call minpac#add('taohex/lightline-buffer') | call minpac#add('itchyny/lightline.vim') " Status bar
+  call minpac#add('ajmwagar/lightline-deus')
+  call minpac#add('taohexxx/lightline-buffer')
+  call minpac#add('itchyny/lightline.vim') " Status bar
 
 endif
 " }}}
