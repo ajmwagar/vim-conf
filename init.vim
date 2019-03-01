@@ -6,6 +6,8 @@ if &compatible
   " only when 'compatible' is set.
   set nocompatible
 endif
+let mapleader = ";"
+
 " Begone default plugins: {{{
 "
 let g:loaded_matchit = 1 " Don't need it
@@ -45,7 +47,7 @@ if exists('*minpac#init')
 
   " Git support
   call minpac#add('tpope/vim-fugitive') " This should be illegal
-  call minpac#add('mhinz/vim-signify') " I can see the red dress
+  " call minpac#add('mhinz/vim-signify') " I can see the red dress
   call minpac#add('skywind3000/asyncrun.vim') " build code async
 
   " Autocomplete
@@ -59,9 +61,10 @@ if exists('*minpac#init')
 
   " Prose mode plugins
   call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
-  " call minpac#add('davinche/godown-vim', {'type': 'opt'})
+  call minpac#add('davinche/godown-vim', {'type': 'opt'})
   call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
   call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
+  call minpac#add('reedes/vim-pencil')
 
   " Editor plugins/UI
   call minpac#add('ajmwagar/vim-deus') " Colorsheme
@@ -142,30 +145,29 @@ let g:LanguageClient_serverCommands = {
 " GoTo def
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 " Rename
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+nnoremap <silent> <leader>c :call LanguageClient#textDocument_rename()<CR>
 " Symbols
-nnoremap <silent> <C-s> :call LanguageClient#textDocument_documentSymbol()<CR>
+nnoremap <silent> <leader>s :call LanguageClient#textDocument_documentSymbol()<CR>
 " Formatting 
-nnoremap <silent> <C-f> :call LanguageClient#textDocument_formatting()<CR>
+nnoremap <silent> <leader>f :call LanguageClient#textDocument_formatting()<CR>
 
 nnoremap <silent> <leader>r :call LanguageClient#textDocument_references()<CR>
 
 " Auto start server
 
 
-" signText": "⚠️ ⛔️",
 " better diagnotics
 let g:LanguageClient_diagnosticsDisplay =  {
       \ 1: {
       \ "name": "Error",
       \ "texthl": "ALEError",
-      \ "signText": "⛔️",
+      \ "signText": "!",
       \ "signTexthl": "ALEErrorSign",
       \ },
       \ 2: {
       \ "name": "Warning",
       \ "texthl": "ALEWarning",
-      \ "signText": "⚠️",
+      \ "signText": "?",
       \ "signTexthl": "ALEWarningSign",
       \ },
       \ 3: {
@@ -264,6 +266,18 @@ endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
+autocmd! InsertLeave call ToggleCursorlineAutoGroup()
+autocmd! InsertEnter call ToggleCursorlineAutoGroup()
+
+" }}}
+" Vim-pencil: {{{
+let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
+
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,mkd call pencil#init()
+  autocmd FileType text         call pencil#init({'wrap': 'hard'})
+augroup END
 " }}}
 " }}}
 "fuzzy finder/ack Settings {{{
@@ -427,7 +441,7 @@ command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
 
 " Godown packadd
 " autocmd FileType markdown packadd godown-vim
-
+"
 " Goyo and Limelighy
 command! GoyoStart packadd goyo.vim | packadd limelight.vim | Goyo
 " }}}
@@ -444,7 +458,6 @@ filetype off
 " Turn on syntax highlighting
 syntax on
 "  Pick a leader key
-let mapleader = ";"
 " Security
 set modelines=1
 " Folding
