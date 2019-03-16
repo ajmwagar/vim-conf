@@ -46,8 +46,10 @@ if exists('*minpac#init')
   call minpac#add('mileszs/ack.vim') " Search me, baby
 
   " Autocomplete
-  call minpac#add('neoclide/coc.nvim') " Conquereer of Completions
-
+  call minpac#add('tpope/vim-fugitive')
+  call minpac#add('neoclide/coc.nvim', {'do': coc#util#install()}) " Conquereer of Completions 
+  call minpac#add('w0rp/ale') " ALE
+  call minpac#add('KabbAmine/zeavim.vim') " ZealDoc Support
   " Prose mode plugins
   " call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
   " call minpac#add('davinche/godown-vim', {'type': 'opt'})
@@ -66,8 +68,12 @@ endif
 " Plugin Config: {{{
 " COC {{{
 
-" Better display for messages
-set cmdheight=2
+let g:coc_force_debug = 1
+"Better display for messages
+set cmdheight=1
+set noshowmode
+set noruler
+set noshowcmd
 
 " Smaller updatetime for CursorHold & CursorHoldI
 set updatetime=300
@@ -76,7 +82,7 @@ set updatetime=300
 set shortmess+=c
 
 " always show signcolumns
-set signcolumn=yes
+" set signcolumn=yes
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -107,6 +113,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gn <Plug>(coc-rename)
 
 " Use K for show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -115,7 +122,7 @@ function! s:show_documentation()
   if &filetype == 'vim'
     execute 'h '.expand('<cword>')
   else
-    call CocAction('doHover')
+    call CocActionAsync('doHover')
   endif
 endfunction
 
@@ -132,7 +139,7 @@ nmap <leader>f  <Plug>(coc-format-selected)
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  autocmd FileType typescript,json setl formatexpr=CocActionAsync('formatSelected')
   " Update signature help on jump placeholder
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
@@ -151,20 +158,6 @@ command! -nargs=0 Format :call CocAction('format')
 
 " Use `:Fold` for fold current buffer
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-
-" Add diagnostic info for https://github.com/itchyny/lightline.vim
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'cocstatus': 'coc#status'
-      \ },
-      \ }
-
 
 
 " Using CocList
@@ -472,6 +465,7 @@ set showmatch " Highlight matching brace
 " Workflow: {{{
 set backspace=indent,eol,start " Use backspace in insert mode
 set pdev=Brother_HL-4570CDW_series " Print from home
+set noshowcmd
 " }}}
 " Persistent undo: {{{
 "
@@ -528,7 +522,7 @@ if !has('gui_running')
   " let &t_ZH="\e[3m"
   " let &t_ZR="\e[23m"
   let g:deus_termcolors=256
-  let NVIM_TUI_ENABLE_TRUE_COLOR=1
+  " let NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 
 set background=dark    " Setting dark mode
@@ -545,7 +539,7 @@ endif
 "Mappings {{{
 "
 " Open docs
-nnoremap <silent> K :call ZealDoc()<CR>
+" nnoremap <silent> K :call ZealDoc()<CR>
 
 function! ZealDoc()
   echo 'Opening Zeal...'
@@ -587,5 +581,17 @@ nnoremap <silent><leader>z :GoyoStart<return>
 " Disable ex-mode 
 nnoremap Q <nop> 
 
+" }}}
+" Gui:: {{{
+let s:fontsize = 12
+function! AdjustFontSize(amount)
+  let s:fontsize = s:fontsize+a:amount
+  :execute "GuiFont! Fira Code:h" . s:fontsize
+endfunction
+
+noremap <C-ScrollWheelUp> :call AdjustFontSize(1)<CR>
+noremap <C-ScrollWheelDown> :call AdjustFontSize(-1)<CR>
+inoremap <C-ScrollWheelUp> <Esc>:call AdjustFontSize(1)<CR>a
+inoremap <C-ScrollWheelDown> <Esc>:call AdjustFontSize(-1)<CR>a
 " }}}
 " }}}
