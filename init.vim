@@ -6,6 +6,8 @@ if &compatible
   " only when 'compatible' is set.
   set nocompatible
 endif
+let mapleader = ";"
+
 " Begone default plugins: {{{
 "
 let g:loaded_matchit = 1 " Don't need it
@@ -33,240 +35,151 @@ if exists('*minpac#init')
   endfunction
 
   " Workflow plugins
-  call minpac#add('posva/vim-vue') " vue syntax
+  " call minpac#add('posva/vim-vue') " vue syntax
   call minpac#add('sheerun/vim-polyglot') " Syntax files for most languages
   call minpac#add('jiangmiao/auto-pairs') " Auto close brackets and ''
   call minpac#add('tpope/vim-commentary') " Toggle comments with ease
-  call minpac#add('ConradIrwin/vim-bracketed-paste') " Paste better into vim from terminal
+  " call minpac#add('ConradIrwin/vim-bracketed-paste') " Paste better into vim from terminal
 
   " Searching/Fuzzy Finding
   call minpac#add('junegunn/fzf', { 'do': './install --all' }) | call minpac#add('junegunn/fzf.vim') " FZF <3's Vim
   call minpac#add('mileszs/ack.vim') " Search me, baby
 
-  " Git support
-  call minpac#add('tpope/vim-fugitive') " This should be illegal
-  call minpac#add('mhinz/vim-signify') " I can see the red dress
-  call minpac#add('skywind3000/asyncrun.vim') " build code async
-
   " Autocomplete
-  call minpac#add('autozimu/LanguageClient-neovim', {'do': '!sh ./install.sh', 'branch': 'next' }) " Setup language servers
-  call minpac#add('Shougo/deoplete.nvim', {'do': 'call DoRemote()'}) " Autocomplete engine
-
-  " Snippets 
-  call minpac#add('SirVer/ultisnips', {'type': 'opt'})
-
-  " call minpac#add('ajmwagar/discord.nvim')
-
+  call minpac#add('tpope/vim-fugitive')
+  call minpac#add('neoclide/coc.nvim', {'do': coc#util#install()}) " Conquereer of Completions 
+  call minpac#add('w0rp/ale') " ALE
+  call minpac#add('KabbAmine/zeavim.vim') " ZealDoc Support
   " Prose mode plugins
-  call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
+  " call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
   " call minpac#add('davinche/godown-vim', {'type': 'opt'})
-  call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
-  call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
+  " call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
+  " call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
+  " call minpac#add('reedes/vim-pencil')
 
   " Editor plugins/UI
   call minpac#add('ajmwagar/vim-deus') " Colorsheme
   call minpac#add('ajmwagar/lightline-deus')
-  call minpac#add('taohexxx/lightline-buffer')
+  " call minpac#add('taohexxx/lightline-buffer')
+  call minpac#add('ap/vim-buftabline')
   call minpac#add('itchyny/lightline.vim') " Status bar
 
 endif
 " }}}
 " Plugin Config: {{{
-" Completion {{{
+" COC {{{
 
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-" Deoplete
-let g:deoplete#enable_at_startup = 1 " Auto start
-let g:deoplete#enable_smart_case = 1 " Smart case
-let g:deoplete#auto_complete_start_length = 2 " Stop bothering me
-let g:deoplete#enable_refresh_always = 0 " Stop the weird sorting redraw
-let g:deoplete#max_abbr_width = 0 " Allow for wide menu
-let g:deoplete#max_menu_width = 0 " Allow for tall menu
+let g:coc_force_debug = 1
+"Better display for messages
+set cmdheight=1
+set noshowmode
+set noruler
+set noshowcmd
 
-set completeopt-=preview
+" Smaller updatetime for CursorHold & CursorHoldI
+set updatetime=300
 
-"use TAB as the mapping
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
+" always show signcolumns
+" set signcolumn=yes
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ?  "\<C-n>" :
+      \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
-      \ deoplete#mappings#manual_complete()
-function! s:check_back_space() abort ""     
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
   let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction ""   
-inoremap <silent><expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<TAB>"
-inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
-" Sources:
-let g:deoplete#sources = {}
-let g:deoplete#ignore_sources = {}
-let g:deoplete#sources.markdown = ['look']
-" Ignore look in code files
-let g:deoplete#ignore_sources.java = ['look', 'm']
-let g:deoplete#ignore_sources['cs'] = ['look', 'm']
-let g:deoplete#ignore_sources['javascript'] = ['look', 'm']
-let g:deoplete#ignore_sources['rust'] = ['look', 'm']
-let g:deoplete#ignore_sources['python'] = ['look', 'm']
-let g:deoplete#ignore_sources['snippets'] = ['look', 'm']
-let g:deoplete#ignore_sources['sh'] = ['look', 'm']
-let g:deoplete#ignore_sources['go'] = ['look', 'm']
-let g:deoplete#ignore_sources['pug'] = ['look', 'm']
-let g:deoplete#ignore_sources['css'] = ['look', 'm']
-let g:deoplete#ignore_sources['html'] = ['look', 'm']
-let g:deoplete#ignore_sources['log'] = ['look', 'm']
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
-set complete-=i   " disable scanning included files
-set complete-=t   " disable searching tags
-" }}}
-" LSP {{{
+" Use <c-space> for trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
 
-" Automatically start language servers.
-let g:LanguageClient_autoStart = 1
+" Use <cr> for confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-" Minimal LSP configuration for JavaScript
-let g:LanguageClient_serverCommands = {
-      \ 'rust': ['rls'],
-      \ 'javascript': ['javascript-typescript-stdio'],
-      \ 'javascript.jsx': ['javascript-typescript-stdio'],
-      \ 'csharp': ['node', '/home/ajmwagar/bin/omnisharp-node-client/languageserver/server.js'],
-      \ 'cs': ['node', '/home/ajmwagar/bin/omnisharp-node-client/languageserver/server.js'],
-      \ 'python': ['pyls'],
-      \ 'java': ['jdtls']
-      \ }
+" Use `[c` and `]c` for navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
 
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gn <Plug>(coc-rename)
 
-" Smarter vim features
-" Documentation
-" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-" Replaced in mappings.vim
+" Use K for show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-" GoTo def
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-" Rename
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-" Symbols
-nnoremap <silent> <C-s> :call LanguageClient#textDocument_documentSymbol()<CR>
-" Formatting 
-nnoremap <silent> <C-f> :call LanguageClient#textDocument_formatting()<CR>
-
-nnoremap <silent> <leader>r :call LanguageClient#textDocument_references()<CR>
-
-" Auto start server
-
-
-" signText": "⚠️ ⛔️",
-" better diagnotics
-let g:LanguageClient_diagnosticsDisplay =  {
-      \ 1: {
-      \ "name": "Error",
-      \ "texthl": "ALEError",
-      \ "signText": "⛔️",
-      \ "signTexthl": "ALEErrorSign",
-      \ },
-      \ 2: {
-      \ "name": "Warning",
-      \ "texthl": "ALEWarning",
-      \ "signText": "⚠️",
-      \ "signTexthl": "ALEWarningSign",
-      \ },
-      \ 3: {
-      \ "name": "Information",
-      \ "texthl": "ALEInfo",
-      \ "signText": "ℹ",
-      \ "signTexthl": "ALEInfoSign",
-      \ },
-      \ 4: {
-      \ "name": "Hint",
-      \ "texthl": "ALEInfo",
-      \ "signText": "➤",
-      \ "signTexthl": "ALEInfoSign",
-      \ },
-      \ }
-" }}}
-" Snippets {{{
-" Plugin key-mappings.
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-"imap <C-j>     <Plug>(neosnippet_expand_or_jump)
-"smap <C-j>     <Plug>(neosnippet_expand_or_jump)
-"xmap <C-j>     <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-" let g:UltiSnipsExpandTrigger="<c-enterj>"
-let g:UltiSnipsExpandTrigger="<c-j>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-let g:UltiSnipsSnippetDir="~/.config/nvim/UltiSnips"
-let g:UltiSnipsEditSplit="vertical"
-
-" For conceal markers.
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
-
-" Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.config/nvim/snips/'
-let g:neosnippet#enable_completed_snippet=1
-" }}}
-" Signify {{{
-let g:signify_vcs_list = ['git']
-let g:signify_realtime = 1
-" }}}
-" Prose: {{{
-" Goyo {{{
-" Disable cursorline in goyo
-function! ToggleCursorlineAutoGroup()
-  if !exists('#CursorlineAutoGroup#InsertLeave')
-    set cursorline
-    augroup CursorlineAutoGroup
-      autocmd!
-      autocmd InsertLeave,WinEnter * set cursorline
-      autocmd InsertEnter,WinLeave * set nocursorline
-    augroup END
+function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
   else
-    set nocursorline
-    augroup CursorlineAutoGroup
-      autocmd!
-    augroup END
+    call CocActionAsync('doHover')
   endif
-
 endfunction
 
-call ToggleCursorlineAutoGroup()
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
-set dictionary=/usr/share/dict/words
-function! s:goyo_enter()
-  call ToggleCursorlineAutoGroup()
-  set nocursorline
-  set spell 
-  set noci
-  set nosi 
-  set noai 
-  colorscheme whiteboard
-  set noshowcmd
-  set scrolloff=999
-  :Limelight
-  " :SignifyToggle
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
 
-endfunction
+" Remap for format selected region
+vmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
 
-function! s:goyo_leave()
-  call ToggleCursorlineAutoGroup()
-  set cursorline
-  set nospell ci si ai 
-  set scrolloff=5
-  colorscheme deus
-  " :SignifyEnable
-  :Limelight!
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocActionAsync('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
 
-endfunction
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+vmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
 
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
 
+" Use `:Format` for format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` for fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " }}}
-" }}}
-"fuzzy finder/ack Settings {{{
+" fuzzy finder/ack Settings {{{
 "Use ripgrep
 let g:ackprg = 'rg --vimgrep --no-heading'
 let g:rg_find_command = 'rg --files --follow -g "!{.config,etc,bin,node_modules,.git}/*"'
@@ -301,43 +214,42 @@ set showtabline=2
 let g:lightline = {
       \ 'colorscheme': 'deus',
       \ 'tabline': {
-      \   'left': [ [ ],
-      \             [ 'separator' ],
-      \             [ 'bufferbefore', 'buffercurrent', 'bufferafter' ], ],
+      \   'left': [ [ 'bufferline' ]],
       \   'right': [],
       \ },
       \ 'component_expand': {
       \   'linter_warnings': 'LightlineLinterWarnings',
       \   'linter_errors': 'LightlineLinterErrors',
       \   'linter_ok': 'LightlineLinterOK',
-      \   'buffercurrent': 'lightline#buffer#buffercurrent',
-      \   'bufferbefore': 'lightline#buffer#bufferbefore',
-      \   'bufferafter': 'lightline#buffer#bufferafter'
+      \   'bufferline': 'LightlineBufferline'
       \ },
       \ 'component_type': {
       \   'readonly': 'error',
       \   'linter_warnings': 'warning',
       \   'linter_errors': 'error',
-      \   'buffercurrent': 'tabsel',
-      \   'bufferbefore': 'raw',
-      \   'bufferafter': 'raw'
+      \   'bufferline': 'tabsel',
       \ },
       \ 'component_function': {
       \   'time': 'Timer',
       \   'gitbranch': 'MyGit',
-      \   'bufferinfo': 'lightline#buffer#bufferinfo',
       \   'filetype': 'MyFiletype',
-      \   'fileformat': 'MyFileformat'
+      \   'fileformat': 'MyFileformat',
+      \   'cocstatus': 'coc#status'
       \ },
       \ 'component': {
       \   'separator': ''
       \ },
       \ 'active': {
-      \   'left': [['mode', 'paste'], ['gitbranch', 'filetype', 'modified']],
+      \   'left': [['mode', 'paste'], ['cocstatus','gitbranch', 'filetype', 'modified']],
       \   'right': [['time'], ['lineinfo'],  ['percent']]
       \ }
       \ }
 
+
+function! LightlineBufferline()
+  call bufferline#refresh_status()
+  return [ g:bufferline_status_info.before, g:bufferline_status_info.current, g:bufferline_status_info.after]
+endfunction
 
 function! Timer()
   " return strftime("%H:%S")
@@ -414,37 +326,28 @@ let g:lightline_buffer_maxflen = 30
 
 
 " }}}
-" AsyncRun: {{{
-command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
-autocmd User AsyncRunPre :copen
-" }}}
 " Packadd: {{{
 " Define user commands for updating/cleaning the plugins.
 " Each of them loads minpac, reloads .vimrc to register the
 " information of plugins, then performs the task.
-command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update()
+command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update('', {'do': 'call minpac#status()'})
 command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
+command! PackStatus packadd minpac | source $MYVIMRC | call minpac#status()
 
 " Godown packadd
 " autocmd FileType markdown packadd godown-vim
-
+"
 " Goyo and Limelighy
 command! GoyoStart packadd goyo.vim | packadd limelight.vim | Goyo
 " }}}
-" Syntax: {{{
-let g:vue_disable_pre_processors=1
 " }}}
-" }}}
-" source ~/.config/nvim/config/editor.vim " Colorschemes/indentation
 " Functional Config {{{
 "" Workflow: {{{
-" set shortmess=I " Read :help shortmess for everything else.
 set nocompatible
 filetype off
 " Turn on syntax highlighting
 syntax on
 "  Pick a leader key
-let mapleader = ";"
 " Security
 set modelines=1
 " Folding
@@ -563,6 +466,7 @@ set showmatch " Highlight matching brace
 " Workflow: {{{
 set backspace=indent,eol,start " Use backspace in insert mode
 set pdev=Brother_HL-4570CDW_series " Print from home
+set noshowcmd
 " }}}
 " Persistent undo: {{{
 "
@@ -606,8 +510,6 @@ nnoremap <C-l> <C-w>l
 
 "}}}
 " }}}
-" Autocmds:{{{
-" }}}
 " Colors {{{
 " Fix colors in tmux
 if !has('gui_running')
@@ -635,11 +537,10 @@ if has("gui_running")
 endif
 
 " }}}
-" source ~/.config/nvim/config/mappings.vim " Shortcuts/mappings
 "Mappings {{{
 "
 " Open docs
-nnoremap <silent> K :call ZealDoc()<CR>
+" nnoremap <silent> K :call ZealDoc()<CR>
 
 function! ZealDoc()
   echo 'Opening Zeal...'
@@ -682,5 +583,16 @@ nnoremap <silent><leader>z :GoyoStart<return>
 nnoremap Q <nop> 
 
 " }}}
+" Gui:: {{{
+let s:fontsize = 12
+function! AdjustFontSize(amount)
+  let s:fontsize = s:fontsize+a:amount
+  :execute "GuiFont! Fira Code:h" . s:fontsize
+endfunction
 
+noremap <C-ScrollWheelUp> :call AdjustFontSize(1)<CR>
+noremap <C-ScrollWheelDown> :call AdjustFontSize(-1)<CR>
+inoremap <C-ScrollWheelUp> <Esc>:call AdjustFontSize(1)<CR>a
+inoremap <C-ScrollWheelDown> <Esc>:call AdjustFontSize(-1)<CR>a
+" }}}
 " }}}
