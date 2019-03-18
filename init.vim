@@ -60,7 +60,8 @@ if exists('*minpac#init')
   " Editor plugins/UI
   call minpac#add('ajmwagar/vim-deus') " Colorsheme
   call minpac#add('ajmwagar/lightline-deus')
-  call minpac#add('taohexxx/lightline-buffer')
+  " call minpac#add('taohexxx/lightline-buffer')
+  call minpac#add('ap/vim-buftabline')
   call minpac#add('itchyny/lightline.vim') " Status bar
 
 endif
@@ -213,43 +214,42 @@ set showtabline=2
 let g:lightline = {
       \ 'colorscheme': 'deus',
       \ 'tabline': {
-      \   'left': [ [ ],
-      \             [ 'separator' ],
-      \             [ 'bufferbefore', 'buffercurrent', 'bufferafter' ], ],
+      \   'left': [ [ 'bufferline' ]],
       \   'right': [],
       \ },
       \ 'component_expand': {
       \   'linter_warnings': 'LightlineLinterWarnings',
       \   'linter_errors': 'LightlineLinterErrors',
       \   'linter_ok': 'LightlineLinterOK',
-      \   'buffercurrent': 'lightline#buffer#buffercurrent',
-      \   'bufferbefore': 'lightline#buffer#bufferbefore',
-      \   'bufferafter': 'lightline#buffer#bufferafter'
+      \   'bufferline': 'LightlineBufferline'
       \ },
       \ 'component_type': {
       \   'readonly': 'error',
       \   'linter_warnings': 'warning',
       \   'linter_errors': 'error',
-      \   'buffercurrent': 'tabsel',
-      \   'bufferbefore': 'raw',
-      \   'bufferafter': 'raw'
+      \   'bufferline': 'tabsel',
       \ },
       \ 'component_function': {
       \   'time': 'Timer',
       \   'gitbranch': 'MyGit',
-      \   'bufferinfo': 'lightline#buffer#bufferinfo',
       \   'filetype': 'MyFiletype',
-      \   'fileformat': 'MyFileformat'
+      \   'fileformat': 'MyFileformat',
+      \   'cocstatus': 'coc#status'
       \ },
       \ 'component': {
       \   'separator': ''
       \ },
       \ 'active': {
-      \   'left': [['mode', 'paste'], ['gitbranch', 'filetype', 'modified']],
+      \   'left': [['mode', 'paste'], ['cocstatus','gitbranch', 'filetype', 'modified']],
       \   'right': [['time'], ['lineinfo'],  ['percent']]
       \ }
       \ }
 
+
+function! LightlineBufferline()
+  call bufferline#refresh_status()
+  return [ g:bufferline_status_info.before, g:bufferline_status_info.current, g:bufferline_status_info.after]
+endfunction
 
 function! Timer()
   " return strftime("%H:%S")
@@ -330,8 +330,9 @@ let g:lightline_buffer_maxflen = 30
 " Define user commands for updating/cleaning the plugins.
 " Each of them loads minpac, reloads .vimrc to register the
 " information of plugins, then performs the task.
-command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update()
+command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update('', {'do': 'call minpac#status()'})
 command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
+command! PackStatus packadd minpac | source $MYVIMRC | call minpac#status()
 
 " Godown packadd
 " autocmd FileType markdown packadd godown-vim
@@ -522,7 +523,7 @@ if !has('gui_running')
   " let &t_ZH="\e[3m"
   " let &t_ZR="\e[23m"
   let g:deus_termcolors=256
-  " let NVIM_TUI_ENABLE_TRUE_COLOR=1
+  let NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 
 set background=dark    " Setting dark mode

@@ -1,9 +1,2 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
-let g:netrw_dirhist_1='/home/ajmwagar/usr/dev/git/FPL/fpl-vue/pages'
-let g:netrw_dirhist_2='/home/ajmwagar/usr/dev/git/rust/lzr/src/bin'
-let g:netrw_dirhist_3='/home/ajmwagar/usr/dev/git/rust/lzr/tests'
-let g:netrw_dirhist_4='/home/ajmwagar/.config/alacritty'
-let g:netrw_dirhist_5='/home/ajmwagar/usr/dev/git/FPL/droptimusprime/rs/lambda/dropbot/motherbird/src'
-let g:netrw_dirhist_6='/home/ajmwagar/.config/inkscape'
-let g:netrw_dirhist_7='/home/ajmwagar/usr/dev/git/FPL/droptimusprime/rs/lambda/dropbot/motherbird/src'
+let g:netrw_dirhist_cnt =0
