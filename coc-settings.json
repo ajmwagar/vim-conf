@@ -1,5 +1,13 @@
 {
-"suggest.timeout": 5000,
-"coc.source.word.filetypes": ["md", "markdown"],
-"coc.source.emoji.filetypes": ["md", "markdown"]
+  "suggest.timeout": 5000,
+  "coc.source.word.filetypes": ["md", "markdown"],
+  "coc.source.emoji.filetypes": ["md", "markdown"],
+  "coc.preferences.diagnostic.displayByAle": true,
+  "languageserver": {
+    "omnisharp": {
+      "command": "/opt/omnisharp-roslyn/OmniSharp.exe",
+      "filetypes": ["cs"],
+      "args": ["-lsp"]
+    }
+  }
 }

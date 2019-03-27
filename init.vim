@@ -21,8 +21,7 @@ let g:loaded_tarPlugin = 1 " Nope
 
 " }}}
 " VIMRC: {{{
-" source ~/.config/nvim/config/plugins.vim " Handle Plugins with minpac
-" Import Plugins: {{{
+" source ~/.config/nvim/config/plugins.vim " Handle Plugins with minpac Import Plugins: {{{
 if exists('*minpac#init')
   call minpac#init()
 
@@ -51,16 +50,14 @@ if exists('*minpac#init')
   call minpac#add('w0rp/ale') " ALE
   call minpac#add('KabbAmine/zeavim.vim') " ZealDoc Support
   " Prose mode plugins
-  " call minpac#add('ujihisa/neco-look', {'for': ['md', 'txt', 'markdown']})
   " call minpac#add('davinche/godown-vim', {'type': 'opt'})
-  " call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
-  " call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
+  call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
+  call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
   " call minpac#add('reedes/vim-pencil')
 
   " Editor plugins/UI
   call minpac#add('ajmwagar/vim-deus') " Colorsheme
   call minpac#add('ajmwagar/lightline-deus')
-  " call minpac#add('taohexxx/lightline-buffer')
   call minpac#add('ap/vim-buftabline')
   call minpac#add('itchyny/lightline.vim') " Status bar
 
@@ -179,8 +176,15 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
 " }}}
-" fuzzy finder/ack Settings {{{
+"" ALE: {{{
+let g:ale_sign_error = '❌'
+let g:ale_sign_warning = '⚠'
+let g:ale_lint_on_text_changed = 1
+let g:ale_lint_on_save = 1
+"" }}}
+"" fuzzy finder/ack Settings {{{
 "Use ripgrep
 let g:ackprg = 'rg --vimgrep --no-heading'
 let g:rg_find_command = 'rg --files --follow -g "!{.config,etc,bin,node_modules,.git}/*"'
@@ -207,49 +211,69 @@ let g:fzf_colors =
       \ 'spinner': ['fg', 'Label'],
       \ 'header':  ['fg', 'Comment'] }
 
-" }}}
+"" }}}
 "Lightline {{{ 
 set showtabline=2
 
 " use lightline-buffer in lightline
 let g:lightline = {
       \ 'colorscheme': 'deus',
-      \ 'tabline': {
-      \   'left': [ [ 'bufferline' ]],
-      \   'right': [],
-      \ },
       \ 'component_expand': {
       \   'linter_warnings': 'LightlineLinterWarnings',
       \   'linter_errors': 'LightlineLinterErrors',
-      \   'linter_ok': 'LightlineLinterOK',
-      \   'bufferline': 'LightlineBufferline'
+      \   'linter_ok': 'LightlineLinterOK'
       \ },
       \ 'component_type': {
       \   'readonly': 'error',
       \   'linter_warnings': 'warning',
       \   'linter_errors': 'error',
+      \   'linter_ok': 'left',
       \   'bufferline': 'tabsel',
       \ },
       \ 'component_function': {
+      \   'wordcount': 'WordCount',
       \   'time': 'Timer',
       \   'gitbranch': 'MyGit',
-      \   'filetype': 'MyFiletype',
-      \   'fileformat': 'MyFileformat',
-      \   'cocstatus': 'coc#status'
+      \   'filetype': 'MyFiletype'
       \ },
       \ 'component': {
       \   'separator': ''
       \ },
       \ 'active': {
-      \   'left': [['mode', 'paste'], ['cocstatus','gitbranch', 'filetype', 'modified']],
-      \   'right': [['time'], ['lineinfo'],  ['percent']]
+      \   'left': [['mode', 'paste'], ['gitbranch', 'filetype', 'modified']],
+      \   'right': [['time'], ['linter_ok', 'linter_warnings', 'linter_errors'], ['percent','lineinfo','wordcount']]
       \ }
       \ }
 
+let g:lightline.separator = {
+      \   'left': '', 'right': ''
+      \}
+let g:lightline.subseparator = {
+      \   'left': '', 'right': '' 
+      \}
+" let g:buftabline_separators = 1
+" let g:buftabline_separators_char = ''
 
 function! LightlineBufferline()
   call bufferline#refresh_status()
   return [ g:bufferline_status_info.before, g:bufferline_status_info.current, g:bufferline_status_info.after]
+endfunction
+
+function! StatusDiagnostic() abort
+  let info = get(b:, 'coc_diagnostic_info', {})
+  if empty(info) | return '' | endif
+  let msgs = []
+  if get(info, 'error', 0)
+    call add(msgs, '❌ ' . info['error'])
+  endif
+  if get(info, 'warning', 0)
+    call add(msgs, '⚡ ' . info['warning'])
+  endif
+  return join(msgs, ' ') 
+endfunction
+
+function! MiniStat()
+  return get(g:, 'coc_status', '')
 endfunction
 
 function! Timer()
@@ -260,7 +284,7 @@ endfunction
 
 function! MyGit()
   if (fugitive#head() != '')
-    return fugitive#head() " 
+    return fugitive#head() . ' '
   endif
   return ''
 endfunction
@@ -278,30 +302,63 @@ function! MyFileformat()
   return winwidth(0) > 70 ? (&fileformat . ' ' )  " . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
+function! WordCount()
+  if &buftype !=# 'terminal' 
+    let currentmode = mode()
+    if !exists("g:lastmode_wc")
+      let g:lastmode_wc = currentmode
+    endif
+    " if we modify file, open a new buffer, be in visual ever, or switch modes
+    " since last run, we recompute.
+    if &modified || !exists("b:wordcount") || currentmode =~? '\c.*v' || currentmode != g:lastmode_wc 
+      let g:lastmode_wc = currentmode
+      let l:old_position = getpos('.')
+      let l:old_status = v:statusmsg
+      execute "silent normal g\<c-g>"
+      if v:statusmsg == "--No lines in buffer--"
+        let b:wordcount = 0
+      else
+        let s:split_wc = split(v:statusmsg)
+        if index(s:split_wc, "Selected") < 0
+          let b:wordcount = str2nr(s:split_wc[11])
+        else
+          let b:wordcount = str2nr(s:split_wc[5])
+        endif
+        let v:statusmsg = l:old_status
+      endif
+      call setpos('.', l:old_position)
+      return 'WC ' . b:wordcount
+    else
+      return 'WC '. b:wordcount
+    endif
+  endif
+endfunction
+@ajmwagar
 
 
-" function! LightlineLinterWarnings() abort
-"   let l:counts = ale#statusline#Count(bufnr(''))
-"   let l:all_errors = l:counts.error + l:counts.style_error
-"   let l:all_non_errors = l:counts.total - l:all_errors
-"   return l:counts.total == 0 ? '' : printf('%d ⚠', all_non_errors)
-" endfunction
 
-" function! LightlineLinterErrors() abort
-"   let l:counts = ale#statusline#Count(bufnr(''))
-"   let l:all_errors = l:counts.error + l:counts.style_error
-"   let l:all_non_errors = l:counts.total - l:all_errors
-"   return l:counts.total == 0 ? '' : printf('%d 🔴', all_errors)
-" endfunction
+function! LightlineLinterWarnings() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '' : printf('%d ⚠', all_non_errors)
+endfunction
 
-" function! LightlineLinterOK() abort
-"   let l:counts = ale#statusline#Count(bufnr(''))
-"   let l:all_errors = l:counts.error + l:counts.style_error
-"   let l:all_non_errors = l:counts.total - l:all_errors
-"   return l:counts.total == 0 ? '✓ ' : ''
-" endfunction
+function! LightlineLinterErrors() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '' : printf('%d 🔴', all_errors)
+endfunction
 
-" autocmd User ALELint call s:MaybeUpdateLightline()
+function! LightlineLinterOK() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '✓' : ''
+endfunction
+
+autocmd User ALELint call s:MaybeUpdateLightline()
 
 " Update and show lightline but only if it's visible (e.g., not in Goyo)
 function! s:MaybeUpdateLightline()
@@ -309,7 +366,7 @@ function! s:MaybeUpdateLightline()
     call lightline#update()
   end
 endfunction
-      \ }
+"       \ }
 
 " lightline-buffer ui settings
 " replace these symbols with ascii characters if your environment does not support unicode
@@ -325,6 +382,66 @@ let g:lightline_buffer_enable_devicons = 1
 " max file name length
 let g:lightline_buffer_maxflen = 30
 
+
+" }}}
+" Goyo: {{{
+" Disable cursorline in goyo
+function! ToggleCursorlineAutoGroup()
+  if !exists('#CursorlineAutoGroup#InsertLeave')
+    set cursorline
+    augroup CursorlineAutoGroup
+      autocmd!
+      autocmd InsertLeave,WinEnter * set cursorline
+      autocmd InsertEnter,WinLeave * set nocursorline
+    augroup END
+  else
+    set nocursorline
+    augroup CursorlineAutoGroup
+      autocmd!
+    augroup END
+  endif
+
+endfunction
+
+" call ToggleCursorlineAutoGroup()
+
+set cursorline
+call ToggleCursorlineAutoGroup()
+
+set dictionary=/usr/share/dict/words
+function! s:goyo_enter()
+  call ToggleCursorlineAutoGroup()
+
+  " set nocursorline
+  set showtabline=0
+  " let g:buftabline_show=0
+  " call buftabline#update(0)
+  set spell noci nosi noai 
+  " colorscheme whiteboard
+  colorscheme deus
+  set noshowcmd
+  set scrolloff=999
+  ":Limelight
+  " :SignifyToggle
+
+endfunction
+
+function! s:goyo_leave()
+  call ToggleCursorlineAutoGroup()
+  " set cursorline
+  set showtabline=2
+  let g:buftabline_show=2
+  call buftabline#update(0)
+  set nospell ci si ai 
+  set scrolloff=5
+  colorscheme deus
+  " :SignifyEnable
+  ":Limelight!
+
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 " }}}
 " Packadd: {{{
@@ -353,6 +470,7 @@ syntax on
 set modelines=1
 " Folding
 set foldmethod=marker
+"set timeoutlen=200 " set amount of time for timeout
 set foldlevel=0
 set number " Show line number
 set relativenumber " Enable 'nybrid' line numbers
@@ -465,6 +583,8 @@ set ignorecase " Always case-insensitive
 set showmatch " Highlight matching brace
 " }}}
 " Workflow: {{{
+nmap <space>, :Vimrc<return>
+command! Vimrc edit /home/$USER/.config/nvim/init.vim
 set backspace=indent,eol,start " Use backspace in insert mode
 set pdev=Brother_HL-4570CDW_series " Print from home
 set noshowcmd
@@ -508,6 +628,10 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+nnoremap <C-H> <C-w>H
+nnoremap <C-J> <C-w>J
+nnoremap <C-K> <C-w>K
+nnoremap <C-L> <C-w>L
 
 "}}}
 " }}}
