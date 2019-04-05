@@ -46,19 +46,20 @@ if exists('*minpac#init')
 
   " Autocomplete
   call minpac#add('tpope/vim-fugitive')
-  call minpac#add('neoclide/coc.nvim', {'do': coc#util#install()}) " Conquereer of Completions 
-  call minpac#add('w0rp/ale') " ALE
+  call minpac#add('neoclide/coc.nvim', {'do': 'call coc#util#install()'}) " Conquereer of Completions 
+  " call minpac#add('w0rp/ale') " ALE
   call minpac#add('KabbAmine/zeavim.vim') " ZealDoc Support
   " Prose mode plugins
   " call minpac#add('davinche/godown-vim', {'type': 'opt'})
   call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
   call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
+  call minpac#add('mengelbrecht/lightline-bufferline')
   " call minpac#add('reedes/vim-pencil')
 
   " Editor plugins/UI
   call minpac#add('ajmwagar/vim-deus') " Colorsheme
   call minpac#add('ajmwagar/lightline-deus')
-  call minpac#add('ap/vim-buftabline')
+  " call minpac#add('ap/vim-buftabline')
   call minpac#add('itchyny/lightline.vim') " Status bar
 
 endif
@@ -80,7 +81,7 @@ set updatetime=300
 set shortmess+=c
 
 " always show signcolumns
-" set signcolumn=yes
+set signcolumn=yes
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -126,6 +127,8 @@ endfunction
 
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
+
+autocmd User CocDiagnosticChange silent call s:MaybeUpdateLightline()
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
@@ -215,35 +218,52 @@ let g:fzf_colors =
 "Lightline {{{ 
 set showtabline=2
 
+" let g:lightline = {
+"       \ 'colorscheme': 'wombat',
+"       \ 'active': {
+"       \   'left': [ [ 'mode', 'paste' ],
+"       \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
+"       \ },
+"       \ 'component_function': {
+"       \   'cocstatus': 'coc#status'
+"       \ },
+"       \ }
+
 " use lightline-buffer in lightline
 let g:lightline = {
       \ 'colorscheme': 'deus',
       \ 'component_expand': {
-      \   'linter_warnings': 'LightlineLinterWarnings',
-      \   'linter_errors': 'LightlineLinterErrors',
-      \   'linter_ok': 'LightlineLinterOK'
+      \   'linter_warnings': 'CocWarnings',
+      \   'linter_errors': 'CocErrors',
+      \   'linter_ok': 'CocOK',
+      \   'buffers': 'lightline#bufferline#buffers'
       \ },
       \ 'component_type': {
       \   'readonly': 'error',
       \   'linter_warnings': 'warning',
       \   'linter_errors': 'error',
       \   'linter_ok': 'left',
-      \   'bufferline': 'tabsel',
+      \   'buffers': 'tabsel',
       \ },
       \ 'component_function': {
       \   'wordcount': 'WordCount',
+      \   'lsp': 'MiniStat',
       \   'time': 'Timer',
-      \   'gitbranch': 'MyGit',
-      \   'filetype': 'MyFiletype'
+      \   'gitbranch': 'GitBranch',
+      \   'filetype': 'Filetype'
       \ },
       \ 'component': {
       \   'separator': ''
       \ },
       \ 'active': {
       \   'left': [['mode', 'paste'], ['gitbranch', 'filetype', 'modified']],
-      \   'right': [['time'], ['linter_ok', 'linter_warnings', 'linter_errors'], ['percent','lineinfo','wordcount']]
+      \   'right': [['time'], ['linter_ok',  'lsp', 'linter_warnings', 'linter_errors'], ['percent','lineinfo','wordcount']]
       \ }
       \ }
+
+let g:lightline.tabline = {'left': [['buffers']], 'right': []}
+let g:lightline#bufferline#unnamed      = '[No Name]'
+let g:lightline#bufferline#unicode_symbols = 1
 
 let g:lightline.separator = {
       \   'left': '', 'right': ''
@@ -259,20 +279,20 @@ function! LightlineBufferline()
   return [ g:bufferline_status_info.before, g:bufferline_status_info.current, g:bufferline_status_info.after]
 endfunction
 
-function! StatusDiagnostic() abort
-  let info = get(b:, 'coc_diagnostic_info', {})
-  if empty(info) | return '' | endif
-  let msgs = []
-  if get(info, 'error', 0)
-    call add(msgs, '❌ ' . info['error'])
-  endif
-  if get(info, 'warning', 0)
-    call add(msgs, '⚡ ' . info['warning'])
-  endif
-  return join(msgs, ' ') 
-endfunction
+" function! StatusDiagnostic() abort
+"   let info = get(b:, 'coc_diagnostic_info', {})
+"   if empty(info) | return '' | endif
+"   let msgs = []
+"   if get(info, 'error', 0)
+"     call add(msgs, '❌ ' . info['error'])
+"   endif
+"   if get(info, 'warning', 0)
+"     call add(msgs, '⚡ ' . info['warning'])
+"   endif
+"   return join(msgs, ' ') 
+" endfunction
 
-function! MiniStat()
+function! MiniStat() abort
   return get(g:, 'coc_status', '')
 endfunction
 
@@ -282,25 +302,25 @@ function! Timer()
   " return !date
 endfunction
 
-function! MyGit()
+function! GitBranch()
   if (fugitive#head() != '')
     return fugitive#head() . ' '
   endif
   return ''
 endfunction
 
-function! MyFiletype()
-  if expand('%:t') != ''
-    return expand('%:t') . " "  " .  WebDevIconsGetFileTypeSymbol()
-  else
-    return ''
-  endif
-  " return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol()  ''
-endfunction
+" function! Filetype()
+"   if expand('%:t') != ''
+"     return expand('%:t') . " "  " .  WebDevIconsGetFileTypeSymbol()
+"   else
+"     return ''
+"   endif
+"   " return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol()  ''
+" endfunction
 
-function! MyFileformat()
-  return winwidth(0) > 70 ? (&fileformat . ' ' )  " . WebDevIconsGetFileFormatSymbol()) : ''
-endfunction
+" function! MyFileformat()
+"   return winwidth(0) > 70 ? (&fileformat . ' ' )  " . WebDevIconsGetFileFormatSymbol()) : ''
+" endfunction
 
 function! WordCount()
   if &buftype !=# 'terminal' 
@@ -333,32 +353,49 @@ function! WordCount()
     endif
   endif
 endfunction
-@ajmwagar
 
+" Coc Linter functions
 
-
-function! LightlineLinterWarnings() abort
-  let l:counts = ale#statusline#Count(bufnr(''))
-  let l:all_errors = l:counts.error + l:counts.style_error
-  let l:all_non_errors = l:counts.total - l:all_errors
-  return l:counts.total == 0 ? '' : printf('%d ⚠', all_non_errors)
+function! CocWarnings() abort
+  let info = get(b:, 'coc_diagnostic_info', {})
+  if empty(info) | return '' | endif
+  return printf('%d ⚠', info['warning'])
 endfunction
 
-function! LightlineLinterErrors() abort
-  let l:counts = ale#statusline#Count(bufnr(''))
-  let l:all_errors = l:counts.error + l:counts.style_error
-  let l:all_non_errors = l:counts.total - l:all_errors
-  return l:counts.total == 0 ? '' : printf('%d 🔴', all_errors)
+function! CocErrors() abort
+  let info = get(b:, 'coc_diagnostic_info', {})
+  if empty(info) | return '' | endif
+  return printf('%d 🔴', info['error'])
 endfunction
 
-function! LightlineLinterOK() abort
-  let l:counts = ale#statusline#Count(bufnr(''))
-  let l:all_errors = l:counts.error + l:counts.style_error
-  let l:all_non_errors = l:counts.total - l:all_errors
-  return l:counts.total == 0 ? '✓' : ''
+
+function! CocOK() abort
+  let info = get(b:, 'coc_diagnostic_info', {})
+  return empty(info) ? '✓' : ''
 endfunction
 
-autocmd User ALELint call s:MaybeUpdateLightline()
+" function! LightlineLinterWarnings() abort
+"   let l:counts = ale#statusline#Count(bufnr(''))
+"   let l:all_errors = l:counts.error + l:counts.style_error
+"   let l:all_non_errors = l:counts.total - l:all_errors
+"   return l:counts.total == 0 ? '' : printf('%d ⚠', all_non_errors)
+" endfunction
+
+" function! LightlineLinterErrors() abort
+"   let l:counts = ale#statusline#Count(bufnr(''))
+"   let l:all_errors = l:counts.error + l:counts.style_error
+"   let l:all_non_errors = l:counts.total - l:all_errors
+"   return l:counts.total == 0 ? '' : printf('%d 🔴', all_errors)
+" endfunction
+
+" function! LightlineLinterOK() abort
+"   let l:counts = ale#statusline#Count(bufnr(''))
+"   let l:all_errors = l:counts.error + l:counts.style_error
+"   let l:all_non_errors = l:counts.total - l:all_errors
+"   return l:counts.total == 0 ? '✓' : ''
+" endfunction
+
+
 
 " Update and show lightline but only if it's visible (e.g., not in Goyo)
 function! s:MaybeUpdateLightline()
@@ -377,7 +414,7 @@ let g:lightline_buffer_separator_icon = '  '
 
 " enable devicons, only support utf-8
 " require <https://github.com/ryanoasis/vim-devicons>
-let g:lightline_buffer_enable_devicons = 1
+" let g:lightline_buffer_enable_devicons = 1
 
 " max file name length
 let g:lightline_buffer_maxflen = 30
@@ -430,8 +467,6 @@ function! s:goyo_leave()
   call ToggleCursorlineAutoGroup()
   " set cursorline
   set showtabline=2
-  let g:buftabline_show=2
-  call buftabline#update(0)
   set nospell ci si ai 
   set scrolloff=5
   colorscheme deus
