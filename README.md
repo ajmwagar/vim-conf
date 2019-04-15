@@ -13,11 +13,11 @@
 ## Installation
 
 ### Neovim
-1. `git clone https://github.com/ajmwagar/vimkampf.git ~/.config/nvim`
+1. `git clone https://github.com/ajmwagar/vim-conf.git ~/.config/nvim`
 2. `nvim`
 3. `:PackUpdate`
 ### Vim 8
-1. `git clone https://github.com/ajmwagar/vimkampf.git ~/.vim`
+1. `git clone https://github.com/ajmwagar/vim-conf.git ~/.vim`
 2. `mv ~/.vim/init.vim ~/.vimrc`
 3. `vim`
 4. `:PackUpdate`
