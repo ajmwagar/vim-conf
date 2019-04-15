@@ -1,4 +1,4 @@
-# vimkampf
+# vim-conf
 📓 My (neo)vim files...
 
 ## Plugins
