@@ -190,7 +190,7 @@ let g:ale_lint_on_save = 1
 "" fuzzy finder/ack Settings {{{
 "Use ripgrep
 let g:ackprg = 'rg --vimgrep --no-heading'
-let g:rg_find_command = 'rg --files --follow -g "!{.config,etc,bin,node_modules,.git}/*"'
+let g:rg_find_command = 'rg --files --follow -g "!{.config,etc,node_modules,.git,target}/*"'
 command! -bang -nargs=* Rg call fzf#vim#files('.', {'source': g:rg_find_command}, 0) 
 let g:ackprg = 'rg --vimgrep --no-heading'
 noremap <silent> <C-p> :Rg<return>
@@ -496,6 +496,19 @@ command! GoyoStart packadd goyo.vim | packadd limelight.vim | Goyo
 " }}}
 " Functional Config {{{
 "" Workflow: {{{
+function! OpenUrlUnderCursor()
+    execute "normal BvEy"
+    let url=matchstr(@0, '[a-z]*:\/\/[^ >,;"]*')
+    if url != ""
+        silent exec "!brave '".url."'" | redraw! 
+        echo "opened ".url
+    else
+        echo "No URL under cursor."
+    endif
+endfunction
+nmap <leader>o :call OpenUrlUnderCursor()<CR>
+
+
 set nocompatible
 filetype off
 " Turn on syntax highlighting
@@ -648,17 +661,18 @@ set noswapfile " Begone
 autocmd TermOpen term://* startinsert
 autocmd TermOpen term://* setlocal nonumber norelativenumber
 " Make esc work
-tnoremap <Esc> <C-\><C-n>:bd!<CR>
+tnoremap <Esc> <C-\><C-n>
+" :bd!<CR>
 " :bd!<CR>
 "Better Focus
 " tnoremap <C-h> <C-\><C-N><C-w>h
 " tnoremap <C-j> <C-\><C-N><C-w>j
 " tnoremap <C-k> <C-\><C-N><C-w>k
 " tnoremap <C-l> <C-\><C-N><C-w>l
-inoremap <C-h> <C-\><C-N><C-w>h
-inoremap <C-j> <C-\><C-N><C-w>j
-inoremap <C-k> <C-\><C-N><C-w>k
-inoremap <C-l> <C-\><C-N><C-w>l
+inoremap <C-h> <C-\><C-n><C-w>h
+inoremap <C-j> <C-\><C-n><C-w>j
+inoremap <C-k> <C-\><C-n><C-w>k
+inoremap <C-l> <C-\><C-n><C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
