@@ -21,7 +21,9 @@ let g:loaded_tarPlugin = 1 " Nope
 
 " }}}
 " VIMRC: {{{
-" source ~/.config/nvim/config/plugins.vim " Handle Plugins with minpac Import Plugins: {{{
+" source ~/.config/nvim/config/plugins.vim 
+" " Handle Plugins with minpac 
+" Import Plugins: {{{
 if exists('*minpac#init')
   call minpac#init()
 
@@ -181,13 +183,13 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 " }}}
-"" ALE: {{{
+" ALE: {{{
 let g:ale_sign_error = '❌'
 let g:ale_sign_warning = '⚠'
 let g:ale_lint_on_text_changed = 1
 let g:ale_lint_on_save = 1
 "" }}}
-"" fuzzy finder/ack Settings {{{
+" fuzzy finder/ack Settings {{{
 "Use ripgrep
 let g:ackprg = 'rg --vimgrep --no-heading'
 let g:rg_find_command = 'rg --files --follow -g "!{.config,etc,node_modules,.git,target}/*"'
@@ -495,7 +497,7 @@ command! GoyoStart packadd goyo.vim | packadd limelight.vim | Goyo
 " }}}
 " }}}
 " Functional Config {{{
-"" Workflow: {{{
+" Workflow: {{{
 function! OpenUrlUnderCursor()
     execute "normal BvEy"
     let url=matchstr(@0, '[a-z]*:\/\/[^ >,;"]*')
@@ -528,6 +530,36 @@ filetype plugin indent on " Turn on indeting
 "Make vim more natural
 set splitbelow " Split new panes below
 set splitright " Vertical split new panes to the right
+
+nmap <space>, :Vimrc<return>
+command! Vimrc edit /home/$USER/.config/nvim/init.vim
+set backspace=indent,eol,start " Use backspace in insert mode
+set pdev=Brother_HL-4570CDW_series " Print from home
+set noshowcmd
+
+
+" Workspace Setup
+" ----------------
+function! DefaultWorkspace()
+    " Rough num columns to decide between laptop and big monitor screens
+    let numcol = 2
+    if winwidth(0) >= 220
+        let numcol = 3
+    endif
+
+    if numcol == 3
+        e term://zsh
+        file Shell\ Two
+        vnew
+    endif
+
+    vsp term://neofetch
+    file Context
+    sp term://zsh
+    file Shell\ One
+    resize 60
+endfunction
+command! -register DefaultWorkspace call DefaultWorkspace()
 "" }}}
 " Whitespace:{{{
 set wrap " Wrap lines
@@ -540,7 +572,7 @@ set shiftwidth=2   " Number of auto indent spaces
 set autoindent " Auto indent
 set noshiftround " Indent lines by 2 not by nearest mutiple of two
 " }}}
-" " Netrw: {{{
+" Netrw: {{{
 
 " let g:netrw_liststyle = 3  " Show 'tree' view
 " let g:netrw_banner = 0 " Disable annoying banner
@@ -630,13 +662,6 @@ set smartcase " Enable smart case
 set ignorecase " Always case-insensitive
 set showmatch " Highlight matching brace
 " }}}
-" Workflow: {{{
-nmap <space>, :Vimrc<return>
-command! Vimrc edit /home/$USER/.config/nvim/init.vim
-set backspace=indent,eol,start " Use backspace in insert mode
-set pdev=Brother_HL-4570CDW_series " Print from home
-set noshowcmd
-" }}}
 " Persistent undo: {{{
 "
 if exists("+undofile")
@@ -671,10 +696,19 @@ set splitright
 " Terminal settings
 tnoremap <Leader><Esc> <Esc>
 
+" au BufEnter * if &buftype == 'terminal' | :startinsert | endif
+
 " Window navigation function
 " Make ctrl-h/j/k/l move between windows and auto-insert in terminals
 func! s:mapMoveToWindowInDirection(direction)
-    au BufEnter * if &buftype == 'terminal' | :startinsert | endif
+    func! s:maybeInsertMode(direction)
+        stopinsert
+        execute "wincmd" a:direction
+
+        if &buftype == 'terminal'
+            startinsert!
+        endif
+    endfunc
 
     execute "tnoremap" "<silent>" "<C-" . a:direction . ">"
                 \ "<C-\\><C-n>"
@@ -685,6 +719,30 @@ endfunc
 for dir in ["h", "j", "l", "k"]
     call s:mapMoveToWindowInDirection(dir)
 endfor
+
+
+" Workspace Setup
+" ----------------
+function! DefaultWorkspace()
+    " Rough num columns to decide between laptop and big monitor screens
+    let numcol = 2
+    if winwidth(0) >= 220
+        let numcol = 3
+    endif
+
+    if numcol == 3
+        e term://zsh
+        file Shell\ Two
+        vnew
+    endif
+
+    vsp term://zsh
+    file Shell\ One
+    " wincmd k
+    " resize 4
+    " wincmd h
+endfunction
+command! -register DefaultWorkspace call DefaultWorkspace()
 
 "}}}
 " }}}
@@ -732,10 +790,10 @@ function! ZealDoc()
 endfunction
 
 "Better Focus
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+" nnoremap <C-h> <C-w>h
+" nnoremap <C-j> <C-w>j
+" nnoremap <C-k> <C-w>k
+" nnoremap <C-l> <C-w>l
 
 " Don't lose selection when shifting sidewards
 xnoremap <  <gv
@@ -767,6 +825,9 @@ augroup prose
   autocmd!
   autocmd FileType markdown set spell
 augroup end
+" }}}
+" Workflow: {{{
+
 " }}}
 " Gui:: {{{
 let s:fontsize = 12
