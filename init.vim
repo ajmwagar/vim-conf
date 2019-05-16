@@ -662,25 +662,29 @@ autocmd TermOpen term://* startinsert
 autocmd TermOpen term://* setlocal nonumber norelativenumber
 " Make esc work
 tnoremap <Esc> <C-\><C-n>
-" :bd!<CR>
-" :bd!<CR>
-"Better Focus
-" tnoremap <C-h> <C-\><C-N><C-w>h
-" tnoremap <C-j> <C-\><C-N><C-w>j
-" tnoremap <C-k> <C-\><C-N><C-w>k
-" tnoremap <C-l> <C-\><C-N><C-w>l
-inoremap <C-h> <C-\><C-n><C-w>h
-inoremap <C-j> <C-\><C-n><C-w>j
-inoremap <C-k> <C-\><C-n><C-w>k
-inoremap <C-l> <C-\><C-n><C-w>l
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-nnoremap <C-H> <C-w>H
-nnoremap <C-J> <C-w>J
-nnoremap <C-K> <C-w>K
-nnoremap <C-L> <C-w>L
+
+" Window split settings
+highlight TermCursor ctermfg=red guifg=red
+set splitbelow
+set splitright
+
+" Terminal settings
+tnoremap <Leader><Esc> <Esc>
+
+" Window navigation function
+" Make ctrl-h/j/k/l move between windows and auto-insert in terminals
+func! s:mapMoveToWindowInDirection(direction)
+    au BufEnter * if &buftype == 'terminal' | :startinsert | endif
+
+    execute "tnoremap" "<silent>" "<C-" . a:direction . ">"
+                \ "<C-\\><C-n>"
+                \ ":call <SID>maybeInsertMode(\"" . a:direction . "\")<CR>"
+    execute "nnoremap" "<silent>" "<C-" . a:direction . ">"
+                \ ":call <SID>maybeInsertMode(\"" . a:direction . "\")<CR>"
+endfunc
+for dir in ["h", "j", "l", "k"]
+    call s:mapMoveToWindowInDirection(dir)
+endfor
 
 "}}}
 " }}}
