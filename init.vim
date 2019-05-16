@@ -532,6 +532,7 @@ set splitbelow " Split new panes below
 set splitright " Vertical split new panes to the right
 
 nmap <space>, :Vimrc<return>
+nmap <C-,> :Vimrc<return>
 command! Vimrc edit /home/$USER/.config/nvim/init.vim
 set backspace=indent,eol,start " Use backspace in insert mode
 set pdev=Brother_HL-4570CDW_series " Print from home
@@ -686,7 +687,7 @@ set noswapfile " Begone
 autocmd TermOpen term://* startinsert
 autocmd TermOpen term://* setlocal nonumber norelativenumber
 " Make esc work
-tnoremap <Esc> <C-\><C-n>
+" tnoremap <Esc> <C-\><C-n>
 
 " Window split settings
 highlight TermCursor ctermfg=red guifg=red
@@ -694,7 +695,7 @@ set splitbelow
 set splitright
 
 " Terminal settings
-tnoremap <Leader><Esc> <Esc>
+tnoremap <Leader><Esc> <C-\><C-n>
 
 " au BufEnter * if &buftype == 'terminal' | :startinsert | endif
 
