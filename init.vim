@@ -36,6 +36,7 @@ if exists('*minpac#init')
   endfunction
 
   call minpac#add('christoomey/vim-tmux-navigator')
+  call minpac#add('mhinz/vim-startify')
 
   " Workflow plugins
   " call minpac#add('posva/vim-vue') " vue syntax

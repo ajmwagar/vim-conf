@@ -1,10 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =8
-let g:netrw_dirhist_1='/home/ajmwagar/usr/dev/git/vim-deus'
-let g:netrw_dirhist_2='/home/ajmwagar/usr/dev/git/rust/ufo/examples'
-let g:netrw_dirhist_3='/home/ajmwagar/usr/dev/git/rust/Blastroids/src'
-let g:netrw_dirhist_4='/home/ajmwagar/usr/dev/git/rust/dronezone/src/game/items'
-let g:netrw_dirhist_5='/home/ajmwagar/usr/dev/git/m/src/bin'
-let g:netrw_dirhist_6='/home/ajmwagar/usr/hack/tools/klog/src/unix'
-let g:netrw_dirhist_7='/home/ajmwagar/usr/dev/git/rust/pi-calc'
-let g:netrw_dirhist_8='/home/ajmwagar/usr/dev/git/rust/pi-calc/src'
+let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_1='/home/ajmwagar/usr/dev/git/rust/rustynes/src/nes'
+let g:netrw_dirhist_2='/home/ajmwagar/usr/dev/git/rust/rustynes/src/nes/cpu'
+let g:netrw_dirhist_3='/home/ajmwagar/usr/dev/git/rust/asciibator/src'
+let g:netrw_dirhist_4='/home/ajmwagar/usr/dev/git/rust/stego/src'
+let g:netrw_dirhist_5='/home/ajmwagar'
