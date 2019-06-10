@@ -35,11 +35,14 @@ if exists('*minpac#init')
     UpdateRemotePlugins
   endfunction
 
+  call minpac#add('christoomey/vim-tmux-navigator')
+
   " Workflow plugins
   " call minpac#add('posva/vim-vue') " vue syntax
   call minpac#add('sheerun/vim-polyglot') " Syntax files for most languages
   call minpac#add('jiangmiao/auto-pairs') " Auto close brackets and ''
   call minpac#add('tpope/vim-commentary') " Toggle comments with ease
+  " cal minpac#add('Shougo/defx.nvim', {'do': ':UpdateRemotePlugins' })
   " call minpac#add('ConradIrwin/vim-bracketed-paste') " Paste better into vim from terminal
 
   " Searching/Fuzzy Finding
@@ -69,7 +72,7 @@ endif
 " Plugin Config: {{{
 " COC {{{
 
-let g:coc_force_debug = 1
+" let g:coc_force_debug = 1
 "Better display for messages
 set cmdheight=1
 set noshowmode
@@ -77,7 +80,7 @@ set noruler
 set noshowcmd
 
 " Smaller updatetime for CursorHold & CursorHoldI
-set updatetime=300
+set updatetime=100
 
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
@@ -258,21 +261,30 @@ let g:lightline = {
       \   'separator': ''
       \ },
       \ 'active': {
-      \   'left': [['mode', 'paste'], ['gitbranch', 'filetype', 'modified']],
-      \   'right': [['time'], ['linter_ok',  'lsp', 'linter_warnings', 'linter_errors'], ['percent','lineinfo','wordcount']]
+      \   'left': [['mode', 'paste'], ['gitbranch', 'modified']],
+      \   'right': [
+      \             ['time'], 
+      \             ['linter_ok', 'lsp', 'linter_warnings', 'linter_errors'], 
+      \             ['percent','lineinfo']
+      \]
       \ }
       \ }
 
 let g:lightline.tabline = {'left': [['buffers']], 'right': []}
 let g:lightline#bufferline#unnamed      = '[No Name]'
+let g:lightline#bufferline#show_number = 1
 let g:lightline#bufferline#unicode_symbols = 1
 
-let g:lightline.separator = {
-      \   'left': '', 'right': ''
-      \}
-let g:lightline.subseparator = {
-      \   'left': '', 'right': '' 
-      \}
+" let g:lightline.separator = {
+"       \   'left': '', 'right': ''
+"       \}
+" let g:lightline.subseparator = {
+"       \   'left': '', 'right': '' 
+"       \}
+let g:lightline.separator = { 'left': "\ue0b8", 'right': "\ue0be" }
+let g:lightline.subseparator = { 'left': "\ue0b9", 'right': "\ue0b9" }
+let g:lightline.tabline_separator = { 'left': "\ue0bc", 'right': "\ue0ba" }
+let g:lightline.tabline_subseparator = { 'left': "\ue0bb", 'right': "\ue0bb" }
 " let g:buftabline_separators = 1
 " let g:buftabline_separators_char = ''
 
@@ -778,7 +790,7 @@ endif
 "
 " Open docs
 " nnoremap <silent> K :call ZealDoc()<CR>
-
+imap jj <Esc>
 function! ZealDoc()
   echo 'Opening Zeal...'
   if expand('%:e') == 'js'
