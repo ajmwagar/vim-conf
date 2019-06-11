@@ -1,4 +1,11 @@
-" Setup: {{{
+"           __
+"   .--.--.|__|.--------.
+"   |  |  ||  ||        |
+"    \___/ |__||__|__|__|
+"
+" By: Avery Wagar (@ajmwagar)
+
+" Setup Neovim: {{{
 
 " For a paranoia.
 " Normally `:set nocp` is not needed, because it is done automatically
@@ -25,10 +32,9 @@ let g:loaded_getscriptPlugin = 1 " Dont need it
 let g:loaded_tarPlugin = 1 " Nope
 
 " }}}
-" VIMRC: {{{
-" source ~/.config/nvim/config/plugins.vim 
-" " Handle Plugins with minpac 
+" Config: {{{
 " Import Plugins: {{{
+" Handle Plugins with minpac 
 if exists('*minpac#init')
   call minpac#init()
 
@@ -678,10 +684,10 @@ nnoremap <silent><leader>z :GoyoStart<return>
 nnoremap Q <nop> 
 
 " }}}
-" Autocommands: {{{
+" Autocommands: 
 augroup prose
   autocmd!
   autocmd FileType markdown set spell
 augroup end
-" }}}
+" 
 " }}}
