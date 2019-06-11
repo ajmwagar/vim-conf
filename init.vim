@@ -1,3 +1,5 @@
+" Setup: {{{
+
 " For a paranoia.
 " Normally `:set nocp` is not needed, because it is done automatically
 " when .vimrc is found.
@@ -6,10 +8,13 @@ if &compatible
   " only when 'compatible' is set.
   set nocompatible
 endif
+
+" Set leader
 let mapleader = ";"
 
-" Begone default plugins: {{{
-"
+" }}}
+" Disable default plugins: {{{
+
 let g:loaded_matchit = 1 " Don't need it
 let g:loaded_gzip = 1 " Gzip is pointless
 let g:loaded_zipPlugin = 1 " zip is also pointless
@@ -28,45 +33,36 @@ if exists('*minpac#init')
   call minpac#init()
 
   " minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
-  call minpac#add('k-takata/minpac', {'type': 'opt'})
   " Fast plugin manager
+  call minpac#add('k-takata/minpac', {'type': 'opt'})
 
   function! DoRemote()
     UpdateRemotePlugins
   endfunction
 
-  call minpac#add('christoomey/vim-tmux-navigator')
-  call minpac#add('mhinz/vim-startify')
-
   " Workflow plugins
-  " call minpac#add('posva/vim-vue') " vue syntax
+  call minpac#add('christoomey/vim-tmux-navigator')
   call minpac#add('sheerun/vim-polyglot') " Syntax files for most languages
   call minpac#add('jiangmiao/auto-pairs') " Auto close brackets and ''
   call minpac#add('tpope/vim-commentary') " Toggle comments with ease
-  " cal minpac#add('Shougo/defx.nvim', {'do': ':UpdateRemotePlugins' })
-  " call minpac#add('ConradIrwin/vim-bracketed-paste') " Paste better into vim from terminal
+  call minpac#add('tpope/vim-fugitive')
 
   " Searching/Fuzzy Finding
   call minpac#add('junegunn/fzf', { 'do': './install --all' }) | call minpac#add('junegunn/fzf.vim') " FZF <3's Vim
-  call minpac#add('mileszs/ack.vim') " Search me, baby
 
   " Autocomplete
-  call minpac#add('tpope/vim-fugitive')
   call minpac#add('neoclide/coc.nvim', {'do': 'call coc#util#install()'}) " Conquereer of Completions 
   " call minpac#add('w0rp/ale') " ALE
-  call minpac#add('KabbAmine/zeavim.vim') " ZealDoc Support
-  " Prose mode plugins
-  " call minpac#add('davinche/godown-vim', {'type': 'opt'})
-  call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
-  call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
-  call minpac#add('mengelbrecht/lightline-bufferline')
-  " call minpac#add('reedes/vim-pencil')
+  " call minpac#add('KabbAmine/zeavim.vim') " ZealDoc Support
 
   " Editor plugins/UI
+  call minpac#add('mhinz/vim-startify')
   call minpac#add('ajmwagar/vim-deus') " Colorsheme
   call minpac#add('ajmwagar/lightline-deus')
-  " call minpac#add('ap/vim-buftabline')
   call minpac#add('itchyny/lightline.vim') " Status bar
+  call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
+  " call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
+  call minpac#add('mengelbrecht/lightline-bufferline')
 
 endif
 " }}}
@@ -236,16 +232,6 @@ noremap <C-t> :LAck<space>
 "Lightline {{{ 
 set showtabline=2
 
-" let g:lightline = {
-"       \ 'colorscheme': 'wombat',
-"       \ 'active': {
-"       \   'left': [ [ 'mode', 'paste' ],
-"       \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
-"       \ },
-"       \ 'component_function': {
-"       \   'cocstatus': 'coc#status'
-"       \ },
-"       \ }
 "
 function! User()
   return system('echo -n $LOGNAME@$(/bin/hostname -s)')
@@ -296,36 +282,15 @@ let g:lightline#bufferline#unnamed      = '[No Name]'
 let g:lightline#bufferline#show_number = 1
 let g:lightline#bufferline#unicode_symbols = 1
 
-" let g:lightline.separator = {
-"       \   'left': '', 'right': ''
-"       \}
-" let g:lightline.subseparator = {
-"       \   'left': '', 'right': '' 
-"       \}
 let g:lightline.separator = { 'left': "\ue0b8", 'right': "\ue0be" }
 let g:lightline.subseparator = { 'left': "\ue0b9", 'right': "\ue0b9" }
 let g:lightline.tabline_separator = { 'left': "\ue0bc", 'right': "\ue0ba" }
 let g:lightline.tabline_subseparator = { 'left': "\ue0bb", 'right': "\ue0bb" }
-" let g:buftabline_separators = 1
-" let g:buftabline_separators_char = ''
 
 function! LightlineBufferline()
   call bufferline#refresh_status()
   return [ g:bufferline_status_info.before, g:bufferline_status_info.current, g:bufferline_status_info.after]
 endfunction
-
-" function! StatusDiagnostic() abort
-"   let info = get(b:, 'coc_diagnostic_info', {})
-"   if empty(info) | return '' | endif
-"   let msgs = []
-"   if get(info, 'error', 0)
-"     call add(msgs, '❌ ' . info['error'])
-"   endif
-"   if get(info, 'warning', 0)
-"     call add(msgs, '⚡ ' . info['warning'])
-"   endif
-"   return join(msgs, ' ') 
-" endfunction
 
 function! MiniStat() abort
   return get(g:, 'coc_status', '')
@@ -344,50 +309,6 @@ function! GitBranch()
   return ''
 endfunction
 
-" function! Filetype()
-"   if expand('%:t') != ''
-"     return expand('%:t') . " "  " .  WebDevIconsGetFileTypeSymbol()
-"   else
-"     return ''
-"   endif
-"   " return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol()  ''
-" endfunction
-
-" function! MyFileformat()
-"   return winwidth(0) > 70 ? (&fileformat . ' ' )  " . WebDevIconsGetFileFormatSymbol()) : ''
-" endfunction
-
-function! WordCount()
-  if &buftype !=# 'terminal' 
-    let currentmode = mode()
-    if !exists("g:lastmode_wc")
-      let g:lastmode_wc = currentmode
-    endif
-    " if we modify file, open a new buffer, be in visual ever, or switch modes
-    " since last run, we recompute.
-    if &modified || !exists("b:wordcount") || currentmode =~? '\c.*v' || currentmode != g:lastmode_wc 
-      let g:lastmode_wc = currentmode
-      let l:old_position = getpos('.')
-      let l:old_status = v:statusmsg
-      execute "silent normal g\<c-g>"
-      if v:statusmsg == "--No lines in buffer--"
-        let b:wordcount = 0
-      else
-        let s:split_wc = split(v:statusmsg)
-        if index(s:split_wc, "Selected") < 0
-          let b:wordcount = str2nr(s:split_wc[11])
-        else
-          let b:wordcount = str2nr(s:split_wc[5])
-        endif
-        let v:statusmsg = l:old_status
-      endif
-      call setpos('.', l:old_position)
-      return 'WC ' . b:wordcount
-    else
-      return 'WC '. b:wordcount
-    endif
-  endif
-endfunction
 
 " Coc Linter functions
 
@@ -409,28 +330,6 @@ function! CocOK() abort
   return empty(info) ? '✓' : ''
 endfunction
 
-" function! LightlineLinterWarnings() abort
-"   let l:counts = ale#statusline#Count(bufnr(''))
-"   let l:all_errors = l:counts.error + l:counts.style_error
-"   let l:all_non_errors = l:counts.total - l:all_errors
-"   return l:counts.total == 0 ? '' : printf('%d ⚠', all_non_errors)
-" endfunction
-
-" function! LightlineLinterErrors() abort
-"   let l:counts = ale#statusline#Count(bufnr(''))
-"   let l:all_errors = l:counts.error + l:counts.style_error
-"   let l:all_non_errors = l:counts.total - l:all_errors
-"   return l:counts.total == 0 ? '' : printf('%d 🔴', all_errors)
-" endfunction
-
-" function! LightlineLinterOK() abort
-"   let l:counts = ale#statusline#Count(bufnr(''))
-"   let l:all_errors = l:counts.error + l:counts.style_error
-"   let l:all_non_errors = l:counts.total - l:all_errors
-"   return l:counts.total == 0 ? '✓' : ''
-" endfunction
-
-
 
 " Update and show lightline but only if it's visible (e.g., not in Goyo)
 function! s:MaybeUpdateLightline()
@@ -446,10 +345,6 @@ let g:lightline_buffer_readonly_icon = ''
 let g:lightline_buffer_modified_icon = '•'
 let g:lightline_buffer_git_icon = ' '
 let g:lightline_buffer_separator_icon = '  '
-
-" enable devicons, only support utf-8
-" require <https://github.com/ryanoasis/vim-devicons>
-" let g:lightline_buffer_enable_devicons = 1
 
 " max file name length
 let g:lightline_buffer_maxflen = 30
@@ -475,39 +370,25 @@ function! ToggleCursorlineAutoGroup()
 
 endfunction
 
-" call ToggleCursorlineAutoGroup()
-
 set cursorline
 call ToggleCursorlineAutoGroup()
 
 set dictionary=/usr/share/dict/words
 function! s:goyo_enter()
   call ToggleCursorlineAutoGroup()
-
-  " set nocursorline
   set showtabline=0
-  " let g:buftabline_show=0
-  " call buftabline#update(0)
   set spell noci nosi noai 
-  " colorscheme whiteboard
   colorscheme deus
   set noshowcmd
   set scrolloff=999
-  ":Limelight
-  " :SignifyToggle
-
 endfunction
 
 function! s:goyo_leave()
   call ToggleCursorlineAutoGroup()
-  " set cursorline
   set showtabline=2
   set nospell ci si ai 
   set scrolloff=5
   colorscheme deus
-  " :SignifyEnable
-  ":Limelight!
-
 endfunction
 
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
@@ -523,7 +404,6 @@ let g:ascii = [
       \ ''
       \]
 let g:startify_custom_header = g:ascii
-
 "" }}}
 " Packadd: {{{
 " Define user commands for updating/cleaning the plugins.
@@ -536,13 +416,12 @@ command! PackStatus packadd minpac | source $MYVIMRC | call minpac#status()
 " Godown packadd
 " autocmd FileType markdown packadd godown-vim
 "
-" Goyo and Limelighy
+" Goyo and Limelight
 command! GoyoStart packadd goyo.vim | packadd limelight.vim | Goyo
 " }}}
 " }}}
 " Functional Config {{{
 " Workflow: {{{
-
 " define a fancy nvim clipboard provider
 let g:clipboard = {
   \   'name': 'Vim Clipboard',
@@ -560,6 +439,8 @@ let g:clipboard = {
 " now vim sessions can share yank buffers by using the virtually unheard of
 " secondary selection buffer!
 set clipboard=unnamed
+
+
 function! OpenUrlUnderCursor()
     execute "normal BvEy"
     let url=matchstr(@0, '[a-z]*:\/\/[^ >,;"]*')
@@ -573,23 +454,21 @@ endfunction
 nmap <leader>o :call OpenUrlUnderCursor()<CR>
 
 
-set nocompatible
 filetype off
 " Turn on syntax highlighting
 syntax on
-"  Pick a leader key
 " Security
 set modelines=1
 " Folding
 set foldmethod=marker
-"set timeoutlen=200 " set amount of time for timeout
 set foldlevel=0
 set number " Show line number
 set relativenumber " Enable 'nybrid' line numbers
 set mouse=n " Disable mouse in insert mode
 set dictionary+=/usr/share/dict/words "Add  a dictionary
 filetype plugin indent on " Turn on indeting
-"Make vim more natural
+
+" Make vim more natural
 set splitbelow " Split new panes below
 set splitright " Vertical split new panes to the right
 
@@ -599,30 +478,6 @@ command! Vimrc edit /home/$USER/.config/nvim/init.vim
 set backspace=indent,eol,start " Use backspace in insert mode
 set pdev=Brother_HL-4570CDW_series " Print from home
 set noshowcmd
-
-
-" Workspace Setup
-" ----------------
-function! DefaultWorkspace()
-    " Rough num columns to decide between laptop and big monitor screens
-    let numcol = 2
-    if winwidth(0) >= 220
-        let numcol = 3
-    endif
-
-    if numcol == 3
-        e term://zsh
-        file Shell\ Two
-        vnew
-    endif
-
-    vsp term://neofetch
-    file Context
-    sp term://zsh
-    file Shell\ One
-    resize 60
-endfunction
-command! -register DefaultWorkspace call DefaultWorkspace()
 "" }}}
 " Whitespace:{{{
 set wrap " Wrap lines
@@ -637,72 +492,72 @@ set noshiftround " Indent lines by 2 not by nearest mutiple of two
 " }}}
 " Netrw: {{{
 
-" let g:netrw_liststyle = 3  " Show 'tree' view
-" let g:netrw_banner = 0 " Disable annoying banner
-" let g:netrw_winsize = 15 " 15 pecent of screen size
-" let g:netrw_altv = 1 " Auto cd
-" let g:netrw_preview= 1 " open previews vertically
-" let g:netrw_browse_split = 4 " Open in last used buffer
+let g:netrw_liststyle = 3  " Show 'tree' view
+let g:netrw_banner = 0 " Disable annoying banner
+let g:netrw_winsize = 15 " 15 pecent of screen size
+let g:netrw_altv = 1 " Auto cd
+let g:netrw_preview= 1 " open previews vertically
+let g:netrw_browse_split = 4 " Open in last used buffer
 
-" " Toggle Vexplore with leader-t
-" function! ToggleVExplorer()
-"   if exists("t:expl_buf_num")
-"     let expl_win_num = bufwinnr(t:expl_buf_num)
-"     if expl_win_num != -1
-"       let cur_win_nr = winnr()
-"       exec expl_win_num . 'wincmd w'
-"       bd
-"       " exec cur_win_nr . 'wincmd w'
-"       unlet t:expl_buf_num
-"     else
-"       unlet t:expl_buf_num
-"     endif
-"   else
-"     exec '1wincmd w'
-"     Vexplore
-"     let t:expl_buf_num = bufnr("%")
-"   endif
-" endfunction
+" Toggle Vexplore with leader-t
+function! ToggleVExplorer()
+  if exists("t:expl_buf_num")
+    let expl_win_num = bufwinnr(t:expl_buf_num)
+    if expl_win_num != -1
+      let cur_win_nr = winnr()
+      exec expl_win_num . 'wincmd w'
+      bd
+      " exec cur_win_nr . 'wincmd w'
+      unlet t:expl_buf_num
+    else
+      unlet t:expl_buf_num
+    endif
+  else
+    exec '1wincmd w'
+    Vexplore
+    let t:expl_buf_num = bufnr("%")
+  endif
+endfunction
 
-" map <silent> <leader>t :call ToggleVExplorer()<CR>
+map <silent> <leader>t :call ToggleVExplorer()<CR>
 
-" " Dir setup
-" " set autochdir
+" Dir setup
+" set autochdir
 
-" " Follow symlinks
-" function! FollowSymlink()
-"   let current_file = expand('%:p')
-"   " Check for symlink
-"   if getftype(current_file) == 'link'
-"     " Open actual filepath
-"     let actual_file = resolve(current_file)
-"     silent! execute 'file ' . actual_file
-"   endif
-" endfunction
+" Follow symlinks
+function! FollowSymlink()
+  let current_file = expand('%:p')
+  " Check for symlink
+  if getftype(current_file) == 'link'
+    " Open actual filepath
+    let actual_file = resolve(current_file)
+    silent! execute 'file ' . actual_file
+  endif
+endfunction
 
 
-" function! SetProjectRoot()
-"   " default to current
-"   lcd %:p:h
-"   let my_git_dir = system("git rev-parse --show-toplevel")
-"   " Check output
-"   let is_not_git_dir = matchstr(my_git_dir, '^fatal:.*')
-"   let is_not_dot_git_dir = matchstr(my_git_dir, '\n')
+function! SetProjectRoot()
+  " default to current
+  lcd %:p:h
+  let my_git_dir = system("git rev-parse --show-toplevel")
+  " Check output
+  let is_not_git_dir = matchstr(my_git_dir, '^fatal:.*')
+  let is_not_dot_git_dir = matchstr(my_git_dir, '\n')
 
-"   if empty(is_not_git_dir)
-"     if empty(is_not_dot_git_dir)
-"       lcd my_git_dir
-"     endif
-"   endif
-" endfunction
+  if empty(is_not_git_dir)
+    if empty(is_not_dot_git_dir)
+      lcd my_git_dir
+    endif
+  endif
+endfunction
 
-" autocmd BufNewFile *
-"       \   call SetProjectRoot()
+autocmd BufNewFile *
+      \   call SetProjectRoot()
 
-" autocmd CursorMoved silent *
-"       \ if &filetype == 'netrw' |
-"       \   call SetProjectRoot() |
-"       \ endif
+autocmd CursorMoved silent *
+      \ if &filetype == 'netrw' |
+      \   call SetProjectRoot() |
+      \ endif
 
 " " }}}
 " Performance: {{{
@@ -748,18 +603,11 @@ set noswapfile " Begone
 "
 autocmd TermOpen term://* startinsert
 autocmd TermOpen term://* setlocal nonumber norelativenumber
-" Make esc work
-" tnoremap <Esc> <C-\><C-n>
-
-" Window split settings
-highlight TermCursor ctermfg=red guifg=red
-set splitbelow
-set splitright
 
 " Terminal settings
-tnoremap <Leader><Esc> <C-\><C-n>
 
-" au BufEnter * if &buftype == 'terminal' | :startinsert | endif
+" Make esc work
+tnoremap <Leader><Esc> <C-\><C-n>
 
 " Window navigation function
 " Make ctrl-h/j/k/l move between windows and auto-insert in terminals
@@ -783,30 +631,6 @@ for dir in ["h", "j", "l", "k"]
     call s:mapMoveToWindowInDirection(dir)
 endfor
 
-
-" Workspace Setup
-" ----------------
-function! DefaultWorkspace()
-    " Rough num columns to decide between laptop and big monitor screens
-    let numcol = 2
-    if winwidth(0) >= 220
-        let numcol = 3
-    endif
-
-    if numcol == 3
-        e term://zsh
-        file Shell\ Two
-        vnew
-    endif
-
-    vsp term://zsh
-    file Shell\ One
-    " wincmd k
-    " resize 4
-    " wincmd h
-endfunction
-command! -register DefaultWorkspace call DefaultWorkspace()
-
 "}}}
 " }}}
 " Colors {{{
@@ -817,50 +641,21 @@ if !has('gui_running')
   " Colors
   set termguicolors
   set t_Co=256
-  " let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  " let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-  " let &t_ZH="\e[3m"
-  " let &t_ZR="\e[23m"
   let g:deus_termcolors=256
   let NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 
 set background=dark    " Setting dark mode
 let g:deus_italics = 1
-"set background=light    " Setting light mode
 set fillchars+=vert:\ 
 colorscheme deus
 
-if has("gui_running")
-  set guifont ="DejaVuSansMono Nerd Font Complete Mono:h11"
-endif
 
 " }}}
 "Mappings {{{
-"
-" Open docs
-" nnoremap <silent> K :call ZealDoc()<CR>
-imap jj <Esc>
-function! ZealDoc()
-  echo 'Opening Zeal...'
-  if expand('%:e') == 'js'
-    execute "silent !zeal \"nodejs: " . expand('<cword>') . "\" > /dev/null \n\n"
-  elseif expand('%:e') == 'cs'
-    execute "silent !zeal \"unity3d: " . expand('<cword>') . "\" > /dev/null \n\n"
-  else
-    execute "silent !zeal \"" . &filetype . ": " . expand('<cword>') . "\" > /dev/null \n\n"
-  endif
-endfunction
-
-"Better Focus
-" nnoremap <C-h> <C-w>h
-" nnoremap <C-j> <C-w>j
-" nnoremap <C-k> <C-w>k
-" nnoremap <C-l> <C-w>l
-
 " Don't lose selection when shifting sidewards
-xnoremap <  <gv
-xnoremap >  >gv
+xnoremap < <gv
+xnoremap > >gv
 
 " Switching Buffers
 noremap <leader>[ :bp<return>
@@ -868,6 +663,7 @@ noremap <leader>] :bn<return>
 
 "Find and replace
 map <leader>fr :%s///g<left><left>
+" Find and replace on current line only
 map <leader>frl :s///g<left><left>
 map <silent><leader><space> :let @/=''<cr> " clear search
 
@@ -881,7 +677,6 @@ nnoremap <silent><leader>z :GoyoStart<return>
 " Disable ex-mode 
 nnoremap Q <nop> 
 
-
 " }}}
 " Autocommands: {{{
 augroup prose
@@ -889,19 +684,4 @@ augroup prose
   autocmd FileType markdown set spell
 augroup end
 " }}}
-" Workflow: {{{
 " }}}
-" Gui:: {{{
-let s:fontsize = 12
-function! AdjustFontSize(amount)
-  let s:fontsize = s:fontsize+a:amount
-  :execute "GuiFont! Fira Code:h" . s:fontsize
-endfunction
-
-noremap <C-ScrollWheelUp> :call AdjustFontSize(1)<CR>
-noremap <C-ScrollWheelDown> :call AdjustFontSize(-1)<CR>
-inoremap <C-ScrollWheelUp> <Esc>:call AdjustFontSize(1)<CR>a
-inoremap <C-ScrollWheelDown> <Esc>:call AdjustFontSize(-1)<CR>a
-" }}}
-" }}}
-"
