@@ -246,6 +246,11 @@ set showtabline=2
 "       \   'cocstatus': 'coc#status'
 "       \ },
 "       \ }
+"
+function! User()
+  return system('echo -n $LOGNAME@$(/bin/hostname -s)')
+  " . "@" . echo "silent !hostname"
+endfunction
 
 " use lightline-buffer in lightline
 let g:lightline = {
@@ -261,6 +266,8 @@ let g:lightline = {
       \   'linter_warnings': 'warning',
       \   'linter_errors': 'error',
       \   'linter_ok': 'left',
+      \   'time': 'left',
+      \   'user': 'left',
       \   'buffers': 'tabsel',
       \ },
       \ 'component_function': {
@@ -268,22 +275,23 @@ let g:lightline = {
       \   'lsp': 'MiniStat',
       \   'time': 'Timer',
       \   'gitbranch': 'GitBranch',
-      \   'filetype': 'Filetype'
+      \   'filetype': 'Filetype',
+      \   'user': 'User'
       \ },
       \ 'component': {
       \   'separator': ''
       \ },
       \ 'active': {
-      \   'left': [['mode', 'paste'], ['gitbranch', 'modified']],
+      \   'left': [['mode', 'paste'], ['gitbranch', 'filename', 'modified']],
       \   'right': [
-      \             ['time'], 
-      \             ['linter_ok', 'lsp', 'linter_warnings', 'linter_errors'], 
+      \             ['linter_ok'],
+      \             ['lsp', 'linter_warnings', 'linter_errors'], 
       \             ['percent','lineinfo']
       \]
       \ }
       \ }
 
-let g:lightline.tabline = {'left': [['buffers']], 'right': []}
+let g:lightline.tabline = {'left': [['buffers']], 'right': [['user', 'time']]}
 let g:lightline#bufferline#unnamed      = '[No Name]'
 let g:lightline#bufferline#show_number = 1
 let g:lightline#bufferline#unicode_symbols = 1
@@ -506,6 +514,17 @@ autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 " }}}
+" Startify: {{{
+let g:ascii = [
+      \ '           __',
+      \ '   .--.--.|__|.--------.',
+      \ '   |  |  ||  ||        |',
+      \ '    \___/ |__||__|__|__|',
+      \ ''
+      \]
+let g:startify_custom_header = g:ascii
+
+"" }}}
 " Packadd: {{{
 " Define user commands for updating/cleaning the plugins.
 " Each of them loads minpac, reloads .vimrc to register the
@@ -853,7 +872,6 @@ augroup prose
 augroup end
 " }}}
 " Workflow: {{{
-
 " }}}
 " Gui:: {{{
 let s:fontsize = 12
