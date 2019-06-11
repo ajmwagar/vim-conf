@@ -1,0 +1,15 @@
+{
+  "suggest.timeout": 5000,
+  "coc.source.word.filetypes": ["md", "markdown"],
+  "coc.source.emoji.filetypes": ["md", "markdown"],
+  "diagnostic.warningSign": "⚠",
+  "diagnostic.errorSign": "🔴",
+  "diagnostic.infoSign": "i",
+  "languageserver": {
+    "omnisharp": {
+      "command": "/opt/omnisharp-roslyn/OmniSharp.exe",
+      "filetypes": ["cs"],
+      "args": ["-lsp"]
+    }
+  }
+}
