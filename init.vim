@@ -47,7 +47,7 @@ if exists('*minpac#init')
   endfunction
 
   " Workflow plugins
-  call minpac#add('christoomey/vim-tmux-navigator')
+  " call minpac#add('christoomey/vim-tmux-navigator')
   call minpac#add('sheerun/vim-polyglot') " Syntax files for most languages
   call minpac#add('jiangmiao/auto-pairs') " Auto close brackets and ''
   call minpac#add('tpope/vim-commentary') " Toggle comments with ease
@@ -64,7 +64,7 @@ if exists('*minpac#init')
   " Editor plugins/UI
   call minpac#add('mhinz/vim-startify')
   call minpac#add('ajmwagar/vim-deus') " Colorsheme
-  call minpac#add('ajmwagar/lightline-deus')
+  call minpac#add('ajmwagar/lightline-deus') " Status bar theme
   call minpac#add('itchyny/lightline.vim') " Status bar
   call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
   " call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
@@ -682,10 +682,10 @@ nnoremap <silent><leader>z :GoyoStart<return>
 nnoremap Q <nop> 
 
 " }}}
-" Autocommands: 
+" Autocommands: {{{
 augroup prose
   autocmd!
   autocmd FileType markdown set spell
 augroup end
-" 
+" }}}
 " }}}
