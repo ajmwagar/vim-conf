@@ -203,7 +203,7 @@ let g:ackprg = 'rg --vimgrep --no-heading'
 let $FZF_DEFAULT_OPTS='--reverse'
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
-function! FloatingFZF()
+function! FloatingFZF() " Floating FZF Windows
   let buf = nvim_create_buf(v:false, v:true)
   call setbufvar(buf, '&signcolumn', 'no')
 
@@ -542,6 +542,24 @@ command! GoyoStart packadd goyo.vim | packadd limelight.vim | Goyo
 " }}}
 " Functional Config {{{
 " Workflow: {{{
+
+" define a fancy nvim clipboard provider
+let g:clipboard = {
+  \   'name': 'Vim Clipboard',
+  \   'copy': {
+  \      '+': 'xclip -i -selection clipboard',
+  \      '*': 'xclip -i -selection secondary',
+  \    },
+  \   'paste': {
+  \      '+': 'xclip -o -selection clipboard',
+  \      '*': 'xclip -o -selection secondary',
+  \   },
+  \   'cache_enabled': 1,
+  \ }
+" tell nvim to use * as its internal clipboard
+" now vim sessions can share yank buffers by using the virtually unheard of
+" secondary selection buffer!
+set clipboard=unnamed
 function! OpenUrlUnderCursor()
     execute "normal BvEy"
     let url=matchstr(@0, '[a-z]*:\/\/[^ >,;"]*')
