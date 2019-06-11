@@ -198,9 +198,9 @@ let g:ale_lint_on_save = 1
 " fuzzy finder/ack Settings {{{
 "Use ripgrep
 let g:ackprg = 'rg --vimgrep --no-heading'
-let g:rg_find_command = 'rg --files --follow -g "!{.config,etc,node_modules,.git,target}/*"'
+let g:rg_find_command = 'rg --files --follow  -g "!{.config,etc,node_modules,.git,target}/*"'
+command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
 command! -bang -nargs=* Rg call fzf#vim#files('.', {'source': g:rg_find_command}, 0) 
-let g:ackprg = 'rg --vimgrep --no-heading'
 
 let $FZF_DEFAULT_OPTS='--reverse'
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
@@ -228,11 +228,10 @@ function! FloatingFZF() " Floating FZF Windows
 endfunction
 
 noremap <silent> <C-p> :Rg<return>
+noremap <silent> <C-f> :Find<return>
 noremap <silent> <C-b> :Buffers<cr>
 
 noremap <C-t> :LAck<space>
-
-" Customize fzf colors to match your color scheme
 
 "" }}}
 "Lightline {{{ 
