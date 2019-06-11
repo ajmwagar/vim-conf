@@ -199,26 +199,38 @@ let g:ackprg = 'rg --vimgrep --no-heading'
 let g:rg_find_command = 'rg --files --follow -g "!{.config,etc,node_modules,.git,target}/*"'
 command! -bang -nargs=* Rg call fzf#vim#files('.', {'source': g:rg_find_command}, 0) 
 let g:ackprg = 'rg --vimgrep --no-heading'
+
+let $FZF_DEFAULT_OPTS='--reverse'
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+
+function! FloatingFZF()
+  let buf = nvim_create_buf(v:false, v:true)
+  call setbufvar(buf, '&signcolumn', 'no')
+
+  let height = float2nr(&lines - (&lines * 2 / 10))
+  let row = float2nr((&lines - height) / 2)
+  let width = float2nr(&columns - (&columns * 2 / 10))
+  let col = float2nr((&columns - width) / 2)
+
+  let opts = {
+        \ 'relative': 'editor',
+        \ 'row': row,
+        \ 'col': col,
+        \ 'width': width,
+        \ 'height': height
+        \ }
+
+  let win = nvim_open_win(buf, v:true, opts)
+  call setwinvar(win, '&number', 0)
+  setlocal signcolumn=no
+endfunction
+
 noremap <silent> <C-p> :Rg<return>
 noremap <silent> <C-b> :Buffers<cr>
 
 noremap <C-t> :LAck<space>
 
 " Customize fzf colors to match your color scheme
-let g:fzf_colors =
-      \ { 'fg':      ['fg', 'Normal'],
-      \ 'bg':      ['bg', 'Normal'],
-      \ 'hl':      ['fg', 'Comment'],
-      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-      \ 'hl+':     ['fg', 'Statement'],
-      \ 'info':    ['fg', 'PreProc'],
-      \ 'border':  ['fg', 'Ignore'],
-      \ 'prompt':  ['fg', 'Conditional'],
-      \ 'pointer': ['fg', 'Exception'],
-      \ 'marker':  ['fg', 'Keyword'],
-      \ 'spinner': ['fg', 'Label'],
-      \ 'header':  ['fg', 'Comment'] }
 
 "" }}}
 "Lightline {{{ 
@@ -856,3 +868,4 @@ inoremap <C-ScrollWheelUp> <Esc>:call AdjustFontSize(1)<CR>a
 inoremap <C-ScrollWheelDown> <Esc>:call AdjustFontSize(-1)<CR>a
 " }}}
 " }}}
+"
