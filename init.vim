@@ -661,6 +661,15 @@ colorscheme deus
 xnoremap < <gv
 xnoremap > >gv
 
+vnoremap <silent> <Leader>is :<C-U>let old_reg_a=@a<CR>
+ \:let old_reg=@"<CR>
+ \gv"ay
+ \:let @a=substitute(@a, '.\(.*\)\@=',
+ \ '\=@a[strlen(submatch(1))]', 'g')<CR>
+ \gvc<C-R>a<Esc>
+ \:let @a=old_reg_a<CR>
+ \:let @"=old_reg<CR>
+
 " Switching Buffers
 noremap <leader>[ :bp<return>
 noremap <leader>] :bn<return>
@@ -686,6 +695,7 @@ nnoremap Q <nop>
 augroup prose
   autocmd!
   autocmd FileType markdown set spell
+  autocmd FileType txt set spell
 augroup end
 " }}}
 " }}}

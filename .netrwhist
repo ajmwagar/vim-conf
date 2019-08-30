@@ -1,0 +1,11 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/home/ajmwagar/usr/dev/git/rust/rouge/src'
+let g:netrw_dirhist_2='/home/ajmwagar/.config/waybar'
+let g:netrw_dirhist_3='/home/ajmwagar/usr/dev/git/FPL/outrigger-rs/notify-service'
+let g:netrw_dirhist_4='/home/ajmwagar/usr/dev/git/FPL/outrigger-rs'
+let g:netrw_dirhist_5='/home/ajmwagar/usr/odrive/Google Drive/Shared with Me/School/School/Sophomore/S2/History'
+let g:netrw_dirhist_6='/home/ajmwagar/usr/odrive/Google Drive/Shared with Me/School/School/Sophomore/S2'
+let g:netrw_dirhist_7='/'
+let g:netrw_dirhist_8='/home/ajmwagar/usr/dev/git/glimmer/glimmer-core'
+let g:netrw_dirhist_9='/home/ajmwagar/usr/dev/git/Fortress-Realm-Online/config'
