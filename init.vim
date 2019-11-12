@@ -57,7 +57,7 @@ if exists('*minpac#init')
   call minpac#add('junegunn/fzf', { 'do': './install --all' }) | call minpac#add('junegunn/fzf.vim') " FZF <3's Vim
 
   " Autocomplete
-  call minpac#add('neoclide/coc.nvim', {'do': 'call coc#util#install()'}) " Conquereer of Completions 
+  call minpac#add('neoclide/coc.nvim', {'branch': 'release'}) " Conquereer of Completions 
   " call minpac#add('w0rp/ale') " ALE
   " call minpac#add('KabbAmine/zeavim.vim') " ZealDoc Support
 
