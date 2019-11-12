@@ -1,12 +1,3 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =5
-let g:netrw_dirhist_5='/etc/NetworkManager/system-connections'
-let g:netrw_dirhist_4='/home/ajmwagar/usr/dev/git/putt'
-let g:netrw_dirhist_3='/home/ajmwagar/usr/dev/git/qmk_firmware/keyboards'
-let g:netrw_dirhist_2='/home/ajmwagar/usr/dev/git/work/fpl/outrigger/producers/imap_listener'
-let g:netrw_dirhist_1='/home/ajmwagar/usr/dev/git/work/fpl/outrigger/actions/action_dispatcher/src'
-let g:netrw_dirhist_0='/home/ajmwagar/usr/dev/git/work/fpl/outrigger/actions/action_dispatcher'
-let g:netrw_dirhist_9='/home/ajmwagar/usr/dev/git/work/fpl/outrigger/producers/imap_listener'
-let g:netrw_dirhist_8='/usr/share/java'
-let g:netrw_dirhist_7='/home/ajmwagar/usr/school/junior/nc/q1/english/journal'
-let g:netrw_dirhist_6='/home/ajmwagar/usr/dev/git/rouge/src/const'
+let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_1='/Users/awagar/.config/nvim'

@@ -47,7 +47,6 @@ if exists('*minpac#init')
   endfunction
 
   " Workflow plugins
-  " call minpac#add('christoomey/vim-tmux-navigator')
   call minpac#add('sheerun/vim-polyglot') " Syntax files for most languages
   call minpac#add('jiangmiao/auto-pairs') " Auto close brackets and ''
   call minpac#add('tpope/vim-commentary') " Toggle comments with ease
@@ -58,16 +57,12 @@ if exists('*minpac#init')
 
   " Autocomplete
   call minpac#add('neoclide/coc.nvim', {'branch': 'release'}) " Conquereer of Completions 
-  " call minpac#add('w0rp/ale') " ALE
-  " call minpac#add('KabbAmine/zeavim.vim') " ZealDoc Support
 
   " Editor plugins/UI
-  call minpac#add('mhinz/vim-startify')
   call minpac#add('ajmwagar/vim-deus') " Colorsheme
   call minpac#add('ajmwagar/lightline-deus') " Status bar theme
   call minpac#add('itchyny/lightline.vim') " Status bar
   call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
-  " call minpac#add('junegunn/limelight.vim', {'type': 'opt'})
   call minpac#add('mengelbrecht/lightline-bufferline')
 
 endif
@@ -427,35 +422,24 @@ command! GoyoStart packadd goyo.vim | packadd limelight.vim | Goyo
 " Functional Config {{{
 " Workflow: {{{
 " define a fancy nvim clipboard provider
-let g:clipboard = {
-  \   'name': 'Vim Clipboard',
-  \   'copy': {
-  \      '+': 'xclip -i -selection clipboard',
-  \      '*': 'xclip -i -selection secondary',
-  \    },
-  \   'paste': {
-  \      '+': 'xclip -o -selection clipboard',
-  \      '*': 'xclip -o -selection secondary',
-  \   },
-  \   'cache_enabled': 1,
-  \ }
-" tell nvim to use * as its internal clipboard
-" now vim sessions can share yank buffers by using the virtually unheard of
-" secondary selection buffer!
-set clipboard=unnamed
-
-
-function! OpenUrlUnderCursor()
-    execute "normal BvEy"
-    let url=matchstr(@0, '[a-z]*:\/\/[^ >,;"]*')
-    if url != ""
-        silent exec "!brave '".url."'" | redraw! 
-        echo "opened ".url
-    else
-        echo "No URL under cursor."
-    endif
-endfunction
-nmap <leader>o :call OpenUrlUnderCursor()<CR>
+if has('linux')
+  let g:clipboard = {
+    \   'name': 'Vim Clipboard',
+    \   'copy': {
+    \      '+': 'xclip -i -selection clipboard',
+    \      '*': 'xclip -i -selection secondary',
+    \    },
+    \   'paste': {
+    \      '+': 'xclip -o -selection clipboard',
+    \      '*': 'xclip -o -selection secondary',
+    \   },
+    \   'cache_enabled': 1,
+    \ }
+  " tell nvim to use * as its internal clipboard
+  " now vim sessions can share yank buffers by using the virtually unheard of
+  " secondary selection buffer!
+  set clipboard=unnamed
+endif
 
 
 filetype off
@@ -478,7 +462,10 @@ set splitright " Vertical split new panes to the right
 
 nmap <space>, :Vimrc<return>
 nmap <C-,> :Vimrc<return>
-command! Vimrc edit /home/$USER/.config/nvim/init.vim
+if has('unix') 
+  command! Vimrc edit /home/$USER/.config/nvim/init.vim
+endif
+
 set backspace=indent,eol,start " Use backspace in insert mode
 set pdev=Brother_HL-4570CDW_series " Print from home
 set noshowcmd
@@ -585,7 +572,6 @@ set ignorecase " Always case-insensitive
 set showmatch " Highlight matching brace
 " }}}
 " Persistent undo: {{{
-"
 if exists("+undofile")
   " undofile - This allows you to use undos after exiting and restarting
   " This, like swap and backup files, uses .vim-undo first, then ~/.vim/undo
@@ -604,11 +590,8 @@ set directory^=$HOME/.config/nvim/tmp// " Disable swapfiles
 set noswapfile " Begone
 " }}}
 "Terminal settings: {{{
-"
 autocmd TermOpen term://* startinsert
 autocmd TermOpen term://* setlocal nonumber norelativenumber
-
-" Terminal settings
 
 " Make esc work
 tnoremap <Leader><Esc> <C-\><C-n>
@@ -671,8 +654,8 @@ vnoremap <silent> <Leader>is :<C-U>let old_reg_a=@a<CR>
  \:let @"=old_reg<CR>
 
 " Switching Buffers
-noremap <leader>[ :bp<return>
-noremap <leader>] :bn<return>
+noremap <silent><leader>[ :bp<return>
+noremap <silent><leader>] :bn<return>
 
 "Find and replace
 map <leader>fr :%s///g<left><left>
@@ -688,14 +671,14 @@ nnoremap <silent> k gk
 nnoremap <silent><leader>z :GoyoStart<return>
 
 " Disable ex-mode 
-nnoremap Q <nop> 
+nnoremap <silent>Q <nop> 
 
 " }}}
 " Autocommands: {{{
 augroup prose
   autocmd!
   autocmd FileType markdown set spell
-  autocmd FileType txt set spell
+  autocmd FileType text set spell
 augroup end
 " }}}
 " }}}
