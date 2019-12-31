@@ -233,7 +233,7 @@ set showtabline=2
 
 "
 function! User()
-  return system('echo -n $LOGNAME@$(/bin/hostname -s)')
+  return system('echo -n $LOGNAME@$(cat /etc/hostname)')
   " . "@" . echo "silent !hostname"
 endfunction
 
