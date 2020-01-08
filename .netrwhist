@@ -1,3 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =1
-let g:netrw_dirhist_1='/Users/awagar/Documents/src/cfc/cfchildren/CFC.Queue'
+let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_1='/Users/awagar/Documents/src/cfc/cfchildren/player/_src/js/components/DragQuestion'
+let g:netrw_dirhist_2='/Users/awagar/Documents/src/cfc/cfchildren/player/_src/js/components'
+let g:netrw_dirhist_3='/Users/awagar/Documents/src/cfc/cfchildren/player/_src/js/lib/HocFlagReader'
