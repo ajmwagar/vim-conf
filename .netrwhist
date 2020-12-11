@@ -1,3 +1,12 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =1
-let g:netrw_dirhist_1='/Users/awagar/Documents/src/cfc/cfchildren/CFC.Queue'
+let g:netrw_dirhistcnt =0
+let g:netrw_dirhist_0='/home/ajmwagar/usr/dev/git/aux/community-mod/PHC/Functions'
+let g:netrw_dirhist_9='/home/ajmwagar/usr/dev/git/zw/whipper/src'
+let g:netrw_dirhist_8='/home/ajmwagar/usr/dev/git/zw/bulksend'
+let g:netrw_dirhist_7='/home/ajmwagar/usr/dev/git/zw/bulksend/backend'
+let g:netrw_dirhist_6='/home/ajmwagar/usr/dev/git/zw/bulksend'
+let g:netrw_dirhist_5='/home/ajmwagar/usr/dev/git/zw/bulksend/frontend'
+let g:netrw_dirhist_4='/home/ajmwagar/usr/dev/git/zw/bulksend'
+let g:netrw_dirhist_3='/home/ajmwagar/usr/dev/git/zw/bulksend/backend'
+let g:netrw_dirhist_2='/home/ajmwagar/usr/dev/git/fpl/outrigger/.git'
+let g:netrw_dirhist_1='/home/ajmwagar/usr/dev/git/zw/translator/amt/src'

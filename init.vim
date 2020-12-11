@@ -52,6 +52,8 @@ if exists('*minpac#init')
   call minpac#add('tpope/vim-commentary') " Toggle comments with ease
   call minpac#add('tpope/vim-fugitive')
 
+  call minpac#add('ussrlongbow/vim-sqf') " SQF File syntax
+
   " Searching/Fuzzy Finding
   call minpac#add('junegunn/fzf', { 'do': './install --all' }) | call minpac#add('junegunn/fzf.vim') " FZF <3's Vim
 
