@@ -281,7 +281,7 @@ let g:lightline = {
 let g:lightline.tabline = {'left': [['buffers']], 'right': [['user', 'time']]}
 let g:lightline#bufferline#unnamed      = '[No Name]'
 let g:lightline#bufferline#show_number = 1
-let g:lightline#bufferline#unicode_symbols = 1
+let g:lightline#bufferline#unicode_symbols = 0
 
 " let g:lightline.separator = { 'left': "\ue0b8", 'right': "\ue0be" }
 " let g:lightline.subseparator = { 'left': "\ue0b9", 'right': "\ue0b9" }
