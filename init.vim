@@ -283,10 +283,10 @@ let g:lightline#bufferline#unnamed      = '[No Name]'
 let g:lightline#bufferline#show_number = 1
 let g:lightline#bufferline#unicode_symbols = 1
 
-let g:lightline.separator = { 'left': "\ue0b8", 'right': "\ue0be" }
-let g:lightline.subseparator = { 'left': "\ue0b9", 'right': "\ue0b9" }
-let g:lightline.tabline_separator = { 'left': "\ue0bc", 'right': "\ue0ba" }
-let g:lightline.tabline_subseparator = { 'left': "\ue0bb", 'right': "\ue0bb" }
+" let g:lightline.separator = { 'left': "\ue0b8", 'right': "\ue0be" }
+" let g:lightline.subseparator = { 'left': "\ue0b9", 'right': "\ue0b9" }
+" let g:lightline.tabline_separator = { 'left': "\ue0bc", 'right': "\ue0ba" }
+" let g:lightline.tabline_subseparator = { 'left': "\ue0bb", 'right': "\ue0bb" }
 
 function! LightlineBufferline()
   call bufferline#refresh_status()
@@ -305,7 +305,7 @@ endfunction
 
 function! GitBranch()
   if (fugitive#head() != '')
-    return fugitive#head() . ' '
+    return fugitive#head()
   endif
   return ''
 endfunction
@@ -316,13 +316,13 @@ endfunction
 function! CocWarnings() abort
   let info = get(b:, 'coc_diagnostic_info', {})
   if empty(info) | return '' | endif
-  return printf('%d ⚠', info['warning'])
+  return printf('%d !', info['warning'])
 endfunction
 
 function! CocErrors() abort
   let info = get(b:, 'coc_diagnostic_info', {})
   if empty(info) | return '' | endif
-  return printf('%d 🔴', info['error'])
+  return printf('%d X', info['error'])
 endfunction
 
 
@@ -330,6 +330,7 @@ function! CocOK() abort
   let info = get(b:, 'coc_diagnostic_info', {})
   return empty(info) ? '✓' : ''
 endfunction
+
 
 
 " Update and show lightline but only if it's visible (e.g., not in Goyo)
