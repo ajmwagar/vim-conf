@@ -122,6 +122,7 @@ nmap <silent> gn <Plug>(coc-rename)
 " Use K for show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
+
 function! s:show_documentation()
   if &filetype == 'vim'
     execute 'h '.expand('<cword>')
@@ -130,18 +131,14 @@ function! s:show_documentation()
   endif
 endfunction
 
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-autocmd User CocDiagnosticChange silent call s:MaybeUpdateLightline()
-
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-
 " Remap for format selected region
 vmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format)
 
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+autocmd User CocDiagnosticChange silent call s:MaybeUpdateLightline()
 
 augroup mygroup
   autocmd!
@@ -156,16 +153,11 @@ vmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
+"nmap <leader>ac  <Plug>(coc-codeaction)
+
 " Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Use `:Format` for format current buffer
-command! -nargs=0 Format :call CocAction('format')
-
-" Use `:Fold` for fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
+nmap <leader>q  <Plug>(coc-fix-current)
+"nmap <leader>qa <Plug>(coc-fix-all)
 
 " Using CocList
 " Show all diagnostics
@@ -184,6 +176,14 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+" Use `:Format` for format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` for fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+
 
 " }}}
 " ALE: {{{

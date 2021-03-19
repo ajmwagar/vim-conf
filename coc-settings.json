@@ -12,5 +12,6 @@
       "args": ["-lsp"]
     }
   },
-  "rust-analyzer.cargoFeatures.allFeatures": true
+  "rust-analyzer.cargoFeatures.allFeatures": true,
+  "coc.preferences.extensionUpdateCheck": "never"
 }
