@@ -44,4 +44,23 @@ xmap(">", ">gv")
 nmap("<C-p>", require('telescope.builtin').find_files)
 nmap("<C-t>", require('telescope.builtin').live_grep)
 nmap("<C-b>", require('telescope.builtin').buffers)
+nmap("<C-d>", require('telescope.builtin').diagnostics)
+nmap("<C-f>", require('telescope.builtin').treesitter)
 nmap("z=", require('telescope.builtin').spell_suggest)
+
+-- Diagnostics
+-- Use `[c` and `]c` for navigate diagnostics
+nmap("]c", vim.diagnostic.goto_next)
+nmap("[c", vim.diagnostic.goto_prev)
+
+
+require('telescope').setup{
+    defaults = {
+        file_ignore_patterns = {
+            "^node_modules/",
+            "^target/",
+            "^build/",
+        }
+    }
+}
+

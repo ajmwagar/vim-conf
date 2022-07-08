@@ -43,12 +43,12 @@ on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gd', telescope.lsp_definitions, bufopts)
   vim.keymap.set('n', 'gt', telescope.lsp_type_definitions, bufopts)
   vim.keymap.set('n', 'gr', telescope.lsp_references, bufopts)
+  vim.keymap.set('n', 'gm', telescope.lsp_implementations, bufopts)
 
   vim.keymap.set('n', 'gn', vim.lsp.buf.rename, bufopts)
 
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
   vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
   vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
   vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
@@ -57,6 +57,7 @@ on_attach = function(client, bufnr)
   end, bufopts)
   vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', '<leader>f', vim.lsp.buf.formatting, bufopts)
+  vim.keymap.set('v', '<leader>f', vim.lsp.buf.range_formatting, bufopts)
 end
 
 lsp_flags = {
@@ -64,7 +65,7 @@ lsp_flags = {
   debounce_text_changes = 150,
 }
 
-local servers = { 'rust_analyzer', 'tsserver', 'barium', 'pyright', 'jdtls' }
+local servers = { 'rust_analyzer', 'tsserver', 'barium', 'pyright', 'jdtls', 'ccls' }
 
 for _,lsp in ipairs(servers) do
   lspconfig[lsp].setup {
