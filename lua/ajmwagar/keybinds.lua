@@ -46,6 +46,7 @@ nmap("<C-t>", require('telescope.builtin').live_grep)
 nmap("<C-b>", require('telescope.builtin').buffers)
 nmap("<C-d>", require('telescope.builtin').diagnostics)
 nmap("<C-f>", require('telescope.builtin').treesitter)
+nmap("<C-q>", require('telescope.builtin').quickfix)
 nmap("z=", require('telescope.builtin').spell_suggest)
 
 -- Diagnostics
@@ -63,4 +64,8 @@ require('telescope').setup{
         }
     }
 }
+-- To get ui-select loaded and working with telescope, you need to call
+-- load_extension, somewhere after setup function:
+require("telescope").load_extension("ui-select")
+require('gitsigns').setup()
 

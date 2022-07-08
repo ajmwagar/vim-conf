@@ -14,6 +14,8 @@ return require('packer').startup(function()
     use 'neovim/nvim-lspconfig'
     use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
     use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
+    use 'L3MON4D3/LuaSnip'
+    use 'saadparwaiz1/cmp_luasnip'
 
     -- Syntax Highlighting
     use 'sheerun/vim-polyglot' -- Syntax highlighting collection
@@ -33,21 +35,20 @@ return require('packer').startup(function()
     -- Post-install/update hook with neovim command
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 
-    -- Use specific branch, dependency and run lua file after load
-    --[[use {
-        'glepnir/galaxyline.nvim', branch = 'main', config = function() require'statusline' end,
-        requires = {'kyazdani42/nvim-web-devicons'}
-    }
-    ]]--
+    use({
+      'glepnir/galaxyline.nvim',
+      branch = 'main',
+      -- some optional icons
+      requires = { 'kyazdani42/nvim-web-devicons', opt = true },
+    })
 
     use {
         'nvim-telescope/telescope.nvim',
         requires = { {'nvim-lua/plenary.nvim'} }
     }
+    use {'nvim-telescope/telescope-ui-select.nvim' }
 
-    -- Use dependency and run lua function after load
     use {
-        'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' },
-        config = function() require('gitsigns').setup() end
+        'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }
     }
 end)
