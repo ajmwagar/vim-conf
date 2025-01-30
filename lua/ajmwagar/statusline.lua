@@ -14,14 +14,37 @@ gls.left[2] = {
   ViMode = {
     provider = function()
       -- auto change color according the vim mode
-      local mode_color = {n = colors.red, i = colors.green,v=colors.blue,
-                          [''] = colors.blue,V=colors.blue,
-                          c = colors.magenta,no = colors.red,s = colors.orange,
-                          S=colors.orange,[''] = colors.orange,
-                          ic = colors.yellow,R = colors.violet,Rv = colors.violet,
-                          cv = colors.red,ce=colors.red, r = colors.cyan,
-                          rm = colors.cyan, ['r?'] = colors.cyan,
-                          ['!']  = colors.red,t = colors.red}
+      local mode_color = {
+          n = colors.red,
+          i = colors.green,
+          v = colors.blue,
+          ["�"] = colors.blue,
+          V = colors.blue,
+          c = colors.magenta,
+          no = colors.red,
+          s = colors.orange,
+          S = colors.orange,
+          ["�"] = colors.orange,
+          ic = colors.yellow,
+          R = colors.violet,
+          Rv = colors.violet,
+          cv = colors.red,
+          ce = colors.red,
+          r = colors.cyan,
+          rm = colors.cyan,
+          ["r?"] = colors.cyan,
+          ["!"] = colors.red,
+          t = colors.red,
+          ["CTRL-V"] = colors.yellow,
+          ["^v"] = colors.yellow,
+          ["^V"] = colors.yellow,
+          ["CTRL_V"] = colors.yellow,
+          ["CTRL-v"] = colors.yellow,
+          ["ctrl-v"] = colors.yellow,
+          [""] = colors.yellow
+      }
+
+
       vim.api.nvim_command('hi GalaxyViMode guifg='..mode_color[vim.fn.mode()])
       return '  '
     end,
