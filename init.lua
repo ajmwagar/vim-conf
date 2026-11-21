@@ -17,6 +17,7 @@ require("ajmwagar.cmp")
 require("ajmwagar.aws")
 require("ajmwagar.undo")
 require("ajmwagar.statusline")
+require("ajmwagar.lisp")
 
 --[[
 vim.cmd([[
