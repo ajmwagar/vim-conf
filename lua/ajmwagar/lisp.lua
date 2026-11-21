@@ -25,12 +25,25 @@ local M = {}
 -- ---------------------------------------------------------------------------
 
 vim.filetype.add({
-  extension = { asd = "lisp", ros = "lisp" },
+  extension = { asd = "lisp", ros = "lisp", soil = "lisp", bel = "lisp" },
   pattern = {
     [".*%.sbclrc"] = "lisp",
     [".*%.clisprc"] = "lisp",
     [".*%.eclrc"] = "lisp",
   },
+})
+
+-- init.lua runs `:filetype off` late, which drops Neovim's Lua detector;
+-- vim-polyglot's ftdetect files cover *.lisp but not these extensions, so
+-- claim them explicitly. (vim.filetype.add above still serves :filetype detect.)
+api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  group = api.nvim_create_augroup("ajmwagar.lisp_filetypes", { clear = true }),
+  pattern = { "*.asd", "*.ros", "*.soil", "*.bel", "*.sbclrc", "*.clisprc", "*.eclrc" },
+  callback = function(args)
+    if vim.bo[args.buf].filetype == "" then
+      vim.bo[args.buf].filetype = "lisp"
+    end
+  end,
 })
 
 -- ---------------------------------------------------------------------------

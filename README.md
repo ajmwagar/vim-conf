@@ -25,7 +25,9 @@
 ## Lisp
 
 `lua/ajmwagar/lisp.lua` wires up syntax (bundled `lisp` syntax, plus the
-tree-sitter `commonlisp` parser when it is installed) and a small REPL/runner
+tree-sitter `commonlisp` parser when it is installed; `*.lisp`, `*.cl`, `*.lsp`,
+`*.asd`, `*.ros`, `*.soil`, `*.bel` and the usual Lisp rc files are treated as
+Lisp) and a small REPL/runner
 with no plugin dependencies. It probes `sbcl`, `clisp`, `ecl`, `ccl`, `ros`,
 `guile`, `racket`, `csi` and `gosh`, and picks the one matching the buffer's
 filetype.
