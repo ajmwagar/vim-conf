@@ -35,11 +35,11 @@ return require('packer').startup(function()
     use 'tpope/vim-fugitive'
 
     -- UI
+    use 'itchyny/lightline.vim'
+    use 'mengelbrecht/lightline-bufferline'
     use 'ajmwagar/vim-deus'
     use 'ajmwagar/lightline-deus'
 
-    use 'itchyny/lightline.vim'
-    use 'mengelbrecht/lightline-bufferline'
 
     -- Post-install/update hook with neovim command
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
