@@ -48,3 +48,22 @@ file, `<leader>ls` stop REPL.
 
 Run `:Lisp info` if it cannot find an implementation; on macOS the quickest
 fix is `brew install sbcl`.
+
+## Themes
+
+Besides `vim-deus`, these are installed: `catppuccin` (+ variants), `tokyonight`,
+`kanagawa`, `gruvbox`, `rose-pine` (pinned `catppuccin/nvim` to `v1.9.0`; newer
+tags require `vim.pack` from Neovim 0.13). All built-in Neovim schemes are
+available too.
+
+```
+:Theme            # floating picker: ↑/↓ are fine, j/k are fine. Live preview.
+                  #   Enter applies and remembers; Esc/q restores the previous one.
+:Theme tokyonight # apply directly
+:Theme list       # print everything installed
+<leader>tt        # same as :Theme
+```
+
+The confirmed choice is saved to `stdpath("state")/colorscheme` and restored on
+startup. `galaxyline` keeps its own fixed palette, so the statusline does not
+recolor with the scheme.

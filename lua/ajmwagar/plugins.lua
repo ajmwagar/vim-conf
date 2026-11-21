@@ -19,6 +19,13 @@ return require('packer').startup(function()
     use 'L3MON4D3/LuaSnip'
     use 'saadparwaiz1/cmp_luasnip'
 
+    -- Colorschemes (preview/switch with :Theme, see ajmwagar/theme.lua)
+    use { 'catppuccin/nvim', tag = 'v1.9.0' } -- newer tags need vim.pack (nvim 0.13)
+    use 'folke/tokyonight.nvim'
+    use 'rebelot/kanagawa.nvim'
+    use 'ellisonleao/gruvbox.nvim'
+    use { 'rose-pine/neovim', as = 'rose-pine' }
+
     -- Syntax Highlighting
     use 'sheerun/vim-polyglot' -- Syntax highlighting collection
     use 'ussrlongbow/vim-sqf' -- SQF Syntax highlighting
