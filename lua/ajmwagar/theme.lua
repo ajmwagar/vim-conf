@@ -129,8 +129,8 @@ function M.list()
   end
 end
 
---- Open the floating picker. Movement previews immediately; only ⏎ persists.
-function M.open()
+--- Fallback floating picker when telescope is unavailable.
+local function open_float()
   local names = installed()
   if #names == 0 then
     notify("no colorschemes found", vim.log.levels.WARN)
@@ -249,6 +249,106 @@ function M.open()
   end, "Cancel")
 
   render()
+end
+
+--- Open the fuzzy picker. Selection previews immediately; only ⏎ persists.
+function M.open()
+  local names = installed()
+  if #names == 0 then
+    notify("no colorschemes found", vim.log.levels.WARN)
+    return
+  end
+
+  local original = vim.g.colors_name or "deus"
+
+  -- deus is the default: preview it as soon as the picker opens (telescope
+  -- does not fire the previewer for the initial selection in this version).
+  local has_deus = false
+  for _, name in ipairs(names) do
+    if name == "deus" then
+      has_deus = true
+      break
+    end
+  end
+  if has_deus then
+    apply("deus")
+  end
+
+  local ok = pcall(function()
+    return require("telescope.pickers")
+  end)
+  if not ok then
+    return open_float()
+  end
+
+  local pickers = require("telescope.pickers")
+  local finders = require("telescope.finders")
+  local conf = require("telescope.config").values
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+
+  local function cancel(prompt_bufnr)
+    apply(original)
+    actions.close(prompt_bufnr)
+  end
+
+  local function choose(prompt_bufnr)
+    local entry = action_state.get_selected_entry()
+    local name = entry and entry.value
+    if name and apply(name) then
+      remember(name)
+      notify(("using %s"):format(name))
+    elseif name then
+      notify(("could not load %s; keeping %s"):format(name, original), vim.log.levels.WARN)
+      apply(original)
+    end
+    actions.close(prompt_bufnr)
+  end
+
+  -- Applying on every selection change is the live preview.
+  local previewer = {}
+  function previewer:title()
+    return "colorscheme preview"
+  end
+  function previewer:preview(entry)
+    if entry and entry.value and entry.value ~= vim.g.colors_name then
+      apply(entry.value)
+    end
+  end
+  function previewer:teardown() end
+
+  -- deus is the default selection unless the user's saved theme is installed.
+  local default = nil
+  for i, name in ipairs(names) do
+    if name == "deus" then
+      default = i
+      break
+    end
+  end
+
+  local opts = {}
+  pickers.new(opts, {
+    prompt_title = "Colorschemes (fuzzy; enter apply, esc cancel)",
+    default_selection_index = default,
+    finder = finders.new_table({
+      results = names,
+      entry_maker = function(name)
+        return { value = name, display = name, ordinal = name }
+      end,
+    }),
+    sorter = conf.generic_sorter(opts),
+    previewer = previewer,
+    attach_mappings = function(prompt_bufnr, map)
+      map("i", "<CR>", choose)
+      map("n", "<CR>", choose)
+      map("i", "<Esc>", cancel)
+      map("n", "<Esc>", cancel)
+      map("i", "<C-c>", cancel)
+      map("n", "<C-c>", cancel)
+      map("n", "q", cancel)
+      return true
+    end,
+  }):find()
 end
 
 --- Restore the remembered scheme; fall back silently to whatever is loaded.

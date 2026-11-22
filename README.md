@@ -57,12 +57,14 @@ tags require `vim.pack` from Neovim 0.13). All built-in Neovim schemes are
 available too.
 
 ```
-:Theme            # floating picker: ↑/↓ are fine, j/k are fine. Live preview.
-                  #   Enter applies and remembers; Esc/q restores the previous one.
+:Theme            # fuzzy picker (telescope). Opens on deus; typing filters,
+                  #   moving previews live, Enter applies+remembers, Esc restores.
 :Theme tokyonight # apply directly
 :Theme list       # print everything installed
 <leader>tt        # same as :Theme
 ```
+
+If telescope is unavailable the old floating list is used instead.
 
 The confirmed choice is saved to `stdpath("state")/colorscheme` and restored on
 startup. `galaxyline` keeps its own fixed palette, so the statusline does not
